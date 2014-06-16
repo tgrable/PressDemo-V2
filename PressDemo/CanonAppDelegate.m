@@ -7,15 +7,47 @@
 //
 
 #import "CanonAppDelegate.h"
+#import "CanonModel.h"
 
 @implementation CanonAppDelegate
+@synthesize AppDataObj;
+
+- (id) init;
+{
+	self.AppDataObj = [[CanonModel alloc] init];
+	return [super init];
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    //make the splash screen appear for 3 seconds
+    [NSThread sleepForTimeInterval:3.0];
+    
+    // Instantiate Shared Manager to start monitoring for network reachability
+    Reachability *reachability = [Reachability reachabilityWithHostname:@"www.google.com"];
+    // Start Monitoring
+    [reachability startNotifier];
+    
+    //load the root view controller
+    self.viewController = [[CanonViewController alloc] initWithNibName:@"CanonViewController" bundle:nil];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
+    
+    [navController setNavigationBarHidden:YES animated:NO];
+    [self.window setRootViewController: navController];
+    [self.window makeKeyAndVisible];
+ 
     return YES;
+    
 }
-							
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -24,7 +56,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
 

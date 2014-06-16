@@ -7,9 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AppDelegateProtocol.h"
+#import "CanonViewController.h"
 
-@interface CanonAppDelegate : UIResponder <UIApplicationDelegate>
+@class CanonModel;
 
+@interface CanonAppDelegate : UIResponder <UIApplicationDelegate, AppDelegateProtocol>{
+    CanonModel * AppDataObj;
+}
+@property (nonatomic, retain)CanonModel * AppDataObj;
+@property (strong, nonatomic)CanonViewController *viewController;
 @property (strong, nonatomic) UIWindow *window;
 
 @end
