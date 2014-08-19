@@ -8,6 +8,7 @@
 
 #import "CanonAppDelegate.h"
 #import "CanonModel.h"
+#import "Reachability.h"
 
 @implementation CanonAppDelegate
 @synthesize AppDataObj;
@@ -15,7 +16,8 @@
 - (id) init;
 {
 	self.AppDataObj = [[CanonModel alloc] init];
-	return [super init];
+   
+    return [super init];
 }
 
 - (BOOL)prefersStatusBarHidden
@@ -25,24 +27,26 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    //setup NSUserDefaults for LastUpdated
+    [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"LastUpdated" ofType:@"plist"]]];
+    
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     //make the splash screen appear for 3 seconds
     [NSThread sleepForTimeInterval:3.0];
     
-    // Instantiate Shared Manager to start monitoring for network reachability
-    Reachability *reachability = [Reachability reachabilityWithHostname:@"www.google.com"];
-    // Start Monitoring
-    [reachability startNotifier];
     
     //load the root view controller
     self.viewController = [[CanonViewController alloc] initWithNibName:@"CanonViewController" bundle:nil];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
+    [navController.navigationBar setBounds:CGRectMake(0, 0, 1024, 64)];
     
     [navController setNavigationBarHidden:YES animated:NO];
     [self.window setRootViewController: navController];
     [self.window makeKeyAndVisible];
+    
  
     return YES;
     

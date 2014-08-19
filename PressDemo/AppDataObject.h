@@ -10,18 +10,20 @@
 #import "Video.h"
 #import "Document.h"
 #import "Product.h"
+#import "ProductSeries.h"
 
 @interface AppDataObject : NSObject{
-    BOOL reachable, firstLoad;
-    NSMutableDictionary *documentData;
-    NSMutableDictionary *videoData;
-    NSMutableDictionary *productData;
+    BOOL reachable, layoutSync, needsUpdate;
     NSMutableDictionary *whatDoYouWantToPrint, *showAll;
-    NSMutableDictionary *taxonomyReadableNames;
-    NSMutableDictionary *lastUpdated;
+    NSMutableDictionary *taxonomyReadableNames, *topBanners;
+    NSMutableDictionary *seriesBanners, *documentBanners;
+    NSMutableDictionary *lastUpdated, *documentData, *productData, *productSeriesData, *videoData;
+    NSMutableArray *downloadedImages;
 }
-@property (nonatomic, strong)NSMutableDictionary *documentData, *videoData, *productData;
-@property (nonatomic, strong)NSMutableDictionary *whatDoYouWantToPrint, *showAll, *taxonomyReadableNames;
-@property (nonatomic, strong)NSMutableDictionary *lastUpdated;
-@property BOOL reachable, firstLoad;
+
+@property (nonatomic, strong)NSMutableDictionary *whatDoYouWantToPrint, *showAll, *taxonomyReadableNames, *topBanners;
+@property (nonatomic, strong)NSMutableDictionary *lastUpdated, *documentData, *productData, *productSeriesData, *videoData;
+@property (nonatomic, strong)NSMutableDictionary *seriesBanners;
+@property (nonatomic, strong)NSMutableArray *downloadedImages;
+@property BOOL reachable, layoutSync, needsUpdate;
 @end

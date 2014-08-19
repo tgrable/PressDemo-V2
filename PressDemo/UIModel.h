@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+@class UIModel;
 
 @interface UIModel : NSObject{
-    
     UIActivityIndicatorView *activityIndicator;
     UIImageView *splash;
 }

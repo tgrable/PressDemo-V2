@@ -12,8 +12,7 @@
 
 @implementation NetworkData
 @synthesize networkURL, threads, machineName;
-@synthesize downloadURLs, model, updateURL;
-
+@synthesize downloadURLs, model, updateURL, videoDownloading;
 - (id)init
 {
     self = [super init];
@@ -29,10 +28,11 @@
         status = 0;
         threadCount = 0;
         failureFlag = NO;
+        videoDownloading = NO;
         model = [self AppDataObj];
         // add product back to the machine name
-        machineName = [[NSMutableArray alloc] initWithObjects:@"case-study", @"product", @"product-spec", @"video", @"white-paper", nil];
-        downloadCount = [machineName count];
+        machineName = [[NSMutableArray alloc] initWithObjects:@"case-study", @"product", @"product-spec", @"video", @"white-paper", @"product-series", nil];
+        downloadCount = (int)[machineName count];
         downloadURLs = [[NSMutableArray alloc] init];
     }
     return self;
@@ -45,13 +45,13 @@
         for(NSString *value in machineName){
             //the opration queues
             queue = [NSOperationQueue new];
-            [queue setMaxConcurrentOperationCount:2];
+            [queue setMaxConcurrentOperationCount:3];
             
             //set the status to one for the initial download
             status = 1;
             
             NSString *url = [NSString stringWithFormat:@"%@/data/api/%@", networkURL, value];
-            //NSLog(@"URLs %@", url);
+            NSLog(@"URLs %@", url);
             [downloadURLs addObject:url];
             
             //initiate the downloadoperation class and set the class properties for user authentication
@@ -67,6 +67,7 @@
 {
     @autoreleasepool {
         //the opration queues
+        
         queue = [NSOperationQueue new];
         [queue setMaxConcurrentOperationCount:1];
         
@@ -81,6 +82,36 @@
         DownloadUrlOperation *_downLoad = [[DownloadUrlOperation alloc] initWithURL:[NSURL URLWithString:url]];
         [_downLoad addObserver:self forKeyPath:@"isFinished" options:NSKeyValueObservingOptionNew context:NULL];
         [queue addOperation:_downLoad];
+    
+    }
+}
+
+-(void)downloadVideo:(NSString *)url
+{
+    @autoreleasepool {
+        //NSURL *videoURL = [NSURL URLWithString:url];
+        //MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
+        //http://mediavaletcsa.origin.mediaservices.windows.net/c0a9837b-e284-402b-a84e-60be63503e0c/CS3000 Sustainability.ism/manifest(format=m3u8-aapl)
+       
+        /*
+        //clear out the download array
+        [downloadURLs removeAllObjects];
+        //the opration queues
+        queue = [NSOperationQueue new];
+        [queue setMaxConcurrentOperationCount:1];
+        
+        //set the status to one for the initial download
+        status = 3;
+        videoDownloading = YES;
+        NSLog(@"MADE IT HERE %@", url);
+        [downloadURLs addObject:url];
+        
+        //initiate the downloadoperation class and set the class properties for user authentication
+        DownloadUrlOperation *_downLoad = [[DownloadUrlOperation alloc] initWithURL:[NSURL URLWithString:url]];
+        [_downLoad addObserver:self forKeyPath:@"isFinished" options:NSKeyValueObservingOptionNew context:NULL];
+        [queue addOperation:_downLoad];
+         */
+        
     }
 }
 
@@ -148,8 +179,16 @@
                     if(threadCount == downloadCount){
                         //success
                         if(!failureFlag){
-                            NSLog(@"Success!");
-                            [_delegate downloadResponse:model withFlag:YES];
+                            //sync data and wipe out model
+                            NSLog(@"Saving data to disk");
+                            [model saveAllDataToDisk:^(BOOL completeFlagArgument){
+                                NSLog(@"Success!");
+                                //Just as an option to have
+                                //[model downloadAllImagesAndSaveThem:^(BOOL completeFlagParent){
+                                    [_delegate downloadResponse:model withFlag:YES];
+                                //}];
+                            }];
+                            
                         }else{
                             //failure
                             NSLog(@"Failure!");
@@ -164,6 +203,30 @@
                 //delegate update routine
                 BOOL response = [model breakoutUpdateData:data];
                 [_delegate updateResponse:model withFlag:response];
+                
+            }else if(status == 3){
+                //delegate the video download routine
+                if([downloadURLs count] > 0){
+                    NSString *videoName = [downloadURLs objectAtIndex:0];
+                    NSLog(@"Save file %@", videoName);
+                    NSString *name = [model getVideoFileName:videoName];
+                    name = [NSString stringWithFormat:@"%@.mp4", name];
+                    [model saveFile:data andFileName:name complete:^(BOOL completeFlag) {
+                        if(completeFlag){
+                            //success
+                            [_delegate videoDownloadResponse:model withFlag:YES];
+                            videoDownloading = NO;
+                        }else{
+                            //error
+                            [_delegate videoDownloadResponse:model withFlag:NO];
+                            videoDownloading = NO;
+                        }
+                    }];
+                }else{
+                    //error
+                    [_delegate videoDownloadResponse:model withFlag:NO];
+                    videoDownloading = NO;
+                }
             }
         }
     }

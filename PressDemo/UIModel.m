@@ -16,15 +16,18 @@
     self = [super init];
     
     if (self != nil){
-        
+    
         splash = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 1024, 768)];
         [splash setUserInteractionEnabled:YES];
         
         activityIndicator = [UIActivityIndicatorView.alloc initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
         activityIndicator.frame = CGRectMake(490.0, 500.0, 35.0, 35.0);
         [activityIndicator setColor:[UIColor whiteColor]];
+        activityIndicator.tag = 444;
         [activityIndicator startAnimating];
         [splash addSubview:activityIndicator];
+        
+        
     }
     return self;
 }
@@ -34,5 +37,6 @@
     NSString *path = [[NSBundle mainBundle] pathForResource:filename ofType:nil];
     return [UIImage imageWithContentsOfFile:path];
 }
+
 
 @end

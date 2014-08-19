@@ -8,6 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Video : NSObject
+@interface Video : NSObject <NSCoding>
+
+@property(nonatomic, copy)NSString *title;
+@property(nonatomic, copy)NSString *key;
+@property(nonatomic, copy)NSString *description;
+@property(nonatomic, copy)NSString *image;
+@property(nonatomic, copy)NSString *streamingURL;
 
 @end

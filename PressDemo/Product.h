@@ -8,16 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Product : NSObject
+@interface Product : NSObject <NSCoding>
 
-@property(nonatomic, retain)NSString *title;
-@property(nonatomic, retain)NSString *key;
-@property(nonatomic, retain)NSArray *description;
-@property(nonatomic, retain)NSDictionary *productSpec;
-@property(nonatomic, retain)NSDictionary *whitePaper;
-@property(nonatomic, retain)NSDictionary *caseStudy;
-@property(nonatomic, retain)NSString *whatDoYouWantToPrint;
-@property(nonatomic, retain)NSString *showAll;
+@property(nonatomic, copy)NSString *title;
+@property(nonatomic, copy)NSString *key;
+@property(nonatomic, copy)NSString *series;
+@property(nonatomic, copy)NSMutableDictionary *images;
+@property(nonatomic, copy)NSString *description;
+@property(nonatomic, copy)NSMutableArray *whatDoYouWantToPrint;
+@property(nonatomic, copy)NSMutableArray *showAll;
 
 @end
 

@@ -12,25 +12,32 @@
 #import "CanonModel.h"
 #import "AppDelegateProtocol.h"
 
-@interface CanonViewController : UIViewController<NetworkDelegate, UIAlertViewDelegate>{
+
+@interface CanonViewController : UIViewController<NetworkDelegate, UIScrollViewDelegate, UIAlertViewDelegate>{
     //objects
     NetworkData *network;
-    NSMutableArray *layouViews;
-    
+
     //local views
-    UIImageView *homeHeader;
+    UIImageView *homeHeader, *whatPrint, *showProducts, *logo;
+    UIScrollView *whatDoYouPrint, *showAllProducts;
+    
+    //data
+    NSMutableArray *whatImageNames, *showAllImageNames;
+    UIView *customNavBar;
+    BOOL downloadInProgress;
     
     
 }
 @property(nonatomic)NetworkData *network;
 @property(nonatomic, readonly)CanonModel *model;
 
-
+@property(nonatomic, strong)NSMutableArray *whatImageNames, *showAllImageNames;
+@property(nonatomic, strong)UIScrollView *whatDoYouPrint, *showAllProducts;
+@property(nonatomic, strong)UIView *customNavBar;
 
 //regular views
-
 -(void)displayMessage:(NSString *)message withTitle:(NSString *)title;
--(void)displayAllViews;
 -(void)runLoadingSequence;
+-(void)setupLocalUserInterface:(completeBlock)completeFlag;
 @end
 

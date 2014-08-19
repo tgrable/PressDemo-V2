@@ -10,4 +10,45 @@
 
 @implementation Video
 
+@synthesize title;
+@synthesize key;
+@synthesize description;
+@synthesize image;
+@synthesize streamingURL;
+
+-(id)init
+{
+    self = [super init];
+    
+    if (self != nil){
+        title = @"";
+        key = @"";
+        description = @"";
+        image = @"";
+        streamingURL = @"";
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
+    //Encode properties, other class variables, etc
+    [encoder encodeObject:self.title forKey:@"title"];
+    [encoder encodeObject:self.key forKey:@"key"];
+    [encoder encodeObject:self.description forKey:@"description"];
+    [encoder encodeObject:self.image forKey:@"image"];
+    [encoder encodeObject:self.streamingURL forKey:@"streamingURL"];
+}
+
+- (id)initWithCoder:(NSCoder *)decoder {
+    if((self = [super init])) {
+        //decode properties, other class vars
+        self.title = [decoder decodeObjectForKey:@"title"];
+        self.key = [decoder decodeObjectForKey:@"key"];
+        self.description = [decoder decodeObjectForKey:@"description"];
+        self.image = [decoder decodeObjectForKey:@"image"];
+        self.streamingURL = [decoder decodeObjectForKey:@"streamingURL"];
+    }
+    return self;
+}
+
 @end
