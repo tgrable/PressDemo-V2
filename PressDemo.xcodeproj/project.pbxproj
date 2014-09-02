@@ -106,6 +106,7 @@
 		7129483319A3FFCF00E0548D /* launch.png in Resources */ = {isa = PBXBuildFile; fileRef = 7129482219A3FFCF00E0548D /* launch.png */; };
 		7129483419A3FFCF00E0548D /* launch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7129482319A3FFCF00E0548D /* launch@2x.png */; };
 		7129483619A4061D00E0548D /* CSA-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 7129483519A4061D00E0548D /* CSA-logo.png */; };
+		7129486019ABE92600E0548D /* SavedVideos.m in Sources */ = {isa = PBXBuildFile; fileRef = 7129485F19ABE92600E0548D /* SavedVideos.m */; };
 		718E3133199957ED0000A5EB /* FilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 718E3131199957ED0000A5EB /* FilterViewController.m */; };
 		718E3134199957ED0000A5EB /* FilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 718E3132199957ED0000A5EB /* FilterViewController.xib */; };
 		718E3147199AB9EF0000A5EB /* ITC - ITCAvantGardeStd-Bk.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 718E3146199AB84B0000A5EB /* ITC - ITCAvantGardeStd-Bk.ttf */; };
@@ -388,6 +389,8 @@
 		7129482219A3FFCF00E0548D /* launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = launch.png; sourceTree = "<group>"; };
 		7129482319A3FFCF00E0548D /* launch@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "launch@2x.png"; sourceTree = "<group>"; };
 		7129483519A4061D00E0548D /* CSA-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CSA-logo.png"; sourceTree = "<group>"; };
+		7129485E19ABE92600E0548D /* SavedVideos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SavedVideos.h; sourceTree = "<group>"; };
+		7129485F19ABE92600E0548D /* SavedVideos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SavedVideos.m; sourceTree = "<group>"; };
 		717F1639192E26A300554B39 /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = ../SDWebImage.framework; sourceTree = "<group>"; };
 		718E3130199957ED0000A5EB /* FilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterViewController.h; sourceTree = "<group>"; };
 		718E3131199957ED0000A5EB /* FilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterViewController.m; sourceTree = "<group>"; };
@@ -680,6 +683,8 @@
 				30AC1185192D923700BE1072 /* Product.m */,
 				719D39EB1994216F008E56EC /* ProductSeries.h */,
 				719D39EC1994216F008E56EC /* ProductSeries.m */,
+				7129485E19ABE92600E0548D /* SavedVideos.h */,
+				7129485F19ABE92600E0548D /* SavedVideos.m */,
 				30AC1187192D924400BE1072 /* UIModel.h */,
 				30AC1188192D924400BE1072 /* UIModel.m */,
 			);
@@ -1008,7 +1013,7 @@
 				ORGANIZATIONNAME = Trekk;
 				TargetAttributes = {
 					30AC1132192D90D300BE1072 = {
-						DevelopmentTeam = 477HKM2JBJ;
+						DevelopmentTeam = BS4LR4L547;
 					};
 					30AC1153192D90D300BE1072 = {
 						TestTargetID = 30AC1132192D90D300BE1072;
@@ -1251,6 +1256,7 @@
 				30AC11B9192D92D200BE1072 /* UIImage+Alpha.m in Sources */,
 				30AC11B8192D92D200BE1072 /* UIButton+Extensions.m in Sources */,
 				30AC11AC192D92B900BE1072 /* SBJsonWriter.m in Sources */,
+				7129486019ABE92600E0548D /* SavedVideos.m in Sources */,
 				718E314C199AC1B70000A5EB /* SeriesViewController.m in Sources */,
 				30AC1147192D90D300BE1072 /* CanonAppDelegate.m in Sources */,
 				30AC11AF192D92C400BE1072 /* NSObject+SBJson.m in Sources */,
@@ -1390,8 +1396,8 @@
 				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: matt eaton (SVQZ4HQ2R3)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: matt eaton (SVQZ4HQ2R3)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: matt eaton (D3948RZD37)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: matt eaton (D3948RZD37)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/trekkmini-1/Desktop",
@@ -1401,7 +1407,7 @@
 				INFOPLIST_FILE = "PressDemo/PressDemo-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "FF83F772-3FC8-4BEB-9C1B-7208B8CEA905";
+				PROVISIONING_PROFILE = "3628b6fd-0f64-42f5-91d5-26584f93a991";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1416,8 +1422,8 @@
 				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: matt eaton (SVQZ4HQ2R3)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: matt eaton (SVQZ4HQ2R3)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: matt eaton (D3948RZD37)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: matt eaton (D3948RZD37)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/trekkmini-1/Desktop",
@@ -1427,7 +1433,7 @@
 				INFOPLIST_FILE = "PressDemo/PressDemo-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "FF83F772-3FC8-4BEB-9C1B-7208B8CEA905";
+				PROVISIONING_PROFILE = "3628b6fd-0f64-42f5-91d5-26584f93a991";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

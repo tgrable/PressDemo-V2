@@ -92,8 +92,9 @@
             //sync all images while the user was offline
             if([offlineImages count] > 0){
                 for (id key in offlineImages) {
+                    //grab the image view
                     UIImageView *i = [offlineImages objectForKey:key];
-                    NSLog(@"url %@", key );
+                    //check to see what type of image we are replacing
                     if(i.frame.size.width < 776)
                       [i setImageWithURL:key placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
                     else
@@ -102,23 +103,17 @@
                 [offlineImages removeAllObjects];
                 
             }
-            //sync all videos while the user was offline
-            if([offlineVideos count] > 0){
-                for(id key in offlineVideos){
-                    UIView *row = [offlineVideos objectForKey:key];
-                    row.alpha = 1.0;
-                }
-                [offlineVideos removeAllObjects];
-            }
-            
-            if(sidebarIndicator.frame.origin.y == 96){
-                //disable videos while offline
-                for(UIView *v in offlineVideoRows){
-                    v.alpha = 1.0;
-                }
-            }
-            
             model.layoutSync = YES;
+        }
+        
+        //make sure we display all the videos when we are back online
+        //make sure we remove all of the offline videos
+        //TODO, think about removing this variable
+        if([offlineVideos count] > 0){
+            [offlineVideos removeAllObjects];
+        }
+        for(UIView *v in [documentScroll subviews]){
+            v.alpha = 1.0;
         }
         
     }else{
@@ -127,7 +122,12 @@
         if(sidebarIndicator.frame.origin.y == 96){
             //disable videos while offline
             for(UIView *v in offlineVideoRows){
-                v.alpha = 0.6;
+                UIButton *b = (UIButton *)[v viewWithTag:777];
+                //if there is a subview with the 777 tag, then we know that this row is saved to the device
+                if(b == nil){
+                    v.alpha = 0.6;
+                }
+
             }
         }
     }
@@ -410,17 +410,18 @@
     
     [self setupLocalUserInterface:^(BOOL completeFlag){}];
     
+    downloadingURL = @"";
 }
 
-
+//this function moves around the content in the main view of the app
 -(void)loadUpMainTray:(id)sender
 {
     UIButton *b = (UIButton *)sender;
-    NSLog(@"Loading up: %@" ,b.titleLabel.text);
     
     //if overview is present
     if(sidebarIndicator.frame.origin.y == 30){
         [self tearDownAndLoadUpDocuments:b.titleLabel.text withComplete:^(BOOL completeFlag){
+            //perform the animation
             [UIView animateWithDuration:1.2f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
                 overviewContainer.alpha = 0.0;
                 overviewImageDots.alpha = 0.0;
@@ -432,7 +433,7 @@
      //switching from document back to overview
     }else if([b.titleLabel.text isEqualToString:@"overview"]){
         [self rearrangeDocumentStack];
-        
+        //perform the animation
         [UIView animateWithDuration:1.2f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
             overviewContainer.alpha = 1.0;
             overviewImageDots.alpha = 1.0;
@@ -443,6 +444,7 @@
      //switching from actual document to document
     }else if(actualDocumentView.frame.origin.y < 884){
         [self rearrangeDocumentStack];
+        //perform the animation to move the documet
         [UIView animateWithDuration:0.6f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
             actualDocumentView.frame = CGRectMake(1040, 44, 776, 684);
             actualDocumentView.alpha = 0.0;
@@ -498,6 +500,8 @@
     [offlineVideoRows removeAllObjects];
     //make sure that when we are drawing in from the dynamic property that we are using the
     //assigned data class correctly.  Check the data class to make sure before using
+    
+    //make sure we are dealing with an array, otherwise we can assume that their is no content assigned to this 
     if([data isKindOfClass:[NSArray class]]){
         int count = (int)[data count], i = 0, y = 0;
         for(NSString *documentKey in data){
@@ -544,7 +548,6 @@
             if ([flag isEqualToString:@"videos"]){
                 
                 
-                
                 Video *v = [NSKeyedUnarchiver unarchiveObjectWithData:doc];
                 //set the key for the object
                 [back setTitle:v.key forState:UIControlStateNormal];
@@ -572,20 +575,23 @@
                 [download addTarget:self action:@selector(downloadVideo:)forControlEvents:UIControlEventTouchUpInside];
                 download.showsTouchWhenHighlighted = YES;
                 [download setUserInteractionEnabled:YES];
-                [download setTitle:v.streamingURL forState:UIControlStateNormal];
                 [download setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
                 
-                NSString *videoURLString = [v.streamingURL stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-                NSString *name = [model getVideoFileName:videoURLString];
-                name = [NSString stringWithFormat:@"%@.mp4", name];
-                NSLog(@"Name of video %@", name);
-                if([model fileExists:name]){
+                
+                NSString *rawVideo = [v.rawVideo stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+                NSString *name = [model getVideoFileName:rawVideo];
+                NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
+                
+                if([model fileExists:lookupName]){
                   [download setImage:[UIImage imageNamed:@"icn-load.png"] forState:UIControlStateNormal];
+                  [download setTitle:[model returnFilePath:lookupName] forState:UIControlStateNormal];
                   download.tag = 777;
                 }else{
                   [download setImage:[UIImage imageNamed:@"icn-download.png"] forState:UIControlStateNormal];
+                  [download setTitle:rawVideo forState:UIControlStateNormal];
                   download.tag = 555;
                 }
+                //[download setTitle:splicedName forState:UIControlStateNormal];
                 [download setBackgroundColor:[UIColor whiteColor]];
                 [download setHitTestEdgeInsets:UIEdgeInsetsMake(-15, -15, -15, -15)];
                 [rowContainer addSubview:download];
@@ -700,45 +706,50 @@
 {
     UIButton *b = (UIButton *)sender;
     NSString *videoURLString = [b.titleLabel.text stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+    
     if(b.tag == 555){
         NSLog(@"download video %@", b.titleLabel.text);
         if(network.videoDownloading){
             [self displayMessage:@"Another video is currently downloading." withTitle:@"Alret"];
         }else{
             videoButton = b;
+            [b setImage:nil forState:UIControlStateNormal];
+            UIActivityIndicatorView *gear = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+            gear.frame = CGRectMake(0, 0, 16, 16);
+            gear.alpha = 1.0;
+            gear.tag = 110;
+            [b addSubview:gear];
+            [gear startAnimating];
+            
+            downloadingURL = [model getVideoFileName:videoURLString];
+            downloadingURL = [downloadingURL stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
             dispatch_queue_t model_queue = dispatch_queue_create(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
             dispatch_async(model_queue, ^{
                 NSLog(@"Video string %@", videoURLString);
-               [network downloadVideo:videoURLString];
+                [network downloadVideo:videoURLString];
             });
         }
         
     }else if(b.tag == 777){
-        NSLog(@"Watch video %@", b.titleLabel.text);
-        if(model.reachable){
-            //even if the user has the video downloaded, try and stream it first
-            NSURL *videoURL = [NSURL URLWithString:videoURLString];
-            MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-            [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
-          
+
+        NSString *path = [videoURLString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+
+        if([model videoExists:path]){
+            NSLog(@"Path Exists %@", path);
         }else{
-            
-            
-            [self displayMessage:@"This functionality is under development" withTitle:@"Alert"];
-            /*
-            NSString *name = [model getVideoFileName:videoURLString];
-            NSLog(@"Name %@", name);
-            name = [NSString stringWithFormat:@"%@.mp4", name];
-            NSLog(@"Name after %@ ", name);
-           
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            NSString *documentsDirectory = [paths objectAtIndex:0];
-            NSString* path = [documentsDirectory stringByAppendingPathComponent:name];
-             NSLog(@"path %@ ", path);
-            NSURL *videoURL = [NSURL URLWithString:path];
+            NSLog(@"Path Does Not Exist %@", path);
+        }
+        
+        if([model videoExists:path]){
+        
+            //NSString *p  = @"file:///var/mobile/Applications/B751E322-DE11-4813-8D8B-0F7589B9FDEF/Documents/CS3000_Flexibility_1.mp4";
+            //apply the file transfer protocol on to this path to make it a url
+            NSString *urlPath = [NSString stringWithFormat:@"file://%@", path];
+            NSURL *videoURL = [NSURL URLWithString:urlPath];
             MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
             [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
-            */
+        }else{
+            [self displayMessage:@"There was an error referencing your file" withTitle:@"Alert"];
         }
     }
     
@@ -799,18 +810,35 @@
 
     //type of video
     }else{
+        
+        Video *v = [currentDocumentData objectForKey: b.titleLabel.text];
+        NSString *name = [model getVideoFileName:v.rawVideo];
+        NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
+        
+
         if(model.reachable){
-            Video *v = [currentDocumentData objectForKey: b.titleLabel.text];
+            //stream if reachable
             NSLog(@"Stream %@", v.streamingURL);
             NSString *videoURLString = [v.streamingURL stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
             NSURL *videoURL = [NSURL URLWithString:videoURLString];
             MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
             [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
         }else{
-            //display the connect to the internet message!
-            [self displayMessage:@"Streaming videos requires an internet connection." withTitle:@"Alert!"];
+            NSString *lookupNameAdvanced = [lookupName stringByReplacingOccurrencesOfString:@" " withString:@"_"];
             
+            NSLog(@"Inline %@",  lookupNameAdvanced);
+            if([model fileExists:lookupNameAdvanced]){
+                
+                NSString *fullPath = [model returnFilePath:lookupNameAdvanced];
+                NSString *urlPath = [NSString stringWithFormat:@"file://%@", fullPath];
+                NSURL *videoURL = [NSURL URLWithString:urlPath];
+                MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
+                [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
+            }else{
+                [self displayMessage:@"This video has not been downloaded to the device.  Please connect to the internet and stream the video, or download the video for offline usage." withTitle:@"Alert!"];
+            }
         }
+        
     }
     
 }
@@ -1006,9 +1034,14 @@
 -(void)videoDownloadResponse:(CanonModel *)model withFlag:(BOOL)flag
 {
     NSLog(@"Made it with my video download response! %d", flag);
+    UIView *v = [videoButton viewWithTag:110];
+    [v removeFromSuperview];
+    
     if(flag){
         [videoButton setImage:[UIImage imageNamed:@"icn-load.png"] forState:UIControlStateNormal];
         videoButton.tag = 777;
+        NSLog(@"######### %@", downloadingURL);
+        [videoButton setTitle:[self.model returnFilePath:downloadingURL] forState:UIControlStateNormal];
     }else{
         [self displayMessage:@"OOPS! Something went wrong downloading your video.  Please make sure you are connected to the internet and try again." withTitle:@"Alert"];
     }

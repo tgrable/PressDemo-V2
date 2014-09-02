@@ -15,5 +15,6 @@
 @property(nonatomic, copy)NSString *description;
 @property(nonatomic, copy)NSString *image;
 @property(nonatomic, copy)NSString *streamingURL;
+@property(nonatomic, copy)NSString *rawVideo;
 
 @end

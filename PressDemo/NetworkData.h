@@ -11,7 +11,7 @@
 #import "AppDataObject.h"
 #import "CanonModel.h"
 #import "AppDelegateProtocol.h"
-
+#import "AFURLSessionManager.h"
 
 //network delegate for sending responses and data to the view controllers
 @protocol NetworkDelegate <NSObject>
@@ -32,7 +32,7 @@
     NSOperationQueue *queue;
     int status, downloadCount, threadCount;
     BOOL failureFlag, videoDownloading;
-    NSMutableData *videoData;
+    
 
 }
 @property(nonatomic, strong)CanonModel *model;
@@ -46,4 +46,5 @@
 -(void)runInitialDownload;
 -(void)downloadVideo:(NSString *)url;
 -(void)checkForUpdate;
+-(void)downloadFile:(NSURL *)downloadURL complete:(completeBlock)completeFlag;
 @end

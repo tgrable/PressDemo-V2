@@ -47,4 +47,6 @@ typedef void(^completeBlock)(BOOL);
 -(void)wipeOutAllModelData;
 -(NSString *)getVideoFileName:(NSString *)url;
 -(NSMutableArray *)getInitialSetofPorducts;
+-(BOOL)videoExists:(NSString *)videoURL;
+-(NSString *)returnFilePath:(NSString *)name;
 @end

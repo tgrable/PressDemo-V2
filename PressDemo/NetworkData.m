@@ -89,30 +89,45 @@
 -(void)downloadVideo:(NSString *)url
 {
     @autoreleasepool {
-        //NSURL *videoURL = [NSURL URLWithString:url];
-        //MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-        //http://mediavaletcsa.origin.mediaservices.windows.net/c0a9837b-e284-402b-a84e-60be63503e0c/CS3000 Sustainability.ism/manifest(format=m3u8-aapl)
-       
-        /*
-        //clear out the download array
-        [downloadURLs removeAllObjects];
-        //the opration queues
-        queue = [NSOperationQueue new];
-        [queue setMaxConcurrentOperationCount:1];
-        
-        //set the status to one for the initial download
-        status = 3;
         videoDownloading = YES;
-        NSLog(@"MADE IT HERE %@", url);
-        [downloadURLs addObject:url];
-        
-        //initiate the downloadoperation class and set the class properties for user authentication
-        DownloadUrlOperation *_downLoad = [[DownloadUrlOperation alloc] initWithURL:[NSURL URLWithString:url]];
-        [_downLoad addObserver:self forKeyPath:@"isFinished" options:NSKeyValueObservingOptionNew context:NULL];
-        [queue addOperation:_downLoad];
-         */
+        NSURL *URL = [NSURL URLWithString:url];
+        [self downloadFile:URL complete:^(BOOL completeFlag){
+            if(completeFlag){
+                //success
+                [_delegate videoDownloadResponse:model withFlag:YES];
+                videoDownloading = NO;
+            }else{
+                //error
+                [_delegate videoDownloadResponse:model withFlag:NO];
+                videoDownloading = NO;
+            }
+        }];
         
     }
+}
+
+-(void)downloadFile:(NSURL *)downloadURL complete:(completeBlock)completeFlag
+{
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:downloadURL];
+    
+    NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+        NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
+        NSString *path = [[response suggestedFilename] stringByReplacingOccurrencesOfString:@" " withString:@"_"];
+        return [documentsDirectoryURL URLByAppendingPathComponent:path];
+        //return [documentsDirectoryURL URLByAppendingPathComponent:[response suggestedFilename]];
+    } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+        if(error == nil){
+            NSLog(@"File downloaded to: %@", filePath);
+            completeFlag(YES);
+        }else{
+            NSLog(@"Error downloading video");
+            completeFlag(NO);
+        }
+    }];
+    [downloadTask resume];
 }
 
 
@@ -204,29 +219,6 @@
                 BOOL response = [model breakoutUpdateData:data];
                 [_delegate updateResponse:model withFlag:response];
                 
-            }else if(status == 3){
-                //delegate the video download routine
-                if([downloadURLs count] > 0){
-                    NSString *videoName = [downloadURLs objectAtIndex:0];
-                    NSLog(@"Save file %@", videoName);
-                    NSString *name = [model getVideoFileName:videoName];
-                    name = [NSString stringWithFormat:@"%@.mp4", name];
-                    [model saveFile:data andFileName:name complete:^(BOOL completeFlag) {
-                        if(completeFlag){
-                            //success
-                            [_delegate videoDownloadResponse:model withFlag:YES];
-                            videoDownloading = NO;
-                        }else{
-                            //error
-                            [_delegate videoDownloadResponse:model withFlag:NO];
-                            videoDownloading = NO;
-                        }
-                    }];
-                }else{
-                    //error
-                    [_delegate videoDownloadResponse:model withFlag:NO];
-                    videoDownloading = NO;
-                }
             }
         }
     }

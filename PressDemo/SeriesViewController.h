@@ -42,6 +42,8 @@
     NSMutableDictionary *offlineImages;
     NSMutableDictionary *offlineVideos;
     NSMutableArray *offlineVideoRows;
+    NSString *downloadingURL;
+
 }
 @property(nonatomic)NetworkData *network;
 @property(nonatomic, readonly)CanonModel *model;

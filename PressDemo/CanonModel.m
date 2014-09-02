@@ -311,6 +311,9 @@
           v.image = @"";
         }
         
+        //raw video url
+        v.rawVideo = [dict objectForKey:@"raw-video"];
+        
         if([dict objectForKey:@"video-description"] != nil){
             v.description = [dict objectForKey:@"video-description"];
         }else{
@@ -501,13 +504,21 @@
 
 -(NSString *)getVideoFileName:(NSString *)url
 {
-    NSArray *chopped = [url componentsSeparatedByString:@".ism/manifest(format=m3u8-aapl)"];
-    NSArray *choppedSecond = [[chopped objectAtIndex:0] componentsSeparatedByString:@"/"];
-    if([choppedSecond objectAtIndex:4] != nil){
-        NSLog(@"Chopped %@", [choppedSecond objectAtIndex:4]);
-        return [choppedSecond objectAtIndex:4];
+    if([url length] > 0){
+        NSArray *chopped = [url componentsSeparatedByString:@"//"];
+        if([chopped count] > 0){
+            NSArray *choppedSecond = [[chopped objectAtIndex:1] componentsSeparatedByString:@"/"];
+            if([choppedSecond objectAtIndex:3] != nil){
+                NSLog(@"Chopped %@", [choppedSecond objectAtIndex:3]);
+                return [choppedSecond objectAtIndex:3];
+            }else{
+                return [choppedSecond objectAtIndex:2];
+            }
+        }else{
+            return @"";
+        }
     }else{
-        return [choppedSecond objectAtIndex:3];
+        return @"";
     }
 }
 
@@ -655,5 +666,23 @@
     
 }
 
+-(NSString *)returnFilePath:(NSString *)name
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString* path = [documentsDirectory stringByAppendingPathComponent:name];
+    return path;
+}
+
+-(BOOL)videoExists:(NSString *)videoURL
+{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    if([fileManager fileExistsAtPath:videoURL]){
+        return YES;
+    }else{
+        return NO;
+    }
+}
 
 @end

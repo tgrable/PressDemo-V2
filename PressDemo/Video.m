@@ -15,6 +15,7 @@
 @synthesize description;
 @synthesize image;
 @synthesize streamingURL;
+@synthesize rawVideo;
 
 -(id)init
 {
@@ -26,6 +27,7 @@
         description = @"";
         image = @"";
         streamingURL = @"";
+        rawVideo = @"";
     }
     return self;
 }
@@ -37,6 +39,7 @@
     [encoder encodeObject:self.description forKey:@"description"];
     [encoder encodeObject:self.image forKey:@"image"];
     [encoder encodeObject:self.streamingURL forKey:@"streamingURL"];
+    [encoder encodeObject:self.rawVideo forKey:@"rawVideo"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
@@ -47,6 +50,7 @@
         self.description = [decoder decodeObjectForKey:@"description"];
         self.image = [decoder decodeObjectForKey:@"image"];
         self.streamingURL = [decoder decodeObjectForKey:@"streamingURL"];
+        self.rawVideo = [decoder decodeObjectForKey:@"rawVideo"];
     }
     return self;
 }

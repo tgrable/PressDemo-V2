@@ -11,6 +11,7 @@
 #import "Document.h"
 #import "Product.h"
 #import "ProductSeries.h"
+#import "SavedVideos.h"
 
 @interface AppDataObject : NSObject{
     BOOL reachable, layoutSync, needsUpdate;
