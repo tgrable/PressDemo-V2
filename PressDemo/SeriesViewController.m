@@ -15,6 +15,9 @@
 #define ImageWithPath(path)[UIImage imageWithContentsOfFile:path]
 #define kMaxHeight 1000.0f
 
+//this is a local macro that sets up a class wide logging scheme
+#define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+
 @implementation SeriesViewController
 @synthesize customNavBar, sideBar, mainView, videoButton;
 @synthesize model, network, navBarHomeButton, offlineImages;
@@ -39,7 +42,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        NSLog(@"NIB series");
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityDidChange:) name:kReachabilityChangedNotification object:nil];
     }
     return self;
@@ -56,20 +58,26 @@
     Reachability *reachability = (Reachability *)[notification object];
     //if we can reach the internet
     if ([reachability isReachable]) {
-        model.reachable = YES;
-        NSLog(@"REACHABLE");
+        ALog(@"REACHABLE");
         
     } else {
         //set UI error
-        model.reachable = NO;
-        NSLog(@"NOT REACHABLE");
+        ALog(@"NOT REACHABLE");
     }
 }
+
+/*-----------------------------------------------------
+ 
+ Functions to control when the app comes in and out of focus
+ -(void)appWentIntoBackground
+ -(void)appCameBackIntoFocus
+ 
+ -------------------------------------------------------*/
 
 /* suppress anything that should be killed when app moves to the background */
 -(void)appWentIntoBackground
 {
-    NSLog(@"App went into the background");
+    ALog(@"App went into the background");
     //kill anything that is running here
 }
 
@@ -77,14 +85,13 @@
 -(void)appCameBackIntoFocus
 {
     //start the update check here
-    NSLog(@"App came back into focus");
+    ALog(@"App came back into focus");
     //Reachability* reachability = [Reachability reachabilityWithHostname:@"www.google.com"];
     //if we can reach the internet
-    NSLog(@"Reachable %@", model.hostReachability);
+    ALog(@"Reachable %@", model.hostReachability);
     if ([model.hostReachability isReachable]) {
-        model.reachable = YES;
-        NSLog(@"APP came back into focus and it is reachable");
-        NSLog(@"CHECKING FOR UPDATES");
+        ALog(@"APP came back into focus and it is reachable");
+        ALog(@"CHECKING FOR UPDATES");
         [network checkForUpdate];
         
         //resync the UI
@@ -117,7 +124,6 @@
         }
         
     }else{
-        model.reachable = NO;
         //we are on videos
         if(sidebarIndicator.frame.origin.y == 96){
             //disable videos while offline
@@ -134,17 +140,27 @@
     
 }
 
+/*-----------------------------------------------------
+ 
+ Functions that control the view load and unloading lifecycle
+ - (void)viewWillAppear:(BOOL)animated
+ - (void)viewDidAppear:(BOOL)animated
+ - (void)viewWillDisappear:(BOOL)animated
+ - (void)viewDidDisappear:(BOOL)animated
+ - (void)viewDidLoad
+ -------------------------------------------------------*/
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSLog(@"viewWillAppear SERIES");
+    ALog(@"viewWillAppear SERIES");
     
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    NSLog(@"viewDidAppear SERIES");
+    ALog(@"viewDidAppear SERIES");
     //app going into background notification
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appWentIntoBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -158,14 +174,14 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    NSLog(@"viewWillDisappear SERIES");
+    ALog(@"viewWillDisappear SERIES");
     [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    NSLog(@"viewDidDisappear SERIES");
+    ALog(@"viewDidDisappear SERIES");
 }
 
 - (void)viewDidLoad
@@ -413,6 +429,7 @@
     downloadingURL = @"";
 }
 
+
 //this function moves around the content in the main view of the app
 -(void)loadUpMainTray:(id)sender
 {
@@ -480,19 +497,21 @@
 
 }
 
+//this function switches around the view index in the stack
 -(void)rearrangeDocumentStack
 {
     [mainView sendSubviewToBack:actualDocumentView];
     [mainView bringSubviewToFront:mainShortBanner];
 }
 
+//this function switches the main view from document to document
 -(void)tearDownAndLoadUpDocuments:(NSString *)flag withComplete:(completeBlock)completeFlag
 {
     //remove all subviews
     for(UIView *v in [documentScroll subviews]){
         [v removeFromSuperview];
     }
-    NSLog(@"Flag %@", flag);
+
     //dynamic property reference!!! woooohooo!
     NSMutableArray *data = [model.selectedSeries valueForKey:flag];
     
@@ -503,6 +522,8 @@
     
     //make sure we are dealing with an array, otherwise we can assume that their is no content assigned to this 
     if([data isKindOfClass:[NSArray class]]){
+        
+        //Below we loop through eith the document or video data to load up a dynamic set of buttons
         int count = (int)[data count], i = 0, y = 0;
         for(NSString *documentKey in data){
             NSData *doc = [model getFileData:documentKey complete:^(BOOL completeFlag){}];
@@ -545,9 +566,12 @@
             desc.backgroundColor = [UIColor clearColor];
             [back addSubview:desc];
             
+            
+            /**** if the document is a video ****/
             if ([flag isEqualToString:@"videos"]){
+                /*************** Videos ************************/
                 
-                
+                //set a video object from the selected object
                 Video *v = [NSKeyedUnarchiver unarchiveObjectWithData:doc];
                 //set the key for the object
                 [back setTitle:v.key forState:UIControlStateNormal];
@@ -560,8 +584,9 @@
                     __weak typeof(UIImageView) *imgView = iv;
                     [iv setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
                         if(error){
-                            NSLog(@"Error %@", error);
+                            ALog(@"Error %@", error);
                             imgView.image = [UIImage imageNamed:@"placeholder.png"];
+                            //load the image view in an 
                             [offlineImages setObject:imgView forKey:[NSURL URLWithString:u]];
                             model.layoutSync = NO;
                         }
@@ -603,11 +628,12 @@
                 desc.text = v.description;
                 
                 //make sure the video row is faded out if the user is not online
-                if(!model.reachable){
+                if(![model.hostReachability isReachableViaWiFi]){
                     //user is not connected to the internet
-                    
+                    NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
+
                     //check if the user has the video saved locally
-                    if([model fileExists:name]){
+                    if([model fileExists:lookupName]){
                         rowContainer.alpha = 1.0;
                         back.enabled = YES;
                     }else{
@@ -615,7 +641,6 @@
                         model.layoutSync = NO;
                         [offlineVideos setObject:rowContainer forKey:v.key];
                     }
-                    
                 }else{
                     rowContainer.alpha = 1.0;
                     back.enabled = YES;
@@ -625,6 +650,10 @@
                 //add the data set of data being held for easy reference
                 [currentDocumentData setObject:v forKey:v.key];
             }else{
+                
+                /*************** Documents ************************/
+                
+                //set a document object from the selected object
                 Document *d = [NSKeyedUnarchiver unarchiveObjectWithData:doc];
                 //set the key for the object
                 [back setTitle:d.key forState:UIControlStateNormal];
@@ -645,7 +674,7 @@
                     __weak typeof(UIImageView) *imgView = iv;
                     [iv setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
                         if(error){
-                            NSLog(@"Error %@", error);
+                            ALog(@"Error %@", error);
                             imgView.image = [UIImage imageNamed:@"placeholder.png"];
                             [offlineImages setObject:imgView forKey:[NSURL URLWithString:u]];
                             model.layoutSync = NO;
@@ -667,11 +696,8 @@
                 //add the data set of data being held for easy reference
                 [currentDocumentData setObject:d forKey:d.key];
             }
-            
             //add sub view to the scroll container
             [documentScroll addSubview:rowContainer];
-
-            
             i++;
             
             if(i == count){
@@ -702,43 +728,44 @@
     
 }
 
+//this function tells the application to either download the video or load the video from disk
 -(void)downloadVideo:(id)sender
 {
     UIButton *b = (UIButton *)sender;
     NSString *videoURLString = [b.titleLabel.text stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
     
+    /************ Download the video to disk ************************/
     if(b.tag == 555){
-        NSLog(@"download video %@", b.titleLabel.text);
+        ALog(@"download video %@", b.titleLabel.text);
         if(network.videoDownloading){
             [self displayMessage:@"Another video is currently downloading." withTitle:@"Alret"];
         }else{
-            videoButton = b;
-            [b setImage:nil forState:UIControlStateNormal];
-            UIActivityIndicatorView *gear = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-            gear.frame = CGRectMake(0, 0, 16, 16);
-            gear.alpha = 1.0;
-            gear.tag = 110;
-            [b addSubview:gear];
-            [gear startAnimating];
-            
-            downloadingURL = [model getVideoFileName:videoURLString];
-            downloadingURL = [downloadingURL stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
-            dispatch_queue_t model_queue = dispatch_queue_create(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-            dispatch_async(model_queue, ^{
-                NSLog(@"Video string %@", videoURLString);
-                [network downloadVideo:videoURLString];
-            });
+            //make sure we can access the internet first
+            if([model.hostReachability isReachableViaWiFi]){
+                videoButton = b;
+                [b setImage:nil forState:UIControlStateNormal];
+                UIActivityIndicatorView *gear = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+                gear.frame = CGRectMake(0, 0, 16, 16);
+                gear.alpha = 1.0;
+                gear.tag = 110;
+                [b addSubview:gear];
+                [gear startAnimating];
+                
+                downloadingURL = [model getVideoFileName:videoURLString];
+                downloadingURL = [downloadingURL stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
+                dispatch_queue_t model_queue = dispatch_queue_create(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+                dispatch_async(model_queue, ^{
+                    ALog(@"Video string %@", videoURLString);
+                    [network downloadVideo:videoURLString];
+                });
+            }else{
+                [self displayMessage:@"Please connect to the internet to download this video" withTitle:@"Alret"];
+            }
         }
-        
+    /************ Play the video from disk ************************/
     }else if(b.tag == 777){
 
         NSString *path = [videoURLString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-
-        if([model videoExists:path]){
-            NSLog(@"Path Exists %@", path);
-        }else{
-            NSLog(@"Path Does Not Exist %@", path);
-        }
         
         if([model videoExists:path]){
         
@@ -756,7 +783,7 @@
     
 }
 
-
+//This function executes the functionality when a row is tapped on either a document of a video
 -(void)rowTapped:(id)sender
 {
     UIButton *b = (UIButton *)sender;
@@ -766,7 +793,6 @@
        
         Document *d = [currentDocumentData objectForKey: b.titleLabel.text];
         
-        NSLog(@"Type %@", d.type);
         if([d.type isEqualToString:@"white-paper"]){
             actualDocumentBanner.frame = CGRectMake(0, 0, 776, 173);
             webPage.frame = CGRectMake(36, 209, 704, 445);
@@ -808,7 +834,7 @@
             }];
         }];
 
-    //type of video
+    //**************type of video***********************
     }else{
         
         Video *v = [currentDocumentData objectForKey: b.titleLabel.text];
@@ -816,9 +842,9 @@
         NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
         
 
-        if(model.reachable){
+        if([model.hostReachability isReachableViaWiFi]){
             //stream if reachable
-            NSLog(@"Stream %@", v.streamingURL);
+            ALog(@"Stream %@", v.streamingURL);
             NSString *videoURLString = [v.streamingURL stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
             NSURL *videoURL = [NSURL URLWithString:videoURLString];
             MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
@@ -826,7 +852,7 @@
         }else{
             NSString *lookupNameAdvanced = [lookupName stringByReplacingOccurrencesOfString:@" " withString:@"_"];
             
-            NSLog(@"Inline %@",  lookupNameAdvanced);
+            ALog(@"Inline %@",  lookupNameAdvanced);
             if([model fileExists:lookupNameAdvanced]){
                 
                 NSString *fullPath = [model returnFilePath:lookupNameAdvanced];
@@ -842,13 +868,14 @@
     }
     
 }
-
+//this function loads up the UIWebView with data and sends back a completed flag when done
 -(void)loadUPWebpage:(NSData *)data complete:(completeBlock)completeFlag
 {
     [webPage loadData:data MIMEType: @"text/html" textEncodingName: @"UTF-8" baseURL:nil];
     completeFlag(YES);
 }
 
+//this function performs the animation to run the sidebar indicator up and down
 -(void)animateSidebarIndicator:(int)yValue
 {
     int offset = 5;
@@ -868,26 +895,26 @@
     }];
 
 }
-
+//this function sends the user back one view
 -(void)triggerBack:(id)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+//this function sends the user back home
 -(void)triggerHome:(id)sender
 {
-    NSLog(@"HOME!");
+    ALog(@"HOME!");
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
+//this function sets up the disposable views and also sets up the overview view in the main portion of the app
 -(void)setupLocalUserInterface:(completeBlock)completeFlag
 {
     //back button
-    //[backButton setBackgroundImage:[model.ui getImageWithName:@"/btn-backgrid@2x.png"] forState:UIControlStateNormal];
     [backButton setBackgroundImage:[UIImage imageNamed:@"btn-backgrid.png"] forState:UIControlStateNormal];
     
     //home icon
-    //[navBarHomeButton setBackgroundImage:[model.ui getImageWithName:@"/icn-home@2x.png"] forState:UIControlStateNormal];
     [navBarHomeButton setBackgroundImage:[UIImage imageNamed:@"icn-home.png"] forState:UIControlStateNormal];
     
     //add the small main header
@@ -907,7 +934,7 @@
         __weak typeof(UIImageView) *imgView = img;
         [img setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
             if(error){
-                NSLog(@"Error %@", error);
+                ALog(@"Error %@", error);
                 imgView.image = [UIImage imageNamed:@"overviewPlaceholder.png"];
                 [offlineImages setObject:imgView forKey:[NSURL URLWithString:u]];
                 model.layoutSync = NO;
@@ -990,7 +1017,7 @@
     completeFlag(YES);
 }
 
-
+//this function updates the dots for the current image the the user is on
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
     CGFloat pageWidth = scrollView.bounds.size.width;
@@ -1019,28 +1046,28 @@
         //remove nsuserdefaults
         [model wipeOutAllModelDataForUpdate];
         
-        if(model.reachable){
+        if([model.hostReachability isReachableViaWiFi]){
             //we have now loaded
             model.needsUpdate = YES;
             [self.navigationController popToRootViewControllerAnimated:YES];
         }else{
             [self displayMessage:@"Please connect to the internet to update the application" withTitle:@"Alert"];
         }
-        
     }
 }
 
-
+//function that is called when the video is done downloading
+//this function adds the video URL to the button as the title for download
 -(void)videoDownloadResponse:(CanonModel *)model withFlag:(BOOL)flag
 {
-    NSLog(@"Made it with my video download response! %d", flag);
+    ALog(@"Made it with my video download response! %d", flag);
     UIView *v = [videoButton viewWithTag:110];
     [v removeFromSuperview];
     
     if(flag){
         [videoButton setImage:[UIImage imageNamed:@"icn-load.png"] forState:UIControlStateNormal];
         videoButton.tag = 777;
-        NSLog(@"######### %@", downloadingURL);
+        ALog(@"######### %@", downloadingURL);
         [videoButton setTitle:[self.model returnFilePath:downloadingURL] forState:UIControlStateNormal];
     }else{
         [self displayMessage:@"OOPS! Something went wrong downloading your video.  Please make sure you are connected to the internet and try again." withTitle:@"Alert"];
@@ -1051,7 +1078,7 @@
 //this response will let the view and the user know that there is an update available
 -(void)updateResponse:(CanonModel *)obj withFlag:(BOOL)flag{
     
-    NSLog(@"Update Response, %d.  This tells us if there is an update available.", flag);
+    ALog(@"Update Response, %d.  This tells us if there is an update available.", flag);
     //update available
     if(flag){
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Update App"

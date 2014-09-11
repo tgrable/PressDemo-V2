@@ -14,15 +14,10 @@
 
 
 @interface FilterViewController : UIViewController<NetworkDelegate, UIScrollViewDelegate, UIAlertViewDelegate>{
-    //objects
-    NetworkData *network;
-    
+ 
     //local views
-    UIImageView *topBanner, *logo;
-    UIScrollView *productScroll;
-    UIButton *navBarHomeButton;
-    UIView *customNavBar;
-    NSMutableDictionary *offlineImages;
+    UIImageView *logo;
+
 }
 @property(nonatomic)NetworkData *network;
 @property(nonatomic, readonly)CanonModel *model;

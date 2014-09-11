@@ -14,18 +14,11 @@
 
 
 @interface CanonViewController : UIViewController<NetworkDelegate, UIScrollViewDelegate, UIAlertViewDelegate>{
-    //objects
-    NetworkData *network;
-
     //local views
     UIImageView *homeHeader, *whatPrint, *showProducts, *logo;
-    UIScrollView *whatDoYouPrint, *showAllProducts;
     
     //data
-    NSMutableArray *whatImageNames, *showAllImageNames;
-    UIView *customNavBar;
     BOOL downloadInProgress;
-    
     
 }
 @property(nonatomic)NetworkData *network;

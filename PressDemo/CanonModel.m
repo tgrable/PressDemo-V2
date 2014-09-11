@@ -11,6 +11,9 @@
 #import "SBJson.h"
 #import <SDWebImage/SDWebImageManager.h>
 
+//this is a local macro that sets up a class wide logging scheme
+#define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+
 @implementation CanonModel
 @synthesize orange, blue, green, dullBlack, lightGray, red, yellow, pink, purple, gray, testingString, ui;
 @synthesize localProds, currentFilter, filteredProducts, selectedSeries;
@@ -41,6 +44,7 @@
         
         currentFilter = @"";
         
+        //Full on UIImages to be referenced in the ViewController by Key
         whatDoYouWantToPrint = [[NSMutableDictionary alloc] init];
         [whatDoYouWantToPrint setObject:[UIImage imageNamed:@"home-nav-books.png"] forKey:@"books"];
         [whatDoYouWantToPrint setObject:[UIImage imageNamed:@"home-nav-brochures.png"] forKey:@"brochures-&-collateral"];
@@ -51,6 +55,7 @@
         [whatDoYouWantToPrint setObject:[UIImage imageNamed:@"home-nav-specialty.png"] forKey:@"specialty"];
         [whatDoYouWantToPrint setObject:[UIImage imageNamed:@"home-nav-statements.png"] forKey:@"statements"];
         
+        //Full on UIImages to be referenced in the ViewController by Key
         showAll = [[NSMutableDictionary alloc] init];
         [showAll setObject:[UIImage imageNamed:@"home-nav-color.png"] forKey:@"color"];
         [showAll setObject:[UIImage imageNamed:@"home-nav-continuous.png"] forKey:@"continuous-feed"];
@@ -58,6 +63,7 @@
         [showAll setObject:[UIImage imageNamed:@"home-nav-mono.png"] forKey:@"monochrome"];
         [showAll setObject:[UIImage imageNamed:@"home-nav-workflow.png"] forKey:@"workflow"];
         
+        //Full on UIImages to be referenced in the ViewController by Key
         topBanners = [[NSMutableDictionary alloc] init];
         [topBanners setObject:[UIImage imageNamed:@"header-books.png"] forKey:@"books"];
         [topBanners setObject:[UIImage imageNamed:@"header-brochure.png"] forKey:@"brochures-&-collateral"];
@@ -74,40 +80,7 @@
         [topBanners setObject:[UIImage imageNamed:@"header-workflow.png"] forKey:@"workflow"];
 
         
-        /*
-        whatDoYouWantToPrint = [[NSMutableDictionary alloc] init];
-        [whatDoYouWantToPrint setObject:@"/home-nav-books@2x.png" forKey:@"books"];
-        [whatDoYouWantToPrint setObject:@"/home-nav-brochures@2x.png" forKey:@"brochures-&-collateral"];
-        [whatDoYouWantToPrint setObject:@"/home-nav-catalogs@2x.png" forKey:@"catalogs"];
-        [whatDoYouWantToPrint setObject:@"/home-nav-dm@2x.png" forKey:@"direct-mail"];
-        [whatDoYouWantToPrint setObject:@"/home-nav-healthcare@2x.png" forKey:@"healthcare-eobs"];
-        [whatDoYouWantToPrint setObject:@"/home-nav-manuals@2x.png" forKey:@"manuals"];
-        [whatDoYouWantToPrint setObject:@"/home-nav-specialty@2x.png" forKey:@"specialty"];
-        [whatDoYouWantToPrint setObject:@"/home-nav-statements@2x.png" forKey:@"statements"];
         
-        showAll = [[NSMutableDictionary alloc] init];
-        [showAll setObject:@"/home-nav-color@2x.png" forKey:@"color"];
-        [showAll setObject:@"/home-nav-continuous@2x.png" forKey:@"continuous-feed"];
-        [showAll setObject:@"/home-nav-cutsheet@2x.png" forKey:@"cutsheet"];
-        [showAll setObject:@"/home-nav-mono@2x.png" forKey:@"monochrome"];
-        [showAll setObject:@"/home-nav-workflow@2x.png" forKey:@"workflow"];
-        
-        topBanners = [[NSMutableDictionary alloc] init];
-        [topBanners setObject:@"/header-books@2x.png" forKey:@"books"];
-        [topBanners setObject:@"/header-brochure@2x.png" forKey:@"brochures-&-collateral"];
-        [topBanners setObject:@"/header-catalogs@2x.png" forKey:@"catalogs"];
-        [topBanners setObject:@"/header-dm@2x.png" forKey:@"direct-mail"];
-        [topBanners setObject:@"/header-healthcare@2x.png" forKey:@"healthcare-eobs"];
-        [topBanners setObject:@"/header-manuals@2x.png" forKey:@"manuals"];
-        [topBanners setObject:@"/header-specialty@2x.png" forKey:@"specialty"];
-        [topBanners setObject:@"/header-statements@2x.png" forKey:@"statements"];
-        [topBanners setObject:@"/header-color@2x.png" forKey:@"color"];
-        [topBanners setObject:@"/header-continuousfeed@2x.png" forKey:@"continuous-feed"];
-        [topBanners setObject:@"/header-cutsheet@2x.png" forKey:@"cutsheet"];
-        [topBanners setObject:@"/header-monochrome@2x.png" forKey:@"monochrome"];
-        [topBanners setObject:@"/header-workflow@2x.png" forKey:@"workflow"];
-        */
-         
         //readable names to be displayed to the user
         taxonomyReadableNames = [[NSMutableDictionary alloc] init];
         [taxonomyReadableNames setObject:@"Books" forKey:@"books"];
@@ -124,16 +97,7 @@
         [taxonomyReadableNames setObject:@"Monochrome" forKey:@"monochrome"];
         [taxonomyReadableNames setObject:@"Workflow" forKey:@"workflow"];
         
-        /*
-        seriesBanners = [[NSMutableDictionary alloc] init];
-        [seriesBanners setObject:@"/hdr-short-jetstreamdual@2x.png" forKey:@"jet-stream-dual-series"];
-        [seriesBanners setObject:@"/hdr-short-CS3000@2x.png" forKey:@"color-stream-3000-series"];
-        [seriesBanners setObject:@"/hdr-short-jetstreamcompact@2x.png" forKey:@"jet-stream-compact-series"];
-        [seriesBanners setObject:@"/hdr-short-imagepress@2x.png" forKey:@"image-press-series"];
-        [seriesBanners setObject:@"/hdr-short-VP6000@2x.png" forKey:@"vario-print-6000-series"];
-        [seriesBanners setObject:@"/hdr-short-prisma@2x.png" forKey:@"prisma-series"];
-         */
-        
+        //Full on UIImages to be referenced in the ViewController by Key
         seriesBanners = [[NSMutableDictionary alloc] init];
         [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-jetstreamdual.png"] forKey:@"jet-stream-dual-series"];
         [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-CS3000.png"] forKey:@"color-stream-3000-series"];
@@ -152,23 +116,25 @@
         lightGray = [UIColor colorWithRed:202.0f/255.0f green:200.0f/255.0f blue:200.0f/255.0f alpha:1.0];
         blue = [UIColor colorWithRed:1.0f/255.0f green:120.0f/255.0f blue:180.0f/255.0f alpha:1.0];
 
-        
-        reachable = YES;
         layoutSync = YES;
         needsUpdate = NO;
     }
     return self;
 }
 
+//This function breaks out the time stamps returned for each content type so that the application can recognize
+//the need to flag an alert to the user that their is updated data available
+//this function works by checking the incoming dates returned from the network stack to those saved to NSUserDefaults.
+//if one of the dates is different, then we should flag to the user that an update is available
 -(BOOL)breakoutUpdateData:(NSData *)data
 {
     NSString *responseValue = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     NSDictionary *localData = [(NSDictionary*)[responseValue JSONValue] objectForKey:@"last-update"];
 
     for(id key in localData){
-        NSLog(@"INCOMING DATE %@ and LOCAL DATE %@", [localData objectForKey:key], [[NSUserDefaults standardUserDefaults] objectForKey:key]);
+        ALog(@"INCOMING DATE %@ and LOCAL DATE %@", [localData objectForKey:key], [[NSUserDefaults standardUserDefaults] objectForKey:key]);
         if(![[[NSUserDefaults standardUserDefaults] objectForKey:key] isEqualToString:[localData objectForKey:key]]){
-            NSLog(@"INCOMING DATES %@ and local dates %@", [localData objectForKey:key], [[NSUserDefaults standardUserDefaults] objectForKey:key]);
+            ALog(@"INCOMING DATES %@ and local dates %@", [localData objectForKey:key], [[NSUserDefaults standardUserDefaults] objectForKey:key]);
             return YES;
         }
     }
@@ -176,6 +142,8 @@
 }
 
 
+//This is the function that is hit the when the network stack is downloading content data.
+//The data that hits here is checked to determine which content type it falls into, and then it is sent to a parsing function to break the data into objects.
 -(void)breakoutIncomingData:(NSData *)data complete:(completeBlock)completeFlag
 {
     NSString *responseValue = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -227,7 +195,7 @@
     completeFlag(YES);
 }
 
-
+//function that creates product objects out of an array of dictionaries
 -(void)breakoutProductData:(NSArray* )products
 {
     
@@ -261,6 +229,7 @@
     }
 }
 
+//function that creates product series objects out of an array of dictionaries
 -(void)breakoutProductSeriesData:(NSArray *)series
 {
     
@@ -295,6 +264,7 @@
     }
 }
 
+//function that creates video objects out of an array of dictionaries
 -(void)breakoutVideoData:(NSArray *)videos
 {
     
@@ -326,6 +296,8 @@
     }
 }
 
+//function that creates document objects out of an array of dictionaries
+//the document objects include case studies, white papers, and specs
 -(void)breakoutDocumentData:(NSArray *)documents withType:(NSString *)type
 {
     
@@ -363,9 +335,10 @@
     }
 }
 
+//this function removes all NSUserDefaults for data to be updated
+//this function is called when an update routine needs to run
 -(void)wipeOutAllModelDataForUpdate
 {
-    
     //here I remove the last updated user defaults
     //i do not remove the saved nsdata to disk because it will be overwritten when updated
     NSUserDefaults * defs = [NSUserDefaults standardUserDefaults];
@@ -377,8 +350,11 @@
     
 }
 
+//this function is run after the network routine finishes running the initial download or after an update
+//the reason this is done is it saves on memory and redundant saved object attached to the model
 -(void)wipeOutAllModelData
 {
+    //this routine adds the last updated dictionary to a NSUserDefault dictionary for the data to be persistant
     for(id key in lastUpdated){
         NSString *date = [lastUpdated objectForKey:key];
         [[NSUserDefaults standardUserDefaults] setObject:date forKey:key];
@@ -394,8 +370,7 @@
         [products addObject:p.key];
     }
     
-    NSLog(@"Last updated %@", lastUpdated);
-    
+    //wipe out all of the saved data in the models dictionaries
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:products];
     [self saveFile:data andFileName:@"product-data" complete:^(BOOL completeFlag){
         [productData removeAllObjects];
@@ -406,6 +381,12 @@
     }];
 }
 
+/*******************************************************************
+ 
+ SDWebImage Persistant Image Functions
+ The two functions below download and save UIImages to disk for offline usage
+ 
+*******************************************************************/
 
 /*
 -(void)downloadAllImagesAndSaveThem:(completeBlock)completeFlagFirstParent
@@ -455,33 +436,36 @@
     }
 }*/
 
+//This function saves all the objects saved temporarily in the model to disk
+//So basically all of the objects are serialized and saved in dictionaries/arrays now they are wrote to the device by the object key.
+//The object key is sort of like the object ID or row ID.
 -(void)saveAllDataToDisk:(completeBlock)completeFlagArgument
 {
     //save all product data
     __block int c1 = 0;
     for(id key in productData){
-        NSLog(@"Product Key %@", key);
+        //NSLog(@"Product Key %@", key);
         [self saveFile:[productData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
             c1++;
             if(c1 == [productData count]){
                 __block int c2 = 0;
                 //save all product series data
                 for(id key in productSeriesData){
-                    NSLog(@"Product Series Key %@", key);
+                    //NSLog(@"Product Series Key %@", key);
                     [self saveFile:[productSeriesData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
                         c2++;
                         if(c2 == [productSeriesData count]){
                             __block int c3 = 0;
                             //save all video data
                             for(id key in videoData){
-                                NSLog(@"Video Key %@", key);
+                                //NSLog(@"Video Key %@", key);
                                 [self saveFile:[videoData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
                                     c3++;
                                     if(c3 == [videoData count]){
                                         __block int c4 = 0;
                                         //save all document data
                                         for(id key in documentData){
-                                            NSLog(@"Document Key %@", key);
+                                            //NSLog(@"Document Key %@", key);
                                             [self saveFile:[documentData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
                                                 c4++;
                                                 if(c4 == [documentData count]){
@@ -502,6 +486,8 @@
     }
 }
 
+//This function takes a Media Valet Hyperlink and chops it up to extract the video file name
+//This function will be in flux as we transition asset providers and move away from Media Valet
 -(NSString *)getVideoFileName:(NSString *)url
 {
     if([url length] > 0){
@@ -509,7 +495,7 @@
         if([chopped count] > 0){
             NSArray *choppedSecond = [[chopped objectAtIndex:1] componentsSeparatedByString:@"/"];
             if([choppedSecond objectAtIndex:3] != nil){
-                NSLog(@"Chopped %@", [choppedSecond objectAtIndex:3]);
+                ALog(@"Chopped %@", [choppedSecond objectAtIndex:3]);
                 return [choppedSecond objectAtIndex:3];
             }else{
                 return [choppedSecond objectAtIndex:2];
@@ -529,6 +515,7 @@
  -(BOOL)fileExists:(NSString *)filename
  *---------------------------------------------*/
 
+//saves a file by the file name locally to the device
 -(void)saveFile:(NSData *)data andFileName:(NSString *)filename complete:(completeBlock)completeFlag
 {
     @autoreleasepool {
@@ -539,10 +526,10 @@
             NSString* path = [documentsDirectory stringByAppendingPathComponent:filename];
             
             if([data writeToFile:path atomically:YES]){
-                NSLog(@"FULL PATH %@", path);
-                NSLog(@"SAVED FILE SUCCESSFULLY %@", filename);
+                ALog(@"Model SAVED FILE SUCCESSFULLY %@", filename);
                 completeFlag(YES);
             }else{
+                ALog(@"ERROR SAVING FILE %@", filename);
                 completeFlag(NO);
             }
         }
@@ -551,9 +538,9 @@
 }
 
 //function that saves a file and returns a response of YES or NO if the action was performed
+//It should be noted that this function is save an HTML file and UTF8StringEncodes the data to be saved as HTML
 -(void)saveHTMLFile:(NSData *)data andFileName:(NSString *)filename complete:(completeBlock)completeFlag
 {
-    //NSLog(@"Filename %@", filename );
     @autoreleasepool {
         if (data != nil)
         {
@@ -562,16 +549,18 @@
             NSString* path = [documentsDirectory stringByAppendingPathComponent:filename];
             NSString *html = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
             if([html writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:nil]){
-                NSLog(@"SAVED HTML FILE SUCCESSFULLY %@", filename);
+                ALog(@"SAVED HTML FILE SUCCESSFULLY %@", filename);
                 completeFlag(YES);
             }else{
-                NSLog(@"ERROR SAVING FILE %@", filename);
+                ALog(@"ERROR SAVING FILE %@", filename);
                 completeFlag(NO);
             }
         }
     }
 }
 
+//When all downloads are completed and it is time to display the view to the user, we need some data to get started with.
+//This function allows us to display an initial set of data to the user
 -(NSMutableArray *)getInitialSetofPorducts
 {
     NSError *err = nil;
@@ -601,7 +590,7 @@
         }
     }else{
 
-        NSLog(@"Error retrieving the file from disk %@", err);
+        ALog(@"Error retrieving the file from disk %@", err);
         return nil;
     }
 }
@@ -614,18 +603,19 @@
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString* path = [documentsDirectory stringByAppendingPathComponent:fileName];
     NSData *data = [NSData dataWithContentsOfFile:path options:NSDataReadingUncached error:&err];
-    //NSLog(@"Filename %@ amd path %@", fileName, path );
     if(data != nil && [data length] > 0){
         completeFlag(YES);
         return data;
     }else{
         completeFlag(NO);
-        NSLog(@"Error retrieving the file from disk %@", err);
+        ALog(@"Error retrieving the file from disk %@", err);
         return data;
     }
     
 }
 
+//function that gets an HTML file based upon name
+//this function is function when it comes time to display documents in the prodoct series view
 -(NSData *)getHTMLFile:(NSString *)filename complete:(completeBlock)completeFlag
 {
     NSError *err = nil;
@@ -644,7 +634,7 @@
         return html;
     }else{
         completeFlag(NO);
-        NSLog(@"Error retrieving the file from disk %@", err);
+        ALog(@"Error retrieving the file from disk %@", err);
         return htmlData;
     }
     
@@ -666,6 +656,8 @@
     
 }
 
+//function that returns the file path based upon a filename
+//this function is used a lot for videos that were just downloaded to the device
 -(NSString *)returnFilePath:(NSString *)name
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -674,6 +666,7 @@
     return path;
 }
 
+//this function checks to see if a video exists
 -(BOOL)videoExists:(NSString *)videoURL
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];

@@ -14,6 +14,9 @@
 
 #define ImageWithPath(path)[UIImage imageWithContentsOfFile:path]
 
+//this is a local macro that sets up a class wide logging scheme
+#define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+
 @implementation FilterViewController
 @synthesize topBanner, productScroll, customNavBar;
 @synthesize model, network, navBarHomeButton, offlineImages;
@@ -38,7 +41,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        NSLog(@"NIB");
         //this notification is set to the reachability of the application
         //if the application cannot connect, then this function is called
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityDidChange:) name:kReachabilityChangedNotification object:nil];
@@ -57,21 +59,19 @@
     //reachability object
     Reachability *reachability = (Reachability *)[notification object];
     //if we can reach the internet
-    if ([reachability isReachable]) {
-        model.reachable = YES;
-        NSLog(@"REACHABLE");
+    if ([reachability isReachableViaWiFi]) {
+        ALog(@"REACHABLE");
         
     } else {
         //set UI error
-        model.reachable = NO;
-        NSLog(@"NOT REACHABLE");
+        ALog(@"NOT REACHABLE");
     }
 }
 
 /* suppress anything that should be killed when app moves to the background */
 -(void)appWentIntoBackground
 {
-    NSLog(@"App went into the background");
+    ALog(@"App went into the background");
     //kill anything that is running here
 }
 
@@ -79,16 +79,13 @@
 -(void)appCameBackIntoFocus
 {
     //start the update check here
-    NSLog(@"App came back into focus");
-    //Reachability* reachability = [Reachability reachabilityWithHostname:@"www.google.com"];
-    //if we can reach the internet
-    NSLog(@"Reachable %@", model.hostReachability);
-    if ([model.hostReachability isReachable]) {
-        model.reachable = YES;
-        NSLog(@"APP came back into focus and it is reachable");
-        NSLog(@"CHECKING FOR UPDATES");
+    ALog(@"App came back into focus");
+
+    
+    //make sure to check the connectivity again
+    if ([model.hostReachability isReachableViaWiFi]) {
+        ALog(@"CHECKING FOR UPDATES");
         [network checkForUpdate];
-        
         //resync the UI
         if(!model.layoutSync){
            for (id key in offlineImages) {
@@ -97,7 +94,7 @@
                if([url objectAtIndex:1] != nil){
                   [i setImageWithURL:[NSURL URLWithString:[url objectAtIndex:1]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]
                          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-                            NSLog(@"Got the image %@", image);
+                            ALog(@"Got the image %@", image);
                   }];
                }
                 
@@ -106,24 +103,20 @@
            [offlineImages removeAllObjects];
            model.layoutSync = YES;
         }
-
-    }else{
-        model.reachable = NO;
     }
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSLog(@"viewWillAppear FILTER");
+    ALog(@"viewWillAppear FILTER");
     
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    NSLog(@"viewDidAppear FILTER");
+    ALog(@"viewDidAppear FILTER");
     //app going into background notification
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appWentIntoBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -137,14 +130,14 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    NSLog(@"viewWillDisappear FILTER");
+    ALog(@"viewWillDisappear FILTER");
     [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    NSLog(@"viewDidDisappear FILTER");
+    ALog(@"viewDidDisappear FILTER");
 }
 
 - (void)viewDidLoad
@@ -196,8 +189,11 @@
     [self loadupProducts];
 }
 
+//this function loads up the products associated with the current filter
 -(void)loadupProducts
 {
+    //a generic set of data to detect formatting the UI
+    //cycle through the data and load up a grid of products
     NSArray *ends = [NSArray arrayWithObjects:@"0",@"3",@"4",@"7",@"8",@"11",@"12",@"15",@"16",@"19",@"20",@"23", nil];
     int x = 0, y = 24, e = 0, i = 1;
     for(Product *p in model.filteredProducts){
@@ -227,14 +223,16 @@
         
         int imgX = 8;
         if(x == 0) imgX = 0;
-        
+        //below we add a placeholder image into the UIImageView, then we try and load the image on a background thread
+        //if the image loads, it is placed in the UIImageView, if it does not, the view is placed in a dictionary to be redownloaded when the app comes back online
+        //a flag is also set to make sure the app knows that we have to resync the UI
         UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(imgX, 0, 224, 151)];
         //check to make sure the everything is reachable
         NSString *u = [[p.images objectForKey:@"grid-image"] stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
         __weak typeof(UIImageView) *imgView = iv;
         [iv setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
             if(error){
-                NSLog(@"Error %@", error);
+                ALog(@"Error %@", error);
                 NSString *key = [NSString stringWithFormat:@"%d---%@",i,u];
                 imgView.image = [UIImage imageNamed:@"placeholder.png"];
                 [offlineImages setObject:imgView forKey:key];
@@ -287,31 +285,37 @@
             }
         }
     }
+    //below I am calculating the content height for the scrollview that displays the products
     int multi = i / 4, add = multi * 50, mod = [model.filteredProducts count] % 4;
     if(mod >= 1) add += 324;
+    //set the dynamic content height
     [productScroll setContentSize:CGSizeMake(952, ((multi * 300) + add))];
 
 }
 
+//this function handles a product being touched
+//this function also sets the appropriate data so the product series can display the correct data
 -(void)productTouched:(id)sender
 {
     UIButton *b = (UIButton *)sender;
-    NSLog(@"Series %@",b.titleLabel.text);
+    ALog(@"Series %@",b.titleLabel.text);
     
     NSData *seriesData = [model getFileData:b.titleLabel.text complete:^(BOOL completeFlag){}];
     model.selectedSeries = [NSKeyedUnarchiver unarchiveObjectWithData:seriesData];
-    NSLog(@"Series %@", model.selectedSeries.title);
+    ALog(@"Series %@", model.selectedSeries.title);
     
     SeriesViewController *series = [[SeriesViewController alloc] initWithNibName:@"SeriesViewController" bundle:nil];
     [self.navigationController pushViewController:series animated:YES];
 }
 
+//function that pops the view controller off the stack and sends the user back home
 -(void)triggerHome:(id)sender
 {
-    NSLog(@"HOME!");
+    ALog(@"HOME!");
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
+//function that sets up the disposable views for the view controller
 -(void)setupLocalUserInterface:(completeBlock)completeFlag
 {
     //setup top banner
@@ -333,6 +337,7 @@
     [error show];
 }
 
+//the ominous memory function!!!!
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -357,7 +362,7 @@
         //remove nsuserdefaults
         [model wipeOutAllModelDataForUpdate];
         
-        if(model.reachable){
+        if([model.hostReachability isReachableViaWiFi]){
             //we have now loaded
             model.needsUpdate = YES;
             [self.navigationController popToRootViewControllerAnimated:YES];
@@ -373,7 +378,7 @@
 //this response will let the view and the user know that there is an update available
 -(void)updateResponse:(CanonModel *)obj withFlag:(BOOL)flag{
     
-    NSLog(@"Update Response, %d.  This tells us if there is an update available.", flag);
+    ALog(@"Update Response, %d.  This tells us if there is an update available.", flag);
     //update available
     if(flag){
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Update App"

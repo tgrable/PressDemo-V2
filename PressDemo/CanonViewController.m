@@ -13,6 +13,9 @@
 
 #define ImageWithPath(path)[UIImage imageWithContentsOfFile:path]
 
+//this is a local macro that sets up a class wide logging scheme
+#define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+
 @implementation CanonViewController
 @synthesize model, network, customNavBar;
 @synthesize whatDoYouPrint, showAllProducts;
@@ -38,7 +41,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        NSLog(@"NIB");
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityDidChange:) name:kReachabilityChangedNotification object:nil];
     }
     return self;
@@ -55,8 +57,7 @@
     Reachability *reachability = (Reachability *)[notification object];
     //if we can reach the internet
     if ([reachability isReachable]) {
-        model.reachable = YES;
-        NSLog(@"REACHABLE");
+        ALog(@"REACHABLE");
         if([[[NSUserDefaults standardUserDefaults] objectForKey:@"case-study"] isEqualToString:@""] && !downloadInProgress){
             //this means that the app failed on the initial load and needs to be loaded
             [self runLoadingSequence];
@@ -64,15 +65,14 @@
         
     } else {
         //set UI error
-        model.reachable = NO;
-        NSLog(@"NOT REACHABLE");
+        ALog(@"NOT REACHABLE");
     }
 }
 
 /* suppress anything that should be killed when app moves to the background */
 -(void)appWentIntoBackground
 {
-    NSLog(@"App went into the background");
+    ALog(@"App went into the background");
     //kill anything that is running here
 }
 
@@ -80,41 +80,38 @@
 -(void)appCameBackIntoFocus
 {
     //start the update check here
-    NSLog(@"App came back into focus");
+    ALog(@"App came back into focus");
     //if we can reach the internet
-    NSLog(@"Reachable %@", model.hostReachability);
-    if ([model.hostReachability isReachable] && !downloadInProgress) {
-        model.reachable = YES;
-        NSLog(@"APP came back into focus and it is reachable");
+    if ([model.hostReachability isReachableViaWiFi] && !downloadInProgress) {
+        //make sure
         if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"case-study"] isEqualToString:@""]){
-            NSLog(@"CHECKING FOR UPDATES");
+            ALog(@"CHECKING FOR UPDATES");
             [network checkForUpdate];
-        }else{
-            model.reachable = NO;
         }
     }
     
 }
 
-
+//this function is executed to run the initial downloading sequence
 -(void)runLoadingSequence
 {
-    NSLog(@"runLoadingSequence");
+    ALog(@"runLoadingSequence");
     dispatch_queue_t model_queue = dispatch_queue_create(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     //execute the first load sequence load
     if([[[NSUserDefaults standardUserDefaults] objectForKey:@"case-study"] isEqualToString:@""] && !downloadInProgress){
-        NSLog(@"runLoadingSequence, case study blank, no other download in progress");
+        
+        ALog(@"runLoadingSequence, case study blank, no other download in progress");
         model.ui.splash.image = [model.ui getImageWithName:@"/sample@2x.png"];
         [self.view addSubview:model.ui.splash];
         [self.view bringSubviewToFront:model.ui.splash];
        
-        if([model.hostReachability isReachable]){
+        if([model.hostReachability isReachableViaWiFi]){
             downloadInProgress = YES;
-            NSLog(@"runLoadingSequence, case study blank, no other download in progress, network is reachable");
+            ALog(@"runLoadingSequence, case study blank, no other download in progress, network is reachable");
             UIActivityIndicatorView *ac = (UIActivityIndicatorView *)[model.ui.splash viewWithTag:444];
             ac.alpha = 1.0;
             dispatch_async(model_queue, ^{
-                NSLog(@"runLoadingSequence, case study blank, no other download in progress, network is reachable, running download");
+                ALog(@"runLoadingSequence, case study blank, no other download in progress, network is reachable, running download");
                 [network runInitialDownload];
             });
         }else{
@@ -131,10 +128,10 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSLog(@"viewWillAppear HOME");
+    ALog(@"viewWillAppear HOME");
     
-    if(model.needsUpdate && model.reachable){
-        NSLog(@"The app was flagged that it needed updates");
+    if(model.needsUpdate && [model.hostReachability isReachableViaWiFi]){
+        ALog(@"The app was flagged that it needed updates");
         model.ui.splash.image = [model.ui getImageWithName:@"/sample@2x.png"];
         [self.view addSubview:model.ui.splash];
         [self.view bringSubviewToFront:model.ui.splash];
@@ -149,7 +146,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    NSLog(@"viewDidAppear HOME");
+    ALog(@"viewDidAppear HOME");
     //app going into background notification
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appWentIntoBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -163,7 +160,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    NSLog(@"viewWillDisappear HOME");
+    ALog(@"viewWillDisappear HOME");
     
     //remove notification
     [[NSNotificationCenter defaultCenter] removeObserver: self];
@@ -172,7 +169,7 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    NSLog(@"viewDidDisappear HOME");
+    ALog(@"viewDidDisappear HOME");
     
     //remove all assets here for future memory enhancements
 }
@@ -192,7 +189,7 @@
     
     downloadInProgress = NO;
     
-    NSLog(@"Hitting first load");
+    ALog(@"Hitting first load");
     [self runLoadingSequence];
     
 
@@ -224,7 +221,7 @@
     
     //scroll view for what do you want to print
     whatDoYouPrint = [[UIScrollView alloc] initWithFrame:CGRectMake(276, 365, 734, 187)];
-    whatDoYouPrint.showsHorizontalScrollIndicator = YES;
+    whatDoYouPrint.showsHorizontalScrollIndicator = NO;
     whatDoYouPrint.showsVerticalScrollIndicator = NO;
     whatDoYouPrint.canCancelContentTouches = YES;
     whatDoYouPrint.delegate = self;
@@ -239,7 +236,7 @@
     
     //scroll view for show all products
     showAllProducts = [[UIScrollView alloc] initWithFrame:CGRectMake(276, 566, 734, 187)];
-    showAllProducts.showsHorizontalScrollIndicator = YES;
+    showAllProducts.showsHorizontalScrollIndicator = NO;
     showAllProducts.showsVerticalScrollIndicator = NO;
     showAllProducts.canCancelContentTouches = YES;
     showAllProducts.delegate = self;
@@ -249,14 +246,12 @@
     
     [self.view bringSubviewToFront:model.ui.splash];
     
-    NSLog(@"viewDidLoad");
 
     //make sure this is at the bottom of the view
     //at the end of view did load, make sure we have data and load the view up
     //this means that we are running the app again after it has been loaded at least once
     if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"case-study"] isEqualToString:@""]){
-        NSLog(@"Bottom of view did load");
-        NSLog(@"Case study before load %@", [[NSUserDefaults standardUserDefaults] objectForKey:@"case-study"]);
+        
         //setup the local UI before I remove the splash screen
         [self setupLocalUserInterface:^(BOOL completeFlag){
             [model.ui.splash removeFromSuperview];
@@ -265,7 +260,7 @@
     }
 }
 
-
+//this function captures the event of one of the filter buttons being touched
 -(void)captureFilterButtons:(id)sender
 {
     UIButton *b = (UIButton *)sender;
@@ -289,9 +284,6 @@
         }
     }
     
-    for(Product *p in model.filteredProducts){
-        NSLog(@"Title %@", p.title);
-    }
     FilterViewController *filter = [[FilterViewController alloc] initWithNibName:@"FilterViewController" bundle:nil];
     [self.navigationController pushViewController:filter animated:YES];
     
@@ -299,6 +291,7 @@
     
 }
 
+//this function acts as a central filter to setup assets that can be deallocated once the view is left
 -(void)setupLocalUserInterface:(completeBlock)completeFlag
 {
     //add image to the header
@@ -328,12 +321,8 @@
                 }
             }
         }
-        //display the filters in the console
-        NSLog(@"HERE is my local filter for what %@", whatImageNames);
-        NSLog(@"HERE is my local filter for what %@", showAllImageNames);
+   
         //load all what do your want to print buttons
-        
-        
         int x1 = 0, e1 = 0;
         for(NSString *wf in whatImageNames){
             x1 = e1 * 204 + 14;
@@ -342,7 +331,6 @@
             [wfButton setFrame:CGRectMake(x1, 0, 197, 187)];
             [wfButton addTarget:self action:@selector(captureFilterButtons:)forControlEvents:UIControlEventTouchUpInside];
             wfButton.showsTouchWhenHighlighted = YES;
-            //[wfButton setBackgroundImage:[model.ui getImageWithName:[model.whatDoYouWantToPrint objectForKey:wf]] forState:UIControlStateNormal];
             [wfButton setBackgroundImage:[model.whatDoYouWantToPrint objectForKey:wf] forState:UIControlStateNormal];
             [wfButton setTitle:wf forState:UIControlStateNormal];
             [wfButton setBackgroundColor:[UIColor yellowColor]];
@@ -362,7 +350,6 @@
             [saButton setFrame:CGRectMake(x2, 0, 197, 187)];
             [saButton addTarget:self action:@selector(captureFilterButtons:)forControlEvents:UIControlEventTouchUpInside];
             saButton.showsTouchWhenHighlighted = YES;
-            //[saButton setBackgroundImage:[model.ui getImageWithName:[model.showAll objectForKey:sa]] forState:UIControlStateNormal];
             [saButton setBackgroundImage:[model.showAll objectForKey:sa] forState:UIControlStateNormal];
             [saButton setTitle:sa forState:UIControlStateNormal];
             [saButton setBackgroundColor:[UIColor redColor]];
@@ -405,13 +392,13 @@
 -(void)downloadResponse:(CanonModel *)obj withFlag:(BOOL)flag{
     //the download response was successful
     if(flag){
-        NSLog(@"Download response");
         
         //wipe out all data after first initial load
         [model wipeOutAllModelData];
         
         //before we send rebuild the ui with updated data, tear down the UI
         if(model.needsUpdate){
+            //remove all of the what do you want to print items and the show all items
             for(UIView *v in [showAllProducts subviews]){
                 [v removeFromSuperview];
             }
@@ -447,18 +434,19 @@
     //download
     if (buttonIndex == 1){
         //remove nsuserdefaults
-        [model wipeOutAllModelDataForUpdate];
-        model.needsUpdate = YES;
-        NSLog(@"The app was flagged that it needed updates");
-        model.ui.splash.image = [model.ui getImageWithName:@"/sample@2x.png"];
-        [self.view addSubview:model.ui.splash];
-        [self.view bringSubviewToFront:model.ui.splash];
-        dispatch_queue_t model_queue = dispatch_queue_create(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        dispatch_async(model_queue, ^{
-            [network runInitialDownload];
-        });
-
-        
+        if([model.hostReachability isReachableViaWiFi]){
+            [model wipeOutAllModelDataForUpdate];
+            model.needsUpdate = YES;
+            model.ui.splash.image = [model.ui getImageWithName:@"/sample@2x.png"];
+            [self.view addSubview:model.ui.splash];
+            [self.view bringSubviewToFront:model.ui.splash];
+            dispatch_queue_t model_queue = dispatch_queue_create(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            dispatch_async(model_queue, ^{
+                [network runInitialDownload];
+            });
+        }else{
+            [self displayMessage:@"Please connect to the internet to update the application" withTitle:@"Alert"];
+        }
        
     }
 }
@@ -467,7 +455,7 @@
 //this response will let the view and the user know that there is an update available
 -(void)updateResponse:(CanonModel *)obj withFlag:(BOOL)flag{
     
-    NSLog(@"Update Response, %d.  This tells us if there is an update available.", flag);
+    ALog(@"Update Response, %d.  This tells us if there is an update available.", flag);
     //update available
     if(flag){
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Update App"

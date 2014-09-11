@@ -14,7 +14,7 @@
 #import "SavedVideos.h"
 
 @interface AppDataObject : NSObject{
-    BOOL reachable, layoutSync, needsUpdate;
+    BOOL layoutSync, needsUpdate;
     NSMutableDictionary *whatDoYouWantToPrint, *showAll;
     NSMutableDictionary *taxonomyReadableNames, *topBanners;
     NSMutableDictionary *seriesBanners, *documentBanners;
@@ -26,5 +26,5 @@
 @property (nonatomic, strong)NSMutableDictionary *lastUpdated, *documentData, *productData, *productSeriesData, *videoData;
 @property (nonatomic, strong)NSMutableDictionary *seriesBanners;
 @property (nonatomic, strong)NSMutableArray *downloadedImages;
-@property BOOL reachable, layoutSync, needsUpdate;
+@property BOOL layoutSync, needsUpdate;
 @end

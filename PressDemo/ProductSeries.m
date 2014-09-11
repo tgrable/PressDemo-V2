@@ -21,6 +21,7 @@
 
 -(id)init
 {
+    //define the class
     self = [super init];
     
     if (self != nil){

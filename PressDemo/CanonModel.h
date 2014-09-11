@@ -6,6 +6,11 @@
 //  Copyright (c) 2014 Trekk. All rights reserved.
 //
 
+/*******************************
+ SDWebImage has been commented out of this application because it still is on the table to be used for a later version.
+ SDWebImage downloads all of the images locally and saves them to the device to be used offline
+*******************************/
+
 #import "AppDataObject.h"
 #import "UIModel.h"
 #import <AVFoundation/AVFoundation.h>
@@ -13,14 +18,10 @@
 //#import <SDWebImage/SDImageCache.h>
 
 @interface CanonModel : AppDataObject{
-    
-    ProductSeries *selectedSeries;
-    UIModel *ui;
     UIColor *orange, *pink, *red, *blue, *dullBlack, *green, *purple, *gray, *yellow, *lightGray;
-    NSString *testingString, *currentFilter;
-    NSMutableArray *localProds, *filteredProducts;
     //SDWebImageManager *manager;
 }
+//Model Properties
 @property(nonatomic, strong)UIModel *ui;
 @property(nonatomic, strong)ProductSeries *selectedSeries;
 @property(nonatomic, strong)NSString *testingString, *currentFilter;
@@ -29,6 +30,7 @@
 @property(nonatomic) Reachability *hostReachability;
 typedef void(^completeBlock)(BOOL);
 
+//Function prototypes
 -(void)breakoutIncomingData:(NSData *)data complete:(completeBlock)completeFlag;
 -(void)saveHTMLFile:(NSData *)data andFileName:(NSString *)filename complete:(completeBlock)completeFlag;
 -(void)saveFile:(NSData *)data andFileName:(NSString *)filename complete:(completeBlock)completeFlag;
@@ -42,6 +44,7 @@ typedef void(^completeBlock)(BOOL);
 -(BOOL)breakoutUpdateData:(NSData *)data;
 -(void)breakoutProductSeriesData:(NSArray *)series;
 -(void)saveAllDataToDisk:(completeBlock)completeFlagArgument;
+//SDWebImage Functions
 //-(void)saveAllImagesToDisk:(NSMutableDictionary *)images complete:(completeBlock)completeFlagParent;
 //-(void)downloadAllImagesAndSaveThem:(completeBlock)completeFlagFirstParent;
 -(void)wipeOutAllModelData;
