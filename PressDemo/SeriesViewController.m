@@ -918,7 +918,6 @@
     [navBarHomeButton setBackgroundImage:[UIImage imageNamed:@"icn-home.png"] forState:UIControlStateNormal];
     
     //add the small main header
-    //mainShortBanner.image = [model.ui getImageWithName:[model.seriesBanners objectForKey:model.selectedSeries.key]];
     mainShortBanner.image = [model.seriesBanners objectForKey:model.selectedSeries.key];
     
     //#### setup image slider in overview view ####
@@ -1101,10 +1100,12 @@
     NSMutableArray *images = [NSMutableArray array];
     NSMutableArray *filteredImages = [NSMutableArray array];
     for(NSString *filename in products){
+        ALog(@"File name after 1 %@", filename);
         NSData *prod = [model getFileData:filename complete:^(BOOL completeFlag){}];
+        ALog(@"File name after 2 %@", filename);
         Product *p = [NSKeyedUnarchiver unarchiveObjectWithData:prod];
         [images addObject:[p.images objectForKey:@"hero-image"]];
-        
+        ALog(@"Product name %@", p.title);
     }
     //filter the array of images
     for(NSString *url in images){

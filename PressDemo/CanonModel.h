@@ -44,6 +44,7 @@ typedef void(^completeBlock)(BOOL);
 -(BOOL)breakoutUpdateData:(NSData *)data;
 -(void)breakoutProductSeriesData:(NSArray *)series;
 -(void)saveAllDataToDisk:(completeBlock)completeFlagArgument;
+-(NSString *)cleanseStringName:(NSString *)filename;
 //SDWebImage Functions
 //-(void)saveAllImagesToDisk:(NSMutableDictionary *)images complete:(completeBlock)completeFlagParent;
 //-(void)downloadAllImagesAndSaveThem:(completeBlock)completeFlagFirstParent;
@@ -52,4 +53,5 @@ typedef void(^completeBlock)(BOOL);
 -(NSMutableArray *)getInitialSetofPorducts;
 -(BOOL)videoExists:(NSString *)videoURL;
 -(NSString *)returnFilePath:(NSString *)name;
+-(NSMutableArray *)cleanArray:(NSMutableArray *)array;
 @end

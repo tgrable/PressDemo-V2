@@ -99,12 +99,12 @@
         
         //Full on UIImages to be referenced in the ViewController by Key
         seriesBanners = [[NSMutableDictionary alloc] init];
-        [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-jetstreamdual.png"] forKey:@"jet-stream-dual-series"];
-        [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-CS3000.png"] forKey:@"color-stream-3000-series"];
-        [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-jetstreamcompact.png"] forKey:@"jet-stream-compact-series"];
-        [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-imagepress.png"] forKey:@"image-press-series"];
-        [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-VP6000.png"] forKey:@"vario-print-6000-series"];
-        [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-prisma.png"] forKey:@"prisma-series"];
+        [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-jetstreamdual.png"] forKey:@"oce-jetstream-dual-series--series"];
+        [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-CS3000.png"] forKey:@"oce-colorstream-3000-series--series"];
+        [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-jetstreamcompact.png"] forKey:@"oce-jetstream-compact-series--series"];
+        [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-imagepress.png"] forKey:@"canon-imagepress-series--series"];
+        [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-VP6000.png"] forKey:@"oce-varioprint-6000+-series--series"];
+        [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-prisma.png"] forKey:@"prisma-series--series"];
         
         red = [UIColor colorWithRed:207.0f/255.0f green:10.0f/255.0f blue:44.0f/255.0f alpha:1.0];
         green = [UIColor colorWithRed:119.0f/255.0f green:188.0f/255.0f blue:31.0f/255.0f alpha:1.0];
@@ -142,7 +142,7 @@
 }
 
 
-//This is the function that is hit the when the network stack is downloading content data.
+//This is the function that is hit the when the network stack is downloading content data.NSUTF8StringEncoding
 //The data that hits here is checked to determine which content type it falls into, and then it is sent to a parsing function to break the data into objects.
 -(void)breakoutIncomingData:(NSData *)data complete:(completeBlock)completeFlag
 {
@@ -151,6 +151,7 @@
     
     //case studies
     if([localData objectForKey:@"case-study"]){
+        ALog(@"Case Study");
         //set when the case studies content type was last updated
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"case-study"];
         //break out the data in files to be save to disk
@@ -158,6 +159,7 @@
        
         //white paper
     }else if([localData objectForKey:@"white-paper"]){
+        ALog(@"White Paper");
         //set when the white paper content type was last updated
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"white-paper"];
         //break out the data in files to be save to disk
@@ -165,6 +167,7 @@
         
         //product spec
     }else if([localData objectForKey:@"product-spec"]){
+        ALog(@"Product Spec");
         //set when the product spec content type was last updated
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"product-spec"];
         //break out the data in files to be save to disk
@@ -172,6 +175,7 @@
         
         //product
     }else if([localData objectForKey:@"product"]){
+        ALog(@"Product");
         //set when the product content type was last updated
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"product"];
         //break out the product data to be saved to memory
@@ -179,6 +183,7 @@
         
         //videos
     }else if([localData objectForKey:@"video"]){
+        ALog(@"Video");
         //set when the video content type was last updated
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"video"];
         //break out the product data to be saved to memory
@@ -186,6 +191,7 @@
         
         //product series
     }else if([localData objectForKey:@"product-series"]){
+        ALog(@"Product Series");
         //set when the video content type was last updated
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"product-series"];
         //break out the product data to be saved to memory
@@ -204,6 +210,7 @@
         Product *p = [[Product alloc] init];
         
         p.title = [dict objectForKey:@"title"];
+        
         NSString *keyProduct = [dict objectForKey:@"key"];
         p.key = keyProduct;
         p.series = [dict objectForKey:@"series"];
@@ -226,6 +233,18 @@
         NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:p];
         [productData setObject:encodedObject  forKey:keyProduct];
         
+        
+        
+        ALog(@"************** Product ************************");
+        ALog(@"Title %@", p.title);
+        ALog(@"Key %@", p.key);
+        ALog(@"Key %@", p.series);
+        ALog(@"Description %@", p.images);
+        ALog(@"Spec %@", p.description);
+        ALog(@"Case Study  %@", p.whatDoYouWantToPrint);
+        ALog(@"White Paper  %@", p.showAll);
+
+        
     }
 }
 
@@ -236,9 +255,10 @@
     for(NSDictionary *dict in series){
         ProductSeries *ps = [[ProductSeries alloc] init];
         
-        ps.title = [dict objectForKey:@"title"];
-        NSString *keyProduct = [dict objectForKey:@"key"];
+        ps.title = [self cleanseStringName:[dict objectForKey:@"title"]];
+        NSString *keyProduct = [self cleanseStringName:[dict objectForKey:@"key"]];
         ps.key = keyProduct;
+
         
         //add the description in order to the description dictionary on the object
         NSArray *desc = [dict objectForKey:@"description"];
@@ -248,16 +268,24 @@
             i++;
         }
         
-        //product spec key
         ps.product_spec = [dict objectForKey:@"product_spec"];
+        
         //case study keys
         ps.case_studies = [dict objectForKey:@"case_studies"];
+        
+        //if([[dict objectForKey:@"case_studies"] isKindOfClass:[NSMutableArray class]]){
+         //  ps.case_studies = [[self cleanArray:[dict objectForKey:@"case_studies"]] mutableCopy];
+        //}
+        
         //white paper keys
         ps.white_papers = [dict objectForKey:@"white_papers"];
+    
         //video keys
         ps.videos = [dict objectForKey:@"videos"];
+    
         //product keys
         ps.products = [dict objectForKey:@"products"];
+        
         
         NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:ps];
         [productSeriesData setObject:encodedObject forKey:keyProduct];
@@ -283,7 +311,6 @@
         
         //raw video url
         v.rawVideo = [dict objectForKey:@"raw-video"];
-        
         if([dict objectForKey:@"video-description"] != nil){
             v.description = [dict objectForKey:@"video-description"];
         }else{
@@ -441,49 +468,55 @@
 //The object key is sort of like the object ID or row ID.
 -(void)saveAllDataToDisk:(completeBlock)completeFlagArgument
 {
-    //save all product data
-    __block int c1 = 0;
-    for(id key in productData){
-        //NSLog(@"Product Key %@", key);
-        [self saveFile:[productData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
-            c1++;
-            if(c1 == [productData count]){
-                __block int c2 = 0;
-                //save all product series data
-                for(id key in productSeriesData){
-                    //NSLog(@"Product Series Key %@", key);
-                    [self saveFile:[productSeriesData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
-                        c2++;
-                        if(c2 == [productSeriesData count]){
-                            __block int c3 = 0;
-                            //save all video data
-                            for(id key in videoData){
-                                //NSLog(@"Video Key %@", key);
-                                [self saveFile:[videoData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
-                                    c3++;
-                                    if(c3 == [videoData count]){
-                                        __block int c4 = 0;
-                                        //save all document data
-                                        for(id key in documentData){
-                                            //NSLog(@"Document Key %@", key);
-                                            [self saveFile:[documentData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
-                                                c4++;
-                                                if(c4 == [documentData count]){
-                                                    completeFlagArgument(YES);
-                                                }
-                                            }];
-                                        }
+    dispatch_queue_t backgroundQueue = dispatch_queue_create("canon.dev.com", 0);
+    dispatch_async(backgroundQueue, ^{
+        //save all product data
+        __block int c1 = 0;
+        for(id key in productData){
+            //ALog(@"Product Key %@", key);
+            [self saveFile:[productData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
+                c1++;
+                if(c1 == [productData count]){
+                    __block int c2 = 0;
+                    //save all product series data
+                    for(id key in productSeriesData){
+                        //ALog(@"Product Series Key %@", key);
+                        ALog(@"Length %d", [[productSeriesData objectForKey:key] length]);
+                        [self saveFile:[productSeriesData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
+                            c2++;
+                            if(c2 == [productSeriesData count]){
+                                __block int c3 = 0;
+                                //save all video data
+                                for(id key in videoData){
+                                    //ALog(@"Video Key %@", key);
+                                    [self saveFile:[videoData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
+                                        c3++;
+                                        if(c3 == [videoData count]){
+                                            __block int c4 = 0;
+                                            //save all document data
+                                            for(id key in documentData){
+                                                //ALog(@"Document Key %@", key);
+                                                [self saveFile:[documentData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
+                                                    c4++;
+                                                    if(c4 == [documentData count]){
+                                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                                            completeFlagArgument(YES);
+                                                        });
+                                                    }
+                                                }];
+                                            }
 
-                                    }
-                                }];
+                                        }
+                                    }];
+                                }
                             }
-                        }
-                    }];
+                        }];
+                    }
+                    
                 }
-                
-            }
-        }];
-    }
+            }];
+        }
+    });
 }
 
 //This function takes a Media Valet Hyperlink and chops it up to extract the video file name
@@ -518,18 +551,24 @@
 //saves a file by the file name locally to the device
 -(void)saveFile:(NSData *)data andFileName:(NSString *)filename complete:(completeBlock)completeFlag
 {
+    filename = [self cleanseStringName:filename];
     @autoreleasepool {
         if (data != nil)
         {
+           
+            //NSError *error;
             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
             NSString *documentsDirectory = [paths objectAtIndex:0];
             NSString* path = [documentsDirectory stringByAppendingPathComponent:filename];
             
+            ALog("Filename %@", filename);
+            ALog("Data length %d", [data length]);
+            
             if([data writeToFile:path atomically:YES]){
-                ALog(@"Model SAVED FILE SUCCESSFULLY %@", filename);
+                //ALog(@"Model SAVED FILE SUCCESSFULLY %@", path);
                 completeFlag(YES);
             }else{
-                ALog(@"ERROR SAVING FILE %@", filename);
+                ALog(@"ERROR SAVING FILE %@", path);
                 completeFlag(NO);
             }
         }
@@ -541,6 +580,7 @@
 //It should be noted that this function is save an HTML file and UTF8StringEncodes the data to be saved as HTML
 -(void)saveHTMLFile:(NSData *)data andFileName:(NSString *)filename complete:(completeBlock)completeFlag
 {
+    filename = [self cleanseStringName:filename];
     @autoreleasepool {
         if (data != nil)
         {
@@ -549,10 +589,10 @@
             NSString* path = [documentsDirectory stringByAppendingPathComponent:filename];
             NSString *html = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
             if([html writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:nil]){
-                ALog(@"SAVED HTML FILE SUCCESSFULLY %@", filename);
+                //ALog(@"SAVED HTML FILE SUCCESSFULLY %@", path);
                 completeFlag(YES);
             }else{
-                ALog(@"ERROR SAVING FILE %@", filename);
+                ALog(@"ERROR SAVING FILE %@", path);
                 completeFlag(NO);
             }
         }
@@ -598,12 +638,17 @@
 //function the retrieves the nsdata based upon file name
 -(NSData *)getFileData:(NSString *)fileName complete:(completeBlock)completeFlag
 {
+    
+    
+    fileName = [self cleanseStringName:fileName];
     NSError *err = nil;
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString* path = [documentsDirectory stringByAppendingPathComponent:fileName];
     NSData *data = [NSData dataWithContentsOfFile:path options:NSDataReadingUncached error:&err];
     if(data != nil && [data length] > 0){
+        ALog("Filename %@", fileName);
+        ALog("Data length %d", [data length]);
         completeFlag(YES);
         return data;
     }else{
@@ -618,10 +663,12 @@
 //this function is function when it comes time to display documents in the prodoct series view
 -(NSData *)getHTMLFile:(NSString *)filename complete:(completeBlock)completeFlag
 {
+    filename = [self cleanseStringName:filename];
     NSError *err = nil;
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString* path = [documentsDirectory stringByAppendingPathComponent:filename];
+
     //get the html data from disk
     NSData *htmlData = [NSData dataWithContentsOfFile:path options:NSDataReadingUncached error:&err];
     //if we actually get data
@@ -643,6 +690,7 @@
 //function that checks if a file exists
 -(BOOL)fileExists:(NSString *)filename
 {
+    filename = [self cleanseStringName:filename];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString* path = [documentsDirectory stringByAppendingPathComponent:filename];
@@ -660,6 +708,7 @@
 //this function is used a lot for videos that were just downloaded to the device
 -(NSString *)returnFilePath:(NSString *)name
 {
+    name = [self cleanseStringName:name];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString* path = [documentsDirectory stringByAppendingPathComponent:name];
@@ -669,6 +718,7 @@
 //this function checks to see if a video exists
 -(BOOL)videoExists:(NSString *)videoURL
 {
+    videoURL = [self cleanseStringName:videoURL];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
     if([fileManager fileExistsAtPath:videoURL]){
@@ -676,6 +726,27 @@
     }else{
         return NO;
     }
+}
+
+-(NSString *)cleanseStringName:(NSString *)filename
+{
+    filename = [filename stringByReplacingOccurrencesOfString:@"/" withString:@""];
+    filename = [filename stringByReplacingOccurrencesOfString:@"," withString:@""];
+    filename = [filename stringByReplacingOccurrencesOfString:@":" withString:@""];
+    filename = [filename stringByReplacingOccurrencesOfString:@"é" withString:@"e"];
+    return [filename stringByReplacingOccurrencesOfString:@"\u00e9" withString:@"e"];
+}
+
+-(NSMutableArray *)cleanArray:(NSMutableArray *)array
+{
+    NSMutableArray *arr = [NSMutableArray array];
+    for(NSString *str in array){
+        NSString *s = str;
+        s = [self cleanseStringName:s];
+        [arr addObject:s];
+    }
+    return arr;
+    
 }
 
 @end

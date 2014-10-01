@@ -301,11 +301,18 @@
     ALog(@"Series %@",b.titleLabel.text);
     
     NSData *seriesData = [model getFileData:b.titleLabel.text complete:^(BOOL completeFlag){}];
-    model.selectedSeries = [NSKeyedUnarchiver unarchiveObjectWithData:seriesData];
-    ALog(@"Series %@", model.selectedSeries.title);
+    if(seriesData != nil){
+        ALog(@"HERE3 %d", [seriesData length]);
+        model.selectedSeries = [NSKeyedUnarchiver unarchiveObjectWithData:seriesData];
+     
+        SeriesViewController *series = [[SeriesViewController alloc] initWithNibName:@"SeriesViewController" bundle:nil];
+        [self.navigationController pushViewController:series animated:YES];
+    }else{
+        [self displayMessage:@"Alert" withTitle:@"There was an internal error, please contact support."];
+    }
     
-    SeriesViewController *series = [[SeriesViewController alloc] initWithNibName:@"SeriesViewController" bundle:nil];
-    [self.navigationController pushViewController:series animated:YES];
+    
+   
 }
 
 //function that pops the view controller off the stack and sends the user back home
