@@ -35,6 +35,8 @@
     UIPageControl *overviewImageDots;
     UIScrollView *overviewContent, *documentScroll;
     UIWebView *webPage;
+    UILabel *documentLabel;
+    UIButton *documentHeaderButton;
     
     
     //global data

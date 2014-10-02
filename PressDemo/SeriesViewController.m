@@ -229,9 +229,24 @@
     actualDocumentView.userInteractionEnabled = YES;
     [mainView addSubview:actualDocumentView];
     
+    documentHeaderButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [documentHeaderButton setFrame:CGRectMake(0, 0, 776, 160)];
+    [documentHeaderButton addTarget:self action:@selector(loadUpMainTray:)forControlEvents:UIControlEventTouchDown];
+    documentHeaderButton.showsTouchWhenHighlighted = YES;
+    documentHeaderButton.tag = 25;
+    documentHeaderButton.backgroundColor = [UIColor clearColor];
+    [actualDocumentView addSubview:documentHeaderButton];
+    
     actualDocumentBanner = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 776, 173)];
     actualDocumentBanner.backgroundColor = [UIColor whiteColor];
     [actualDocumentView addSubview:actualDocumentBanner];
+    
+    documentLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 50, 670, 36)];
+    [documentLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:24.0]];
+    documentLabel.textColor = [UIColor whiteColor];
+    documentLabel.numberOfLines = 1;
+    documentLabel.backgroundColor = [UIColor clearColor];
+    [actualDocumentBanner addSubview:documentLabel];
     
     webPage = [[UIWebView alloc] initWithFrame:CGRectMake(36, 209, 704, 445)];
     webPage.backgroundColor = [UIColor whiteColor];
@@ -795,14 +810,20 @@
         
         if([d.type isEqualToString:@"white-paper"]){
             actualDocumentBanner.frame = CGRectMake(0, 0, 776, 173);
-            webPage.frame = CGRectMake(36, 209, 704, 445);
+            webPage.frame = CGRectMake(36, 164, 704, 445);
             //white paper image assignement
+            documentLabel.text = d.title;
+            documentHeaderButton.titleLabel.text = @"white_papers";
+            documentHeaderButton.tag = 228;
             [actualDocumentBanner setImage:[UIImage imageNamed:@"hdr-doc-whitepaper.png"]];
             
         }else if([d.type isEqualToString:@"case-study"]){
             //case study image assignment
             actualDocumentBanner.frame = CGRectMake(0, 0, 776, 173);
-            webPage.frame = CGRectMake(36, 209, 704, 445);
+            webPage.frame = CGRectMake(36, 164, 704, 445);
+            documentLabel.text = d.title;
+            documentHeaderButton.titleLabel.text = @"case_studies";
+            documentHeaderButton.tag = 294;
             [actualDocumentBanner setImage:[UIImage imageNamed:@"hdr-doc-casestudy.png"]];
             
         }else if([d.type isEqualToString:@"product-spec"]){
