@@ -109,14 +109,14 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    ALog(@"viewWillAppear FILTER");
+    //ALog(@"viewWillAppear FILTER");
     
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    ALog(@"viewDidAppear FILTER");
+    //ALog(@"viewDidAppear FILTER");
     //app going into background notification
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appWentIntoBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -130,14 +130,14 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    ALog(@"viewWillDisappear FILTER");
+    //ALog(@"viewWillDisappear FILTER");
     [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    ALog(@"viewDidDisappear FILTER");
+    //ALog(@"viewDidDisappear FILTER");
 }
 
 - (void)viewDidLoad
@@ -298,11 +298,11 @@
 -(void)productTouched:(id)sender
 {
     UIButton *b = (UIButton *)sender;
-    ALog(@"Series %@",b.titleLabel.text);
+    //ALog(@"Series %@",b.titleLabel.text);
     
     NSData *seriesData = [model getFileData:b.titleLabel.text complete:^(BOOL completeFlag){}];
     if(seriesData != nil){
-        ALog(@"HERE3 %d", [seriesData length]);
+        //ALog(@"HERE3 %d", [seriesData length]);
         model.selectedSeries = [NSKeyedUnarchiver unarchiveObjectWithData:seriesData];
      
         SeriesViewController *series = [[SeriesViewController alloc] initWithNibName:@"SeriesViewController" bundle:nil];
@@ -318,7 +318,7 @@
 //function that pops the view controller off the stack and sends the user back home
 -(void)triggerHome:(id)sender
 {
-    ALog(@"HOME!");
+    //ALog(@"HOME!");
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
@@ -385,7 +385,7 @@
 //this response will let the view and the user know that there is an update available
 -(void)updateResponse:(CanonModel *)obj withFlag:(BOOL)flag{
     
-    ALog(@"Update Response, %d.  This tells us if there is an update available.", flag);
+    //ALog(@"Update Response, %d.  This tells us if there is an update available.", flag);
     //update available
     if(flag){
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Update App"

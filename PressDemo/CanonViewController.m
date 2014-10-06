@@ -128,10 +128,10 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    ALog(@"viewWillAppear HOME");
+    //ALog(@"viewWillAppear HOME");
     
     if(model.needsUpdate && [model.hostReachability isReachableViaWiFi]){
-        ALog(@"The app was flagged that it needed updates");
+        //ALog(@"The app was flagged that it needed updates");
         model.ui.splash.image = [model.ui getImageWithName:@"/sample@2x.png"];
         [self.view addSubview:model.ui.splash];
         [self.view bringSubviewToFront:model.ui.splash];
@@ -146,7 +146,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    ALog(@"viewDidAppear HOME");
+    //ALog(@"viewDidAppear HOME");
     //app going into background notification
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appWentIntoBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -160,7 +160,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    ALog(@"viewWillDisappear HOME");
+    //ALog(@"viewWillDisappear HOME");
     
     //remove notification
     [[NSNotificationCenter defaultCenter] removeObserver: self];
@@ -169,7 +169,7 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    ALog(@"viewDidDisappear HOME");
+    //ALog(@"viewDidDisappear HOME");
     
     //remove all assets here for future memory enhancements
 }
@@ -455,7 +455,7 @@
 //this response will let the view and the user know that there is an update available
 -(void)updateResponse:(CanonModel *)obj withFlag:(BOOL)flag{
     
-    ALog(@"Update Response, %d.  This tells us if there is an update available.", flag);
+    //ALog(@"Update Response, %d.  This tells us if there is an update available.", flag);
     //update available
     if(flag){
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Update App"

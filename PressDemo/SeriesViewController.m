@@ -153,14 +153,14 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    ALog(@"viewWillAppear SERIES");
+    //ALog(@"viewWillAppear SERIES");
     
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    ALog(@"viewDidAppear SERIES");
+    //ALog(@"viewDidAppear SERIES");
     //app going into background notification
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appWentIntoBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -174,14 +174,14 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    ALog(@"viewWillDisappear SERIES");
+    //ALog(@"viewWillDisappear SERIES");
     [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    ALog(@"viewDidDisappear SERIES");
+    //ALog(@"viewDidDisappear SERIES");
 }
 
 - (void)viewDidLoad
@@ -449,9 +449,10 @@
 -(void)loadUpMainTray:(id)sender
 {
     UIButton *b = (UIButton *)sender;
-    
+    ALog(@"Present");
     //if overview is present
     if(sidebarIndicator.frame.origin.y == 30){
+        ALog(@"HERE 1");
         [self tearDownAndLoadUpDocuments:b.titleLabel.text withComplete:^(BOOL completeFlag){
             //perform the animation
             [UIView animateWithDuration:1.2f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
@@ -465,6 +466,7 @@
      //switching from document back to overview
     }else if([b.titleLabel.text isEqualToString:@"overview"]){
         [self rearrangeDocumentStack];
+        ALog(@"HERE 2");
         //perform the animation
         [UIView animateWithDuration:1.2f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
             overviewContainer.alpha = 1.0;
@@ -475,7 +477,9 @@
         }];
      //switching from actual document to document
     }else if(actualDocumentView.frame.origin.y < 884){
+        overviewContainer.alpha = 0.0;
         [self rearrangeDocumentStack];
+        ALog(@"HERE 3");
         //perform the animation to move the documet
         [UIView animateWithDuration:0.6f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
             actualDocumentView.frame = CGRectMake(1040, 44, 776, 684);
@@ -491,7 +495,9 @@
             }];
         }];
     }else{
+        overviewContainer.alpha = 0.0;
         [self rearrangeDocumentStack];
+        ALog(@"HERE 4");
         [UIView animateWithDuration:0.6f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
             documentScroll.frame = CGRectMake(1040, 44, 748, 628);
             documentScroll.alpha = 0.0;
@@ -535,8 +541,10 @@
     //make sure that when we are drawing in from the dynamic property that we are using the
     //assigned data class correctly.  Check the data class to make sure before using
     
+    //ALog(@"Data %@ and flag %@", data, flag);
+    
     //make sure we are dealing with an array, otherwise we can assume that their is no content assigned to this 
-    if([data isKindOfClass:[NSArray class]]){
+    if([data isKindOfClass:[NSArray class]] && [data count] > 0){
         
         //Below we loop through eith the document or video data to load up a dynamic set of buttons
         int count = (int)[data count], i = 0, y = 0;
@@ -581,7 +589,7 @@
             desc.backgroundColor = [UIColor clearColor];
             [back addSubview:desc];
             
-            
+            //ALog(@"Document Key %@", documentKey);
             /**** if the document is a video ****/
             if ([flag isEqualToString:@"videos"]){
                 /*************** Videos ************************/
@@ -619,6 +627,7 @@
                 
                 
                 NSString *rawVideo = [v.rawVideo stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+                //ALog(@"Video name %@", rawVideo);
                 NSString *name = [model getVideoFileName:rawVideo];
                 NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
                 
@@ -717,6 +726,7 @@
             
             if(i == count){
               [documentScroll setContentSize:CGSizeMake(748, (y + 193))];
+              ALog(@"Completed 1");
               completeFlag(YES);
             }
         }
@@ -737,6 +747,7 @@
         [documentScroll addSubview:desc];
         
         [documentScroll setContentSize:CGSizeMake(748, 300)];
+        ALog(@"Completed 2");
         completeFlag(YES);
     }
     
@@ -751,7 +762,7 @@
     
     /************ Download the video to disk ************************/
     if(b.tag == 555){
-        ALog(@"download video %@", b.titleLabel.text);
+        //ALog(@"download video %@", b.titleLabel.text);
         if(network.videoDownloading){
             [self displayMessage:@"Another video is currently downloading." withTitle:@"Alret"];
         }else{
@@ -770,7 +781,7 @@
                 downloadingURL = [downloadingURL stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
                 dispatch_queue_t model_queue = dispatch_queue_create(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
                 dispatch_async(model_queue, ^{
-                    ALog(@"Video string %@", videoURLString);
+                    //ALog(@"Video string %@", videoURLString);
                     [network downloadVideo:videoURLString];
                 });
             }else{
@@ -860,12 +871,13 @@
         
         Video *v = [currentDocumentData objectForKey: b.titleLabel.text];
         NSString *name = [model getVideoFileName:v.rawVideo];
+        //ALog(@"Name %@", name);
         NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
         
 
         if([model.hostReachability isReachableViaWiFi]){
             //stream if reachable
-            ALog(@"Stream %@", v.streamingURL);
+            //ALog(@"Stream %@", v.streamingURL);
             NSString *videoURLString = [v.streamingURL stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
             NSURL *videoURL = [NSURL URLWithString:videoURLString];
             MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
@@ -873,7 +885,7 @@
         }else{
             NSString *lookupNameAdvanced = [lookupName stringByReplacingOccurrencesOfString:@" " withString:@"_"];
             
-            ALog(@"Inline %@",  lookupNameAdvanced);
+            //ALog(@"Inline %@",  lookupNameAdvanced);
             if([model fileExists:lookupNameAdvanced]){
                 
                 NSString *fullPath = [model returnFilePath:lookupNameAdvanced];
@@ -925,7 +937,7 @@
 //this function sends the user back home
 -(void)triggerHome:(id)sender
 {
-    ALog(@"HOME!");
+    //ALog(@"HOME!");
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
@@ -1080,14 +1092,14 @@
 //this function adds the video URL to the button as the title for download
 -(void)videoDownloadResponse:(CanonModel *)model withFlag:(BOOL)flag
 {
-    ALog(@"Made it with my video download response! %d", flag);
+    //ALog(@"Made it with my video download response! %d", flag);
     UIView *v = [videoButton viewWithTag:110];
     [v removeFromSuperview];
     
     if(flag){
         [videoButton setImage:[UIImage imageNamed:@"icn-load.png"] forState:UIControlStateNormal];
         videoButton.tag = 777;
-        ALog(@"######### %@", downloadingURL);
+        //ALog(@"######### %@", downloadingURL);
         [videoButton setTitle:[self.model returnFilePath:downloadingURL] forState:UIControlStateNormal];
     }else{
         [self displayMessage:@"OOPS! Something went wrong downloading your video.  Please make sure you are connected to the internet and try again." withTitle:@"Alert"];
@@ -1098,7 +1110,7 @@
 //this response will let the view and the user know that there is an update available
 -(void)updateResponse:(CanonModel *)obj withFlag:(BOOL)flag{
     
-    ALog(@"Update Response, %d.  This tells us if there is an update available.", flag);
+    //ALog(@"Update Response, %d.  This tells us if there is an update available.", flag);
     //update available
     if(flag){
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Update App"
@@ -1121,12 +1133,12 @@
     NSMutableArray *images = [NSMutableArray array];
     NSMutableArray *filteredImages = [NSMutableArray array];
     for(NSString *filename in products){
-        ALog(@"File name after 1 %@", filename);
+        //ALog(@"File name after 1 %@", filename);
         NSData *prod = [model getFileData:filename complete:^(BOOL completeFlag){}];
-        ALog(@"File name after 2 %@", filename);
+        //ALog(@"File name after 2 %@", filename);
         Product *p = [NSKeyedUnarchiver unarchiveObjectWithData:prod];
         [images addObject:[p.images objectForKey:@"hero-image"]];
-        ALog(@"Product name %@", p.title);
+        //ALog(@"Product name %@", p.title);
     }
     //filter the array of images
     for(NSString *url in images){

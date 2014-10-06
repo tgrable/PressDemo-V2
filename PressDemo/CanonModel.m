@@ -519,17 +519,19 @@
     });
 }
 
-//This function takes a Media Valet Hyperlink and chops it up to extract the video file name
+//This function takes a CDN Hyperlink and chops it up to extract the video file name
 //This function will be in flux as we transition asset providers and move away from Media Valet
 -(NSString *)getVideoFileName:(NSString *)url
 {
     if([url length] > 0){
         NSArray *chopped = [url componentsSeparatedByString:@"//"];
+        //ALog(@"Chopped One link %@", chopped);
         if([chopped count] > 0){
             NSArray *choppedSecond = [[chopped objectAtIndex:1] componentsSeparatedByString:@"/"];
-            if([choppedSecond objectAtIndex:3] != nil){
-                ALog(@"Chopped %@", [choppedSecond objectAtIndex:3]);
-                return [choppedSecond objectAtIndex:3];
+            //ALog(@"Chopped Second link %@", choppedSecond);
+            if([choppedSecond objectAtIndex:2] != nil){
+                //ALog(@"Chopped %@", [choppedSecond objectAtIndex:2]);
+                return [choppedSecond objectAtIndex:2];
             }else{
                 return [choppedSecond objectAtIndex:2];
             }
@@ -561,8 +563,8 @@
             NSString *documentsDirectory = [paths objectAtIndex:0];
             NSString* path = [documentsDirectory stringByAppendingPathComponent:filename];
             
-            ALog("Filename %@", filename);
-            ALog("Data length %d", [data length]);
+            //ALog("Filename %@", filename);
+            //ALog("Data length %d", [data length]);
             
             if([data writeToFile:path atomically:YES]){
                 //ALog(@"Model SAVED FILE SUCCESSFULLY %@", path);
@@ -647,8 +649,8 @@
     NSString* path = [documentsDirectory stringByAppendingPathComponent:fileName];
     NSData *data = [NSData dataWithContentsOfFile:path options:NSDataReadingUncached error:&err];
     if(data != nil && [data length] > 0){
-        ALog("Filename %@", fileName);
-        ALog("Data length %d", [data length]);
+        //ALog("Filename %@", fileName);
+        //ALog("Data length %d", [data length]);
         completeFlag(YES);
         return data;
     }else{
