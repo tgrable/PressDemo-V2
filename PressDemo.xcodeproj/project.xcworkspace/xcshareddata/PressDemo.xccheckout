@@ -14,7 +14,7 @@
 		<string>https://github.com/TrekkDesign/PressDemo.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>PressDemo.xcodeproj/project.xcworkspace</string>
+	<string>PressDemo.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>064E6CE15197D6BFA00B6ED5AE7F99C79345EDB7</key>

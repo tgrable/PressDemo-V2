@@ -10,13 +10,16 @@
 #import "UIModel.h"
 #import "SBJson.h"
 #import <SDWebImage/SDWebImageManager.h>
+#import "GAI.h"
+#import "GAIFields.h"
+#import "GAIDictionaryBuilder.h"
 
 //this is a local macro that sets up a class wide logging scheme
 #define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 
 @implementation CanonModel
 @synthesize orange, blue, green, dullBlack, lightGray, red, yellow, pink, purple, gray, testingString, ui;
-@synthesize localProds, currentFilter, filteredProducts, selectedSeries;
+@synthesize localProds, currentFilter, filteredProducts, selectedSeries, tracker, selectedMill, selectedPartner;
 - (id)init
 {
     self = [super init];
@@ -26,6 +29,8 @@
         
         //manager = [SDWebImageManager sharedManager];
         selectedSeries = [[ProductSeries alloc] init];
+        selectedMill = [[Mill alloc] init];
+        selectedPartner = [[Partner alloc] init];
         
         self.hostReachability = [Reachability reachabilityWithHostname:@"www.apple.com"];
         [self.hostReachability startNotifier];
@@ -36,6 +41,13 @@
         productSeriesData = [[NSMutableDictionary alloc] init];
         videoData = [[NSMutableDictionary alloc] init];
         downloadedImages = [NSMutableArray array];
+        millData = [[NSMutableDictionary alloc] init];
+        paperData = [[NSMutableDictionary alloc] init];
+        softwareData = [[NSMutableDictionary alloc] init];
+        initialPartnerData = [NSMutableArray array];
+        initialSetOfMills = [NSMutableArray array];
+        initialSetOfPaper = [NSMutableArray array];
+        initialSolutionData = [NSMutableArray array];
         
         //initial setup of products in the first view
         localProds = [NSMutableArray array];
@@ -62,6 +74,7 @@
         [showAll setObject:[UIImage imageNamed:@"home-nav-cutsheet.png"] forKey:@"cutsheet"];
         [showAll setObject:[UIImage imageNamed:@"home-nav-mono.png"] forKey:@"monochrome"];
         [showAll setObject:[UIImage imageNamed:@"home-nav-workflow.png"] forKey:@"workflow"];
+        [showAll setObject:[UIImage imageNamed:@"home-nav-media.png"] forKey:@"media"];
         
         //Full on UIImages to be referenced in the ViewController by Key
         topBanners = [[NSMutableDictionary alloc] init];
@@ -77,9 +90,7 @@
         [topBanners setObject:[UIImage imageNamed:@"header-continuousfeed.png"] forKey:@"continuous-feed"];
         [topBanners setObject:[UIImage imageNamed:@"header-cutsheet.png"] forKey:@"cutsheet"];
         [topBanners setObject:[UIImage imageNamed:@"header-monochrome.png"] forKey:@"monochrome"];
-        [topBanners setObject:[UIImage imageNamed:@"header-workflow.png"] forKey:@"workflow"];
-
-        
+ 
         
         //readable names to be displayed to the user
         taxonomyReadableNames = [[NSMutableDictionary alloc] init];
@@ -102,7 +113,7 @@
         [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-jetstreamdual.png"] forKey:@"oce-jetstream-dual-series--series"];
         [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-CS3000.png"] forKey:@"oce-colorstream-3000-series--series"];
         [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-jetstreamcompact.png"] forKey:@"oce-jetstream-compact-series--series"];
-        [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-imagepress.png"] forKey:@"canon-imagepress-series--series"];
+        [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-imagepress.png"] forKey:@"canon-imagepress-jet-series--series"];
         [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-VP6000.png"] forKey:@"oce-varioprint-6000+-series--series"];
         [seriesBanners setObject:[UIImage imageNamed:@"hdr-short-prisma.png"] forKey:@"prisma-series--series"];
         
@@ -121,6 +132,14 @@
     }
     return self;
 }
+
+//##### Google Analytics ###################################################################
+
+-(void)logData:(NSString *)category withAction:(NSString *)action withLabel:(NSString *)label
+{
+    //[tracker send:[[GAIDictionaryBuilder createEventWithCategory:category action:action label:label value:nil] build]];
+}
+
 
 //This function breaks out the time stamps returned for each content type so that the application can recognize
 //the need to flag an alert to the user that their is updated data available
@@ -173,6 +192,54 @@
         //break out the data in files to be save to disk
         [self breakoutDocumentData:[localData objectForKey:@"product-spec"] withType:@"product-spec"];
         
+        //software
+    }else if([localData objectForKey:@"software"]){
+        ALog(@"Software");
+        //set when the software content type was last updated
+        [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"software"];
+        //break out the data in files to be save to disk
+        [self breakoutSoftwareData:[localData objectForKey:@"software"]];
+        
+        //mill
+    }else if([localData objectForKey:@"mill"]){
+        ALog(@"Mill");
+        //set when the mill content type was last updated
+        [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"mill"];
+        //break out the data in files to be save to disk
+        [self breakoutMillData:[localData objectForKey:@"mill"]];
+        
+        //paper
+    }else if([localData objectForKey:@"paper"]){
+        ALog(@"Paper");
+        //set when the paper content type was last updated
+        [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"paper"];
+        //break out the data in files to be save to disk
+        [self breakoutPaperData:[localData objectForKey:@"paper"]];
+        
+        //datasheet
+    }else if([localData objectForKey:@"datasheet"]){
+        ALog(@"Data Sheet");
+        //set when the datasheet content type was last updated
+        [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"datasheet"];
+        //break out the data in files to be save to disk
+        [self breakoutDocumentData:[localData objectForKey:@"datasheet"] withType:@"datasheet"];
+        
+        //brochure
+    }else if([localData objectForKey:@"brochure"]){
+        ALog(@"Brochures");
+        //set when the brochure content type was last updated
+        [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"brochure"];
+        //break out the data in files to be save to disk
+        [self breakoutDocumentData:[localData objectForKey:@"brochure"] withType:@"brochure"];
+        
+        //partner
+    }else if([localData objectForKey:@"partner"]){
+        ALog(@"Partners");
+        //set when the brochure content type was last updated
+        [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"partner"];
+        //break out the data in files to be save to disk
+        [self breakoutPartnerData:[localData objectForKey:@"partner"]];
+        
         //product
     }else if([localData objectForKey:@"product"]){
         ALog(@"Product");
@@ -196,9 +263,34 @@
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"product-series"];
         //break out the product data to be saved to memory
         [self breakoutProductSeriesData:[localData objectForKey:@"product-series"]];
+        
+        //solution
+    }else if([localData objectForKey:@"solution"]){
+        ALog(@"Solution");
+        //set when the video content type was last updated
+        [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"solution"];
+        //break out the product data to be saved to memory
+        [self breakoutSolutionData:[localData objectForKey:@"solution"]];
     }
    
     completeFlag(YES);
+}
+
+//function that creates solution objects out of an array of dictionaries
+-(void)breakoutSolutionData:(NSArray* )solution
+{
+    for(NSDictionary *dict in solution){
+        Solution *s = [[Solution alloc] init];
+        
+        s.title = [dict objectForKey:@"title"];
+        
+        NSString *keySolution = [dict objectForKey:@"key"];
+        s.key = keySolution;
+        s.description = [dict objectForKey:@"description"];
+        
+        [initialSolutionData addObject:s];
+    
+    }
 }
 
 //function that creates product objects out of an array of dictionaries
@@ -232,19 +324,6 @@
        
         NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:p];
         [productData setObject:encodedObject  forKey:keyProduct];
-        
-        
-        
-        ALog(@"************** Product ************************");
-        ALog(@"Title %@", p.title);
-        ALog(@"Key %@", p.key);
-        ALog(@"Key %@", p.series);
-        ALog(@"Description %@", p.images);
-        ALog(@"Spec %@", p.description);
-        ALog(@"Case Study  %@", p.whatDoYouWantToPrint);
-        ALog(@"White Paper  %@", p.showAll);
-
-        
     }
 }
 
@@ -273,10 +352,6 @@
         //case study keys
         ps.case_studies = [dict objectForKey:@"case_studies"];
         
-        //if([[dict objectForKey:@"case_studies"] isKindOfClass:[NSMutableArray class]]){
-         //  ps.case_studies = [[self cleanArray:[dict objectForKey:@"case_studies"]] mutableCopy];
-        //}
-        
         //white paper keys
         ps.white_papers = [dict objectForKey:@"white_papers"];
     
@@ -285,6 +360,9 @@
     
         //product keys
         ps.products = [dict objectForKey:@"products"];
+        
+        //solutions keys
+        ps.solutions = [dict objectForKey:@"solutions"];
         
         
         NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:ps];
@@ -362,6 +440,134 @@
     }
 }
 
+//function that breaks out all of the paper data and saves it as a model object
+-(void)breakoutPaperData:(NSArray *)papers
+{
+    for(NSDictionary *dict in papers){
+        
+        Paper *p = [[Paper alloc] init];
+        
+        NSString *key = [dict objectForKey:@"key"];
+        p.key = key;
+        p.title = [dict objectForKey:@"title"];
+        p.mill = [dict objectForKey:@"mill"];
+        
+        NSString *name = [p.mill stringByReplacingOccurrencesOfString:@"--mill" withString:@""];
+        name = [name capitalizedString];
+        name = [name stringByReplacingOccurrencesOfString:@"-" withString:@" "];
+        p.mill_name = name;
+        
+        p.basis_weight = [dict objectForKey:@"basis_weight"];
+        p.brightness = [dict objectForKey:@"brightness"];
+        p.coating = [dict objectForKey:@"coating"];
+        p.color_capacity = [dict objectForKey:@"color_capacity"];
+        
+        p.category = [dict objectForKey:@"category"];
+        p.dye_pigment = [dict objectForKey:@"dye_pigment"];
+        p.region = [dict objectForKey:@"region"];
+        p.micr_capable = [dict objectForKey:@"micr_capable"];
+        p.price_range = [dict objectForKey:@"price_range"];
+        p.opacity_range = [dict objectForKey:@"opacity_range"];
+        
+        p.recycled_percentage = [dict objectForKey:@"recycled_percentage"];
+        p.type_one = [dict objectForKey:@"type_one"];
+        p.type_two = [dict objectForKey:@"type_two"];
+        
+        p.color_capability = [dict objectForKey:@"color_capability"];
+        p.weights_available = [dict objectForKey:@"weights_available"];
+        p.boost_sample = [dict objectForKey:@"boost_sample"];
+        p.house_paper = [dict objectForKey:@"house_paper"];
+        
+        //add to the inital set of papers so they do not have to be queries later
+        //this is a band-aid until we can implement a RDMS
+        [initialSetOfPaper addObject:p];
+        
+        NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:p];
+        [paperData setObject:encodedObject forKey:key];
+    }
+}
+
+//function that breaks out all of the mill data and saves it as a model object
+-(void)breakoutMillData:(NSArray *)mills
+{
+    
+    for(NSDictionary *dict in mills){
+        
+        Mill *m = [[Mill alloc] init];
+        
+        NSString *key = [dict objectForKey:@"key"];
+        m.key = key;
+        m.title = [dict objectForKey:@"title"];
+        m.logo = [dict objectForKey:@"logo"];
+        m.banners = [dict objectForKey:@"banners"];
+        m.description = [dict objectForKey:@"description"];
+        m.website = [dict objectForKey:@"website"];
+        m.phone = [dict objectForKey:@"phone"];
+        m.address = [dict objectForKey:@"address"];
+        m.videos = [dict objectForKey:@"videos"];
+        m.papers = [dict objectForKey:@"papers"];
+        
+        //add to the inital set of mills so they do not have to be queries later
+        //this is a band-aid until we can implement a RDMS
+        [initialSetOfMills addObject:m];
+        
+        NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:m];
+        [millData setObject:encodedObject forKey:key];
+    }
+}
+
+//function that breaks out all of the software data and saves it as a model object
+-(void)breakoutSoftwareData:(NSArray *)software
+{
+    
+    for(NSDictionary *dict in software){
+        
+        Software *s = [[Software alloc] init];
+        NSString *key = [dict objectForKey:@"key"];
+        s.key = key;
+        s.title = [dict objectForKey:@"title"];
+        s.logo = [dict objectForKey:@"logo"];
+        s.short_desc = [dict objectForKey:@"short_desc"];
+        s.banners = [dict objectForKey:@"banners"];
+        s.description = [dict objectForKey:@"description"];
+        NSArray *overviewObjects = [dict objectForKey:@"overview"];
+        int i = 0;
+        for(NSDictionary *d in overviewObjects){
+            [s.overview setObject:d forKey:[NSString stringWithFormat:@"%d", i]];
+            i++;
+        }
+        
+        s.datasheets = [dict objectForKey:@"datasheets"];
+        s.brochures = [dict objectForKey:@"brochures"];
+        s.videos = [dict objectForKey:@"videos"];
+        
+        NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:s];
+        [softwareData setObject:encodedObject forKey:key];
+    }
+}
+
+//function that breaks out all of the partner data and saves it as a model object
+-(void)breakoutPartnerData:(NSArray *)partners
+{
+    
+    for(NSDictionary *dict in partners){
+        
+        Partner *p = [[Partner alloc] init];
+        NSString *key = [dict objectForKey:@"key"];
+        p.key = key;
+        p.title = [dict objectForKey:@"title"];
+        p.banners = [dict objectForKey:@"banners"];
+        p.description = [dict objectForKey:@"description"];
+        p.white_paper = [dict objectForKey:@"white_paper"];
+        p.case_study = [dict objectForKey:@"case_study"];
+        p.videos = [dict objectForKey:@"videos"];
+        p.solutions = [dict objectForKey:@"solutions"];
+        
+        [initialPartnerData addObject:p];
+    }
+}
+
+
 //this function removes all NSUserDefaults for data to be updated
 //this function is called when an update routine needs to run
 -(void)wipeOutAllModelDataForUpdate
@@ -404,6 +610,9 @@
         [productSeriesData removeAllObjects];
         [videoData removeAllObjects];
         [documentData removeAllObjects];
+        [softwareData removeAllObjects];
+        [paperData removeAllObjects];
+        [millData removeAllObjects];
         [lastUpdated removeAllObjects];
     }];
 }
@@ -463,6 +672,8 @@
     }
 }*/
 
+
+
 //This function saves all the objects saved temporarily in the model to disk
 //So basically all of the objects are serialized and saved in dictionaries/arrays now they are wrote to the device by the object key.
 //The object key is sort of like the object ID or row ID.
@@ -481,7 +692,7 @@
                     //save all product series data
                     for(id key in productSeriesData){
                         //ALog(@"Product Series Key %@", key);
-                        ALog(@"Length %d", [[productSeriesData objectForKey:key] length]);
+                        ALog(@"Length %d", (int)[[productSeriesData objectForKey:key] length]);
                         [self saveFile:[productSeriesData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
                             c2++;
                             if(c2 == [productSeriesData count]){
@@ -499,9 +710,52 @@
                                                 [self saveFile:[documentData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
                                                     c4++;
                                                     if(c4 == [documentData count]){
-                                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                                            completeFlagArgument(YES);
-                                                        });
+                                                        __block int c5 = 0;
+                                                        //save all paper data
+                                                        for(id key in paperData){
+                                                            [self saveFile:[paperData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
+                                                                c5++;
+                                                                if(c5 == [paperData count]){
+                                                                    __block int c6 = 0;
+                                                                    for(id key in millData){
+                                                                        [self saveFile:[millData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
+                                                                            c6++;
+                                                                            if(c6 == [millData count]){
+                                                                                __block int c7 = 0;
+                                                                                for(id key in softwareData){
+                                                                                    [self saveFile:[softwareData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
+                                                                                        c7++;
+                                                                                        if(c7 == [softwareData count]){
+                                                                                            //save inital dataset of mills as object
+                                                                                            NSData *encodedMills = [NSKeyedArchiver archivedDataWithRootObject:initialSetOfMills];
+                                                                                            //save inital dataset of papers as object
+                                                                                            NSData *encodedPapers = [NSKeyedArchiver archivedDataWithRootObject:initialSetOfPaper];
+                                                                                            //save the initial dataset of solutions
+                                                                                            NSData *encodedSolutions = [NSKeyedArchiver archivedDataWithRootObject:initialSolutionData];
+                                                                                            //save the initial dataset of partners
+                                                                                            NSData *encodedPartners = [NSKeyedArchiver archivedDataWithRootObject:initialPartnerData];
+                                                                                            [self saveFile:encodedMills andFileName:@"initialMills" complete:^(BOOL completeFlag){
+                                                                                                [self saveFile:encodedPapers andFileName:@"initialPapers" complete:^(BOOL completeFlag){
+                                                                                                    [self saveFile:encodedSolutions andFileName:@"initialSolutions" complete:^(BOOL completeFlag){
+                                                                                                        [self saveFile:encodedPartners andFileName:@"initialPartners" complete:^(BOOL completeFlag){
+                                                                                                            ALog(@"COMPLETE SAVING!");
+                                                                                                            completeFlagArgument(YES);
+                                                                                                        }];
+                                                                                                    }];
+                                                                                                }];
+                                                                                
+                                                                                            }];
+                                                                                    
+                                                                                        }
+                                                                                    }];
+                                                                                }
+                                                                            }
+                                                                        }];
+                                                                    }
+                                                                }
+                                                            }];
+                                                        }
+                                                        
                                                     }
                                                 }];
                                             }
@@ -518,6 +772,22 @@
         }
     });
 }
+
+//this sorts the data that is going into the table
+-(void)sortInitialPaperDataAlpha:(NSString *)key complete:(completeBlock)completeFlag
+{
+    NSData *paperEncodedData = [self getFileData:@"initialPapers" complete:^(BOOL completeFlag){}];
+    initialSetOfPaper = [NSKeyedUnarchiver unarchiveObjectWithData:paperEncodedData];
+    
+    NSSortDescriptor *sortDescriptor;
+    sortDescriptor = [[NSSortDescriptor alloc] initWithKey:key ascending:YES];
+    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+    
+    initialSetOfPaper = [[initialSetOfPaper sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
+    
+    completeFlag(YES);
+}
+
 
 //This function takes a CDN Hyperlink and chops it up to extract the video file name
 //This function will be in flux as we transition asset providers and move away from Media Valet
@@ -640,14 +910,14 @@
 //function the retrieves the nsdata based upon file name
 -(NSData *)getFileData:(NSString *)fileName complete:(completeBlock)completeFlag
 {
-    
-    
+
     fileName = [self cleanseStringName:fileName];
-    NSError *err = nil;
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString* path = [documentsDirectory stringByAppendingPathComponent:fileName];
+    NSError *err = nil;
     NSData *data = [NSData dataWithContentsOfFile:path options:NSDataReadingUncached error:&err];
+    
     if(data != nil && [data length] > 0){
         //ALog("Filename %@", fileName);
         //ALog("Data length %d", [data length]);
@@ -666,13 +936,14 @@
 -(NSData *)getHTMLFile:(NSString *)filename complete:(completeBlock)completeFlag
 {
     filename = [self cleanseStringName:filename];
-    NSError *err = nil;
+   
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString* path = [documentsDirectory stringByAppendingPathComponent:filename];
-
+    NSError *err = nil;
     //get the html data from disk
-    NSData *htmlData = [NSData dataWithContentsOfFile:path options:NSDataReadingUncached error:&err];
+    NSData * htmlData = [NSData dataWithContentsOfFile:path options:NSDataReadingUncached error:&err];
+    
     //if we actually get data
     if(htmlData != nil && [htmlData length] > 0){
         //Pass this data to a string with UTF8 encoding
@@ -730,8 +1001,10 @@
     }
 }
 
+//this function cleans up a string so that nothing is saved with a strange character
 -(NSString *)cleanseStringName:(NSString *)filename
 {
+    
     filename = [filename stringByReplacingOccurrencesOfString:@"/" withString:@""];
     filename = [filename stringByReplacingOccurrencesOfString:@"," withString:@""];
     filename = [filename stringByReplacingOccurrencesOfString:@":" withString:@""];

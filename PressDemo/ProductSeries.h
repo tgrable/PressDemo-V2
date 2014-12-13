@@ -18,5 +18,5 @@
 @property(nonatomic, copy)NSMutableArray *product_spec;
 @property(nonatomic, copy)NSMutableArray *videos;
 @property(nonatomic, copy)NSMutableArray *products;
-
+@property(nonatomic, copy)NSMutableArray *solutions;
 @end

@@ -11,9 +11,11 @@
 #import "NetworkData.h"
 #import "CanonModel.h"
 #import "AppDelegateProtocol.h"
+#import "GAITrackedViewController.h"
+#import "ShowAll.h"
+#import "WhatDoYouPrint.h"
 
-
-@interface CanonViewController : UIViewController<NetworkDelegate, UIScrollViewDelegate, UIAlertViewDelegate>{
+@interface CanonViewController : GAITrackedViewController<NetworkDelegate, UIScrollViewDelegate, UIAlertViewDelegate>{
     //local views
     UIImageView *homeHeader, *whatPrint, *showProducts, *logo;
     
@@ -25,7 +27,8 @@
 @property(nonatomic, readonly)CanonModel *model;
 
 @property(nonatomic, strong)NSMutableArray *whatImageNames, *showAllImageNames;
-@property(nonatomic, strong)UIScrollView *whatDoYouPrint, *showAllProducts;
+@property(nonatomic, strong)WhatDoYouPrint *whatDoYouPrint;
+@property(nonatomic, strong)ShowAll *showAllProducts;
 @property(nonatomic, strong)UIView *customNavBar;
 
 //regular views

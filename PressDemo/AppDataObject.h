@@ -12,6 +12,11 @@
 #import "Product.h"
 #import "ProductSeries.h"
 #import "SavedVideos.h"
+#import "Mill.h"
+#import "Paper.h"
+#import "Partner.h"
+#import "Software.h"
+#import "Solution.h"
 
 @interface AppDataObject : NSObject{
     BOOL layoutSync, needsUpdate;
@@ -19,12 +24,13 @@
     NSMutableDictionary *taxonomyReadableNames, *topBanners;
     NSMutableDictionary *seriesBanners, *documentBanners;
     NSMutableDictionary *lastUpdated, *documentData, *productData, *productSeriesData, *videoData;
-    NSMutableArray *downloadedImages;
+    NSMutableDictionary *millData, *paperData, *softwareData;
+    NSMutableArray *downloadedImages, *initialSetOfMills, *initialSetOfPaper, *initialSolutionData, *initialPartnerData;
 }
 
 @property (nonatomic, strong)NSMutableDictionary *whatDoYouWantToPrint, *showAll, *taxonomyReadableNames, *topBanners;
 @property (nonatomic, strong)NSMutableDictionary *lastUpdated, *documentData, *productData, *productSeriesData, *videoData;
-@property (nonatomic, strong)NSMutableDictionary *seriesBanners;
-@property (nonatomic, strong)NSMutableArray *downloadedImages;
+@property (nonatomic, strong)NSMutableDictionary *seriesBanners, *millData, *paperData, *softwareData;
+@property (nonatomic, strong)NSMutableArray *downloadedImages, *initialSetOfMills, *initialSetOfPaper, *initialSolutionData, *initialPartnerData;
 @property BOOL layoutSync, needsUpdate;
 @end

@@ -10,6 +10,9 @@
 #import "NetworkData.h"
 #import "DownloadUrlOperation.h"
 
+//this is a local macro that sets up a class wide logging scheme
+#define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+
 @implementation NetworkData
 @synthesize networkURL, threads, machineName;
 @synthesize downloadURLs, model, updateURL, videoDownloading;
@@ -31,7 +34,18 @@
         videoDownloading = NO;
         model = [self AppDataObj];
         // add product back to the machine name
-        machineName = [[NSMutableArray alloc] initWithObjects:@"case-study", @"product", @"product-spec", @"video", @"white-paper", @"product-series", nil];
+        machineName = [[NSMutableArray alloc] initWithObjects:@"case-study",
+                                                              @"product",
+                                                              @"product-spec",
+                                                              @"video",
+                                                              @"white-paper",
+                                                              @"product-series",
+                                                              @"paper",
+                                                              @"mill",
+                                                              @"partner",
+                                                              @"software",
+                                                              @"datasheet",
+                                                              @"solution", nil];
         downloadCount = (int)[machineName count];
         downloadURLs = [[NSMutableArray alloc] init];
     }
@@ -51,7 +65,7 @@
             status = 1;
             
             NSString *url = [NSString stringWithFormat:@"%@/data/api/%@", networkURL, value];
-            NSLog(@"URLs %@", url);
+            ALog(@"URLs %@", url);
             [downloadURLs addObject:url];
             
             //initiate the downloadoperation class and set the class properties for user authentication
@@ -75,7 +89,7 @@
         status = 2;
         
         NSString *url = [NSString stringWithFormat:@"%@%@", networkURL, updateURL];
-        NSLog(@"MADE IT HERE %@", url);
+
         [downloadURLs addObject:url];
         
         //initiate the downloadoperation class and set the class properties for user authentication
@@ -120,10 +134,10 @@
         //return [documentsDirectoryURL URLByAppendingPathComponent:[response suggestedFilename]];
     } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
         if(error == nil){
-            NSLog(@"File downloaded to: %@", filePath);
+            ALog(@"File downloaded to: %@", filePath);
             completeFlag(YES);
         }else{
-            NSLog(@"Error downloading video");
+            ALog(@"Error downloading video");
             completeFlag(NO);
         }
     }];
@@ -176,9 +190,11 @@
                                                                 object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:source, @"source", error, @"error", nil]];
             
             if(status == 1){
-                NSLog(@"Error %@", error);
+                ALog(@"Error %@", error);
                 //let user know we have an error
-                [_delegate downloadResponse:model withFlag:NO];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [_delegate downloadResponse:model withFlag:NO];
+                });
             }
         }else {
             //here I am checking to see the what type of download routine we are doing so I can
@@ -190,24 +206,26 @@
                     threadCount++;
                     // make sure the failure flag is notified that something went wrong
                     if(completeFlag == NO) failureFlag = YES;
-                    NSLog(@"Thread count %d", threadCount);
+                    ALog(@"Thread count %d", threadCount);
                     if(threadCount == downloadCount){
                         //success
                         if(!failureFlag){
                             //sync data and wipe out model
-                            NSLog(@"Saving data to disk");
+                            ALog(@"Saving data to disk");
                             [model saveAllDataToDisk:^(BOOL completeFlagArgument){
-                                NSLog(@"Success!");
+                                ALog(@"Success!");
                                 //Just as an option to have
-                                //[model downloadAllImagesAndSaveThem:^(BOOL completeFlagParent){
+                                dispatch_async(dispatch_get_main_queue(), ^{
                                     [_delegate downloadResponse:model withFlag:YES];
-                                //}];
+                                });
                             }];
                             
                         }else{
                             //failure
-                            NSLog(@"Failure!");
-                            [_delegate downloadResponse:model withFlag:NO];
+                            ALog(@"Failure!");
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [_delegate downloadResponse:model withFlag:NO];
+                            });
                         }
                         threadCount = 0;
                         failureFlag = NO;
@@ -217,7 +235,9 @@
             }else if(status == 2){
                 //delegate update routine
                 BOOL response = [model breakoutUpdateData:data];
-                [_delegate updateResponse:model withFlag:response];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [_delegate updateResponse:model withFlag:response];
+                });
                 
             }
         }

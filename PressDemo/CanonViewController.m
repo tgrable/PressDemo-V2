@@ -8,6 +8,7 @@
 #import "Product.h"
 #import "CanonViewController.h"
 #import "FilterViewController.h"
+#import "CanonMediaGridViewController.h"
 
 #define ResourcePath(path)[[NSBundle mainBundle] pathForResource:path ofType:nil]
 
@@ -86,7 +87,9 @@
         //make sure
         if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"case-study"] isEqualToString:@""]){
             ALog(@"CHECKING FOR UPDATES");
-            [network checkForUpdate];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                [network checkForUpdate];
+            });
         }
     }
     
@@ -96,21 +99,19 @@
 -(void)runLoadingSequence
 {
     ALog(@"runLoadingSequence");
-    dispatch_queue_t model_queue = dispatch_queue_create(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+
     //execute the first load sequence load
     if([[[NSUserDefaults standardUserDefaults] objectForKey:@"case-study"] isEqualToString:@""] && !downloadInProgress){
         
-        ALog(@"runLoadingSequence, case study blank, no other download in progress");
         model.ui.splash.image = [model.ui getImageWithName:@"/sample@2x.png"];
         [self.view addSubview:model.ui.splash];
         [self.view bringSubviewToFront:model.ui.splash];
        
         if([model.hostReachability isReachableViaWiFi]){
             downloadInProgress = YES;
-            ALog(@"runLoadingSequence, case study blank, no other download in progress, network is reachable");
             UIActivityIndicatorView *ac = (UIActivityIndicatorView *)[model.ui.splash viewWithTag:444];
             ac.alpha = 1.0;
-            dispatch_async(model_queue, ^{
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
                 ALog(@"runLoadingSequence, case study blank, no other download in progress, network is reachable, running download");
                 [network runInitialDownload];
             });
@@ -135,8 +136,7 @@
         model.ui.splash.image = [model.ui getImageWithName:@"/sample@2x.png"];
         [self.view addSubview:model.ui.splash];
         [self.view bringSubviewToFront:model.ui.splash];
-        dispatch_queue_t model_queue = dispatch_queue_create(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        dispatch_async(model_queue, ^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             [network runInitialDownload];
         });
         
@@ -159,8 +159,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewWillDisappear:animated];
-    //ALog(@"viewWillDisappear HOME");
+    [super viewWillDisappear:animated]; 
     
     //remove notification
     [[NSNotificationCenter defaultCenter] removeObserver: self];
@@ -169,8 +168,7 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    //ALog(@"viewDidDisappear HOME");
-    
+       
     //remove all assets here for future memory enhancements
 }
 
@@ -178,6 +176,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.screenName = @"Home View";
     
     //this notification is set to the reachability of the application
     //if the application cannot connect, then this function is called
@@ -220,10 +220,10 @@
     [self.view addSubview:whatPrint];
     
     //scroll view for what do you want to print
-    whatDoYouPrint = [[UIScrollView alloc] initWithFrame:CGRectMake(276, 365, 734, 187)];
+    whatDoYouPrint = [[WhatDoYouPrint alloc] initWithFrame:CGRectMake(276, 365, 734, 187)];
     whatDoYouPrint.showsHorizontalScrollIndicator = NO;
     whatDoYouPrint.showsVerticalScrollIndicator = NO;
-    whatDoYouPrint.canCancelContentTouches = YES;
+    whatDoYouPrint.delaysContentTouches = NO;
     whatDoYouPrint.delegate = self;
     whatDoYouPrint.clipsToBounds = YES;
     [self.view addSubview:whatDoYouPrint];
@@ -235,10 +235,10 @@
     [self.view addSubview:showProducts];
     
     //scroll view for show all products
-    showAllProducts = [[UIScrollView alloc] initWithFrame:CGRectMake(276, 566, 734, 187)];
+    showAllProducts = [[ShowAll alloc] initWithFrame:CGRectMake(276, 566, 734, 187)];
     showAllProducts.showsHorizontalScrollIndicator = NO;
     showAllProducts.showsVerticalScrollIndicator = NO;
-    showAllProducts.canCancelContentTouches = YES;
+    showAllProducts.delaysContentTouches = NO;
     showAllProducts.delegate = self;
     showAllProducts.clipsToBounds = YES;
     [self.view addSubview:showAllProducts];
@@ -258,6 +258,9 @@
             model.ui.splash.image = nil;
         }];
     }
+    
+    //GA
+    [model logData:@"Home View" withAction:@"View Tracker" withLabel:@"Landed on home view"];
 }
 
 //this function captures the event of one of the filter buttons being touched
@@ -266,28 +269,40 @@
     UIButton *b = (UIButton *)sender;
     model.currentFilter = b.titleLabel.text;
     
-    //make sure and remove and objects this array may contain
-    if([model.filteredProducts count] > 0){
-        [model.filteredProducts removeAllObjects];
-    }
-    
-    for(Product *p in model.localProds){
-        NSArray *w = p.whatDoYouWantToPrint;
-        NSArray *s = p.showAll;
+    if([model.currentFilter isEqualToString:@"media"]){
+        //filter towards media
+        ALog(@"I touched media");
+        ALog(@"Load up mills");
         
-        if([s containsObject:model.currentFilter] && ![model.filteredProducts containsObject:p]){
-            [model.filteredProducts addObject:p];
+        CanonMediaGridViewController *mgvc = [[CanonMediaGridViewController alloc] initWithNibName:@"CanonMediaGridViewController" bundle:nil];
+        [self.navigationController pushViewController:mgvc animated:YES];
+        
+    }else if([model.currentFilter isEqualToString:@"software"]){
+        //filter towards software
+        
+    }else{
+    
+        //make sure and remove and objects this array may contain
+        if([model.filteredProducts count] > 0){
+            [model.filteredProducts removeAllObjects];
         }
         
-        if([w containsObject:model.currentFilter] && ![model.filteredProducts containsObject:p]){
-            [model.filteredProducts addObject:p];
+        for(Product *p in model.localProds){
+            NSArray *w = p.whatDoYouWantToPrint;
+            NSArray *s = p.showAll;
+            
+            if([s containsObject:model.currentFilter] && ![model.filteredProducts containsObject:p]){
+                [model.filteredProducts addObject:p];
+            }
+            
+            if([w containsObject:model.currentFilter] && ![model.filteredProducts containsObject:p]){
+                [model.filteredProducts addObject:p];
+            }
         }
+        
+        FilterViewController *filter = [[FilterViewController alloc] initWithNibName:@"FilterViewController" bundle:nil];
+        [self.navigationController pushViewController:filter animated:YES];
     }
-    
-    FilterViewController *filter = [[FilterViewController alloc] initWithNibName:@"FilterViewController" bundle:nil];
-    [self.navigationController pushViewController:filter animated:YES];
-    
-    //@TODO Look at deallocating the memory after you leave this view
     
 }
 
@@ -309,6 +324,10 @@
     model.localProds = [model getInitialSetofPorducts];
     
     if(model.localProds != nil){
+        
+        //add media into the show all array by default
+        [showAllImageNames addObject:@"media"];
+        
         for(Product *p in model.localProds){
             for(NSString *w in p.whatDoYouWantToPrint){
                 if(![whatImageNames containsObject:w]){
@@ -440,8 +459,7 @@
             model.ui.splash.image = [model.ui getImageWithName:@"/sample@2x.png"];
             [self.view addSubview:model.ui.splash];
             [self.view bringSubviewToFront:model.ui.splash];
-            dispatch_queue_t model_queue = dispatch_queue_create(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-            dispatch_async(model_queue, ^{
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
                 [network runInitialDownload];
             });
         }else{

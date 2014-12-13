@@ -12,8 +12,9 @@
 #import "CanonModel.h"
 #import "AppDelegateProtocol.h"
 #import <MediaPlayer/MediaPlayer.h>
+#import "GAITrackedViewController.h"
 
-@interface SeriesViewController : UIViewController<NetworkDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate>{
+@interface SeriesViewController : GAITrackedViewController<NetworkDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate>{
     //objects
     NetworkData *network;
     
@@ -23,10 +24,10 @@
     UIButton *navBarHomeButton, *backButton, *videoButton;
 
     //sidebar views
-    UIButton *overview, *videos, *productSpec, *whitePaper, *caseStudy;
+    UIButton *overview, *videos, *productSpec, *whitePaper, *caseStudy, *prePostSolutionButton;
     UIImageView *sidebarIndicator, *overViewIcon, *whitePaperIcon;
-    UIImageView *caseStudyIcon, *videoIcon, *productSpecIcon;
-    UILabel *overviewLabel, *caseStudyLabel, *videoLabel, *productSpecLabel, *whitePaperLabel;
+    UIImageView *caseStudyIcon, *videoIcon, *productSpecIcon, *prePostSolutionImage;
+    UILabel *overviewLabel, *caseStudyLabel, *videoLabel, *productSpecLabel, *whitePaperLabel, *prePostSolutionLabel;
     
     //main area views
     UIImageView *mainShortBanner, *actualDocumentBanner;
@@ -43,8 +44,9 @@
     NSMutableDictionary *currentDocumentData;
     NSMutableDictionary *offlineImages;
     NSMutableDictionary *offlineVideos;
-    NSMutableArray *offlineVideoRows;
+    NSMutableArray *offlineVideoRows, *potentailPartners;
     NSString *downloadingURL;
+    BOOL decodedSolutions;
 
 }
 @property(nonatomic)NetworkData *network;

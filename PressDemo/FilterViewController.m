@@ -85,7 +85,10 @@
     //make sure to check the connectivity again
     if ([model.hostReachability isReachableViaWiFi]) {
         ALog(@"CHECKING FOR UPDATES");
-        [network checkForUpdate];
+        //make sure this thread runs in the background
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            [network checkForUpdate];
+        });
         //resync the UI
         if(!model.layoutSync){
            for (id key in offlineImages) {
@@ -130,19 +133,20 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    //ALog(@"viewWillDisappear FILTER");
+    //remove the observers
     [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    //ALog(@"viewDidDisappear FILTER");
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.screenName = @"Product Filter View";
     
     network = [[NetworkData alloc] init];
     network.delegate = self;
@@ -168,10 +172,10 @@
     navBarHomeButton.tag = 20;
     [customNavBar addSubview:navBarHomeButton];
     
-    productScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(36, 145, 952, 620)];
+    productScroll = [[ProductScroll alloc] initWithFrame:CGRectMake(36, 145, 952, 620)];
     productScroll.showsHorizontalScrollIndicator = NO;
     productScroll.showsVerticalScrollIndicator = YES;
-    productScroll.canCancelContentTouches = YES;
+    productScroll.delaysContentTouches = NO;
     productScroll.delegate = self;
     productScroll.clipsToBounds = YES;
     [self.view addSubview:productScroll];
@@ -187,7 +191,12 @@
     //load up the view with assets
     [self setupLocalUserInterface:^(BOOL completeFlag){}];
     [self loadupProducts];
+    
+    //GA
+    [model logData:@"Product Filter View" withAction:@"View Tracker" withLabel:@"Landed on product filter view"];
 }
+
+
 
 //this function loads up the products associated with the current filter
 -(void)loadupProducts
@@ -293,16 +302,15 @@
 
 }
 
+
 //this function handles a product being touched
 //this function also sets the appropriate data so the product series can display the correct data
 -(void)productTouched:(id)sender
 {
     UIButton *b = (UIButton *)sender;
-    //ALog(@"Series %@",b.titleLabel.text);
-    
+
     NSData *seriesData = [model getFileData:b.titleLabel.text complete:^(BOOL completeFlag){}];
     if(seriesData != nil){
-        //ALog(@"HERE3 %d", [seriesData length]);
         model.selectedSeries = [NSKeyedUnarchiver unarchiveObjectWithData:seriesData];
      
         SeriesViewController *series = [[SeriesViewController alloc] initWithNibName:@"SeriesViewController" bundle:nil];
@@ -311,6 +319,8 @@
         [self displayMessage:@"Alert" withTitle:@"There was an internal error, please contact support."];
     }
     
+    //GA
+    [model logData:@"Product Filter View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Product: %@",b.titleLabel.text]];
     
    
 }
@@ -318,7 +328,6 @@
 //function that pops the view controller off the stack and sends the user back home
 -(void)triggerHome:(id)sender
 {
-    //ALog(@"HOME!");
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
@@ -367,7 +376,9 @@
     //download
     if (buttonIndex == 1){
         //remove nsuserdefaults
-        [model wipeOutAllModelDataForUpdate];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            [model wipeOutAllModelDataForUpdate];
+        });
         
         if([model.hostReachability isReachableViaWiFi]){
             //we have now loaded
@@ -385,8 +396,7 @@
 //this response will let the view and the user know that there is an update available
 -(void)updateResponse:(CanonModel *)obj withFlag:(BOOL)flag{
     
-    //ALog(@"Update Response, %d.  This tells us if there is an update available.", flag);
-    //update available
+    //update available, ask the user if they want to update the app
     if(flag){
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Update App"
                                                         message:@"There is an update available, do you wish to download now?"

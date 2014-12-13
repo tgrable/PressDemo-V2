@@ -18,6 +18,7 @@
 @synthesize product_spec;
 @synthesize videos;
 @synthesize products;
+@synthesize solutions;
 
 -(id)init
 {
@@ -33,6 +34,7 @@
         white_papers = [NSMutableArray array];
         videos = [NSMutableArray array];
         products = [NSMutableArray array];
+        solutions = [NSMutableArray array];
     }
     return self;
 }
@@ -47,6 +49,7 @@
     [encoder encodeObject:self.product_spec forKey:@"product_spec"];
     [encoder encodeObject:self.videos forKey:@"videos"];
     [encoder encodeObject:self.products forKey:@"products"];
+    [encoder encodeObject:self.solutions forKey:@"solutions"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
@@ -60,6 +63,7 @@
         self.product_spec = [decoder decodeObjectForKey:@"product_spec"];
         self.videos = [decoder decodeObjectForKey:@"videos"];
         self.products = [decoder decodeObjectForKey:@"products"];
+        self.solutions = [decoder decodeObjectForKey:@"solutions"];
     }
     return self;
 }

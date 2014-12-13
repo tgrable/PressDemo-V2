@@ -22,8 +22,11 @@
     //SDWebImageManager *manager;
 }
 //Model Properties
+@property(nonatomic, assign) id tracker;
 @property(nonatomic, strong)UIModel *ui;
 @property(nonatomic, strong)ProductSeries *selectedSeries;
+@property(nonatomic, strong)Mill *selectedMill;
+@property(nonatomic, strong)Partner *selectedPartner;
 @property(nonatomic, strong)NSString *testingString, *currentFilter;
 @property(nonatomic, strong)NSMutableArray *localProds, *filteredProducts;
 @property(nonatomic, strong)UIColor *orange, *pink, *red, *blue, *dullBlack, *green, *purple, *gray, *yellow, *lightGray;
@@ -41,6 +44,12 @@ typedef void(^completeBlock)(BOOL);
 -(void)breakoutProductData:(NSArray* )products;
 -(void)wipeOutAllModelDataForUpdate;
 -(void)breakoutVideoData:(NSArray *)videos;
+-(void)breakoutPartnerData:(NSArray *)partners;
+-(void)breakoutSoftwareData:(NSArray *)software;
+-(void)breakoutMillData:(NSArray *)mills;
+-(void)breakoutPaperData:(NSArray *)papers;
+-(void)breakoutSolutionData:(NSArray* )solution;
+
 -(BOOL)breakoutUpdateData:(NSData *)data;
 -(void)breakoutProductSeriesData:(NSArray *)series;
 -(void)saveAllDataToDisk:(completeBlock)completeFlagArgument;
@@ -54,4 +63,7 @@ typedef void(^completeBlock)(BOOL);
 -(BOOL)videoExists:(NSString *)videoURL;
 -(NSString *)returnFilePath:(NSString *)name;
 -(NSMutableArray *)cleanArray:(NSMutableArray *)array;
+//google analytics
+-(void)logData:(NSString *)category withAction:(NSString *)action withLabel:(NSString *)label;
+-(void)sortInitialPaperDataAlpha:(NSString *)key complete:(completeBlock)completeFlag;
 @end

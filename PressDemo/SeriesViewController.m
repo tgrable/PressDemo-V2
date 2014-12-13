@@ -86,13 +86,15 @@
 {
     //start the update check here
     ALog(@"App came back into focus");
-    //Reachability* reachability = [Reachability reachabilityWithHostname:@"www.google.com"];
+    
     //if we can reach the internet
     ALog(@"Reachable %@", model.hostReachability);
     if ([model.hostReachability isReachable]) {
         ALog(@"APP came back into focus and it is reachable");
-        ALog(@"CHECKING FOR UPDATES");
-        [network checkForUpdate];
+        //check for the app on a background thread
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            [network checkForUpdate];
+        });
         
         //resync the UI
         if(!model.layoutSync){
@@ -153,14 +155,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    //ALog(@"viewWillAppear SERIES");
     
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    //ALog(@"viewDidAppear SERIES");
     //app going into background notification
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appWentIntoBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -169,24 +169,25 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appCameBackIntoFocus) name:UIApplicationDidBecomeActiveNotification object:nil];
 
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    //ALog(@"viewWillDisappear SERIES");
     [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    //ALog(@"viewDidDisappear SERIES");
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.screenName = @"Series View";
     
     network = [[NetworkData alloc] init];
     network.delegate = self;
@@ -433,13 +434,39 @@
     caseStudyLabel.backgroundColor = [UIColor clearColor];
     caseStudyLabel.text = @"CASE STUDIES";
     [caseStudy addSubview:caseStudyLabel];
+    
+    prePostSolutionButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [prePostSolutionButton setFrame:CGRectMake(36, 360, 178, 36)];
+    [prePostSolutionButton addTarget:self action:@selector(loadUpMainTray:)forControlEvents:UIControlEventTouchDown];
+    prePostSolutionButton.showsTouchWhenHighlighted = YES;
+    prePostSolutionButton.tag = 360;
+    prePostSolutionButton.titleLabel.text = @"solutions";
+    prePostSolutionButton.backgroundColor = [UIColor clearColor];
+    [sideBar addSubview:prePostSolutionButton];
+    
+    prePostSolutionImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 35, 35)];
+    [prePostSolutionImage setImage:[UIImage imageNamed:@"icn-solution.png"]];
+    [prePostSolutionButton addSubview:prePostSolutionImage];
+    
+    prePostSolutionLabel = [[UILabel alloc] initWithFrame:CGRectMake(53, 0, 100, 36)];
+    [prePostSolutionLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
+    prePostSolutionLabel.textColor = model.dullBlack;
+    prePostSolutionLabel.numberOfLines = 2;
+    prePostSolutionLabel.backgroundColor = [UIColor clearColor];
+    prePostSolutionLabel.text = @"PRE/POST SOLUTIONS";
+    [prePostSolutionButton addSubview:prePostSolutionLabel];
 
     currentDocumentData = [[NSMutableDictionary alloc] init];
     offlineImages = [[NSMutableDictionary alloc] init];
     offlineVideos = [[NSMutableDictionary alloc] init];
     offlineVideoRows = [NSMutableArray array];
+    potentailPartners = [NSMutableArray array];
+    decodedSolutions = NO;
     
-    [self setupLocalUserInterface:^(BOOL completeFlag){}];
+    [self setupLocalUserInterface:^(BOOL completeFlag){
+        //GA
+        [model logData:@"Series View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Landed on series view: %@", model.selectedSeries.title]];
+    }];
     
     downloadingURL = @"";
 }
@@ -449,7 +476,7 @@
 -(void)loadUpMainTray:(id)sender
 {
     UIButton *b = (UIButton *)sender;
-    ALog(@"Present");
+
     //if overview is present
     if(sidebarIndicator.frame.origin.y == 30){
         ALog(@"HERE 1");
@@ -534,200 +561,308 @@
     }
 
     //dynamic property reference!!! woooohooo!
-    NSMutableArray *data = [model.selectedSeries valueForKey:flag];
+    NSMutableArray *data;
+    
+    if([flag isEqualToString:@"solutions"]){
+        [mainView bringSubviewToFront:mainShortBanner];
+        if(decodedSolutions == NO){
+            
+            //decode partner data
+            NSData *partnerEcodedData = [model getFileData:@"initialPartners" complete:^(BOOL completeFlag){}];
+            model.initialPartnerData = [NSKeyedUnarchiver unarchiveObjectWithData:partnerEcodedData];
+            
+            //decode the solution data
+            NSData *solutionEncodedData = [model getFileData:@"initialSolutions" complete:^(BOOL completeFlag){}];
+            model.initialSolutionData = [NSKeyedUnarchiver unarchiveObjectWithData:solutionEncodedData];
+            data = [self sortOutSolutionsForSeries];
+            decodedSolutions = YES;
+        }else{
+            data = [self sortOutSolutionsForSeries];
+            
+        }
+    }else{
+     
+        data = [model.selectedSeries valueForKey:flag];
+    }
     
     //remove video rows
     [offlineVideoRows removeAllObjects];
     //make sure that when we are drawing in from the dynamic property that we are using the
     //assigned data class correctly.  Check the data class to make sure before using
     
-    //ALog(@"Data %@ and flag %@", data, flag);
     
     //make sure we are dealing with an array, otherwise we can assume that their is no content assigned to this 
     if([data isKindOfClass:[NSArray class]] && [data count] > 0){
         
-        //Below we loop through eith the document or video data to load up a dynamic set of buttons
-        int count = (int)[data count], i = 0, y = 0;
-        for(NSString *documentKey in data){
-            NSData *doc = [model getFileData:documentKey complete:^(BOOL completeFlag){}];
-            
-            y = i * 193 + 16;
-            if(y == 0) y = 16;
-            
-            UIView *rowContainer = [[UIView alloc] initWithFrame:CGRectMake(0, y, 748, 179)];
-            rowContainer.backgroundColor = [UIColor whiteColor];
-            
-            UIButton *back = [UIButton buttonWithType:UIButtonTypeCustom];
-            [back setFrame:CGRectMake(0, 0, 748, 179)];
-            [back addTarget:self action:@selector(rowTapped:)forControlEvents:UIControlEventTouchUpInside];
-            back.showsTouchWhenHighlighted = YES;
-            [back setUserInteractionEnabled:YES];
-            [back setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
-            back.tag = i;
-            [back setBackgroundColor:[UIColor whiteColor]];
-            [rowContainer addSubview:back];
-            
-            UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(3, 3, 308, 173)];
-            iv.backgroundColor = model.blue;
-            [back addSubview:iv];
-            
-            UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(328, 16, 360, 24)];
-            [title setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:16.0]];
-            title.textColor = [UIColor blackColor];
-            title.numberOfLines = 2;
-            title.backgroundColor = [UIColor clearColor];
-            [back addSubview:title];
-            
-            UIView *horizontalLine = [[UIView alloc] initWithFrame:CGRectMake(328, 40, 360, 1)];
-            horizontalLine.backgroundColor = [UIColor blackColor];
-            [back addSubview:horizontalLine];
-            
-            UILabel *desc = [[UILabel alloc] initWithFrame:CGRectMake(328, 47, 360, 121)];
-            [desc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
-            desc.textColor = model.dullBlack;
-            desc.numberOfLines = 15;
-            desc.backgroundColor = [UIColor clearColor];
-            [back addSubview:desc];
-            
-            //ALog(@"Document Key %@", documentKey);
-            /**** if the document is a video ****/
-            if ([flag isEqualToString:@"videos"]){
-                /*************** Videos ************************/
+        if([flag isEqualToString:@"solutions"]){
+            int count = (int)[data count], i = 0, y = 0;
+            for(Solution *s in data){
                 
-                //set a video object from the selected object
-                Video *v = [NSKeyedUnarchiver unarchiveObjectWithData:doc];
-                //set the key for the object
-                [back setTitle:v.key forState:UIControlStateNormal];
+                y = i * 193 + 16;
+                if(y == 0) y = 16;
                 
-                if([v.image isEqualToString:@""]){
-                    [iv setImage:[UIImage imageNamed:@"tmb-FPO-video.png"]];
-                }else{
-                    //try and load the image via the internet, otherwise use placeholder as a fallback
-                    NSString *u = [v.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-                    __weak typeof(UIImageView) *imgView = iv;
-                    [iv setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-                        if(error){
-                            ALog(@"Error %@", error);
-                            imgView.image = [UIImage imageNamed:@"placeholder.png"];
-                            //load the image view in an 
-                            [offlineImages setObject:imgView forKey:[NSURL URLWithString:u]];
-                            model.layoutSync = NO;
+                UIView *rowContainer = [[UIView alloc] initWithFrame:CGRectMake(0, y, 748, 179)];
+                rowContainer.backgroundColor = [UIColor whiteColor];
+                
+                UIView *back = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 748, 179)];
+                [back setUserInteractionEnabled:YES];
+                back.tag = i;
+                [back setBackgroundColor:[UIColor whiteColor]];
+                [rowContainer addSubview:back];
+                
+                UILabel *solutionTitle = [[UILabel alloc] initWithFrame:CGRectMake(20, 15, 300, 20)];
+                [solutionTitle setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:14.0]];
+                solutionTitle.textColor = [UIColor blackColor];
+                solutionTitle.numberOfLines = 1;
+                solutionTitle.backgroundColor = [UIColor clearColor];
+                solutionTitle.text = [s.title uppercaseString];
+                [back addSubview:solutionTitle];
+                
+                UILabel *desc = [[UILabel alloc] initWithFrame:CGRectMake(20, 35, 350, 120)];
+                [desc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
+                desc.textColor = model.dullBlack;
+                desc.numberOfLines = 8;
+                desc.text = s.description;
+                desc.backgroundColor = [UIColor clearColor];
+                [back addSubview:desc];
+                
+                UILabel *partnerTitle = [[UILabel alloc] initWithFrame:CGRectMake(410, 15, 300, 20)];
+                [partnerTitle setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:14.0]];
+                partnerTitle.textColor = [UIColor blackColor];
+                partnerTitle.numberOfLines = 1;
+                partnerTitle.backgroundColor = [UIColor clearColor];
+                partnerTitle.text = @"PARTNERS WITH THIS SOLUTION";
+                [back addSubview:partnerTitle];
+                
+                NSMutableArray *partnerArray = [NSMutableArray array];
+         
+                for (Partner *p in model.initialPartnerData) {
+                    if([p.solutions containsObject:s.key]){
+                        //add the object to the local partner array
+                        [partnerArray addObject:p];
+                        //make sure the potentail partner array does not contain duplicates
+                        if(![potentailPartners containsObject:p]){
+                            [potentailPartners addObject:p];
                         }
-                    }];
-                  
+                    }
+                }
+                //print all of the partners out
+                int py = 40, pi = 0;
+                for(Partner *p in partnerArray){
+                    
+                    UIButton *partner = [UIButton buttonWithType:UIButtonTypeCustom];
+                    [partner setFrame:CGRectMake(410, py, 280, 20)];
+                    [partner addTarget:self action:@selector(partnerTapped:)forControlEvents:UIControlEventTouchUpInside];
+                    partner.showsTouchWhenHighlighted = YES;
+                    [partner setUserInteractionEnabled:YES];
+                    partner.titleLabel.adjustsFontSizeToFitWidth = YES;
+                    partner.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+                    [partner setTitle:[p.title uppercaseString] forState:UIControlStateNormal];
+                    [partner setTitleColor:model.blue forState:UIControlStateNormal];
+                    [partner setBackgroundColor:[UIColor clearColor]];
+                    partner.titleLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0];
+                    [back addSubview:partner];
+                    pi++;
+                    py += 35;
+                    //we basically cannot show more than 4 solutions because of the layout that was created
+                    if(pi == 4) break;
                 }
                 
-                //add the download video image to the video top right corner
-                UIButton *download = [UIButton buttonWithType:UIButtonTypeCustom];
-                [download setFrame:CGRectMake(717, 7, 24, 24)];
-                [download addTarget:self action:@selector(downloadVideo:)forControlEvents:UIControlEventTouchUpInside];
-                download.showsTouchWhenHighlighted = YES;
-                [download setUserInteractionEnabled:YES];
-                [download setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+                //add sub view to the scroll container
+                [documentScroll addSubview:rowContainer];
+                i++;
                 
-                
-                NSString *rawVideo = [v.rawVideo stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-                //ALog(@"Video name %@", rawVideo);
-                NSString *name = [model getVideoFileName:rawVideo];
-                NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
-                
-                if([model fileExists:lookupName]){
-                  [download setImage:[UIImage imageNamed:@"icn-load.png"] forState:UIControlStateNormal];
-                  [download setTitle:[model returnFilePath:lookupName] forState:UIControlStateNormal];
-                  download.tag = 777;
-                }else{
-                  [download setImage:[UIImage imageNamed:@"icn-download.png"] forState:UIControlStateNormal];
-                  [download setTitle:rawVideo forState:UIControlStateNormal];
-                  download.tag = 555;
+                if(i == count){
+                    [documentScroll setContentSize:CGSizeMake(748, (y + 193))];
+                    ALog(@"Completed 0");
+                    completeFlag(YES);
                 }
-                //[download setTitle:splicedName forState:UIControlStateNormal];
-                [download setBackgroundColor:[UIColor whiteColor]];
-                [download setHitTestEdgeInsets:UIEdgeInsetsMake(-15, -15, -15, -15)];
-                [rowContainer addSubview:download];
-                [rowContainer bringSubviewToFront:download];
+            }
+            
+            //else if we are creating a video or document, go with the code below
+        }else{
+            //Below we loop through eith the document or video data to load up a dynamic set of buttons
+            int count = (int)[data count], i = 0, y = 0;
+            for(NSString *documentKey in data){
+                NSData *doc = [model getFileData:documentKey complete:^(BOOL completeFlag){}];
                 
+                y = i * 193 + 16;
+                if(y == 0) y = 16;
                 
-                //set the data for the rest of the row
-                title.text = v.title;
-                desc.text = v.description;
+                UIView *rowContainer = [[UIView alloc] initWithFrame:CGRectMake(0, y, 748, 179)];
+                rowContainer.backgroundColor = [UIColor whiteColor];
                 
-                //make sure the video row is faded out if the user is not online
-                if(![model.hostReachability isReachableViaWiFi]){
-                    //user is not connected to the internet
-                    NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
+                UIButton *back = [UIButton buttonWithType:UIButtonTypeCustom];
+                [back setFrame:CGRectMake(0, 0, 748, 179)];
+                [back addTarget:self action:@selector(rowTapped:)forControlEvents:UIControlEventTouchUpInside];
+                back.showsTouchWhenHighlighted = YES;
+                [back setUserInteractionEnabled:YES];
+                [back setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+                back.tag = i;
+                [back setBackgroundColor:[UIColor whiteColor]];
+                [rowContainer addSubview:back];
+                
+                UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(3, 3, 308, 173)];
+                iv.backgroundColor = model.blue;
+                [back addSubview:iv];
+                
+                UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(328, 16, 360, 24)];
+                [title setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:16.0]];
+                title.textColor = [UIColor blackColor];
+                title.numberOfLines = 2;
+                title.backgroundColor = [UIColor clearColor];
+                [back addSubview:title];
+                
+                UIView *horizontalLine = [[UIView alloc] initWithFrame:CGRectMake(328, 40, 360, 1)];
+                horizontalLine.backgroundColor = [UIColor blackColor];
+                [back addSubview:horizontalLine];
+                
+                UILabel *desc = [[UILabel alloc] initWithFrame:CGRectMake(328, 47, 360, 121)];
+                [desc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
+                desc.textColor = model.dullBlack;
+                desc.numberOfLines = 15;
+                desc.backgroundColor = [UIColor clearColor];
+                [back addSubview:desc];
+                
+                /**** if the document is a video ****/
+                if ([flag isEqualToString:@"videos"]){
+                    /*************** Videos ************************/
+                    
+                    //set a video object from the selected object
+                    Video *v = [NSKeyedUnarchiver unarchiveObjectWithData:doc];
+                    //set the key for the object
+                    [back setTitle:v.key forState:UIControlStateNormal];
+                    
+                    if([v.image isEqualToString:@""]){
+                        [iv setImage:[UIImage imageNamed:@"tmb-FPO-video.png"]];
+                    }else{
+                        //try and load the image via the internet, otherwise use placeholder as a fallback
+                        NSString *u = [v.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+                        __weak typeof(UIImageView) *imgView = iv;
+                        [iv setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
+                            if(error){
+                                ALog(@"Error %@", error);
+                                imgView.image = [UIImage imageNamed:@"placeholder.png"];
+                                //load the image view in an 
+                                [offlineImages setObject:imgView forKey:[NSURL URLWithString:u]];
+                                model.layoutSync = NO;
+                            }
+                        }];
+                      
+                    }
+                    
+                    //add the download video image to the video top right corner
+                    UIButton *download = [UIButton buttonWithType:UIButtonTypeCustom];
+                    [download setFrame:CGRectMake(717, 7, 24, 24)];
+                    [download addTarget:self action:@selector(downloadVideo:)forControlEvents:UIControlEventTouchUpInside];
+                    download.showsTouchWhenHighlighted = YES;
+                    [download setUserInteractionEnabled:YES];
+                    [download setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+                    
+                    
+                    NSString *rawVideo = [v.rawVideo stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
 
-                    //check if the user has the video saved locally
+                    NSString *name = [model getVideoFileName:rawVideo];
+                    NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
+                    
                     if([model fileExists:lookupName]){
+                      [download setImage:[UIImage imageNamed:@"icn-load.png"] forState:UIControlStateNormal];
+                      [download setTitle:[model returnFilePath:lookupName] forState:UIControlStateNormal];
+                      download.tag = 777;
+                    }else{
+                      [download setImage:[UIImage imageNamed:@"icn-download.png"] forState:UIControlStateNormal];
+                      [download setTitle:rawVideo forState:UIControlStateNormal];
+                      download.tag = 555;
+                    }
+
+                    [download setBackgroundColor:[UIColor whiteColor]];
+                    [download setHitTestEdgeInsets:UIEdgeInsetsMake(-15, -15, -15, -15)];
+                    [rowContainer addSubview:download];
+                    [rowContainer bringSubviewToFront:download];
+                    
+                    
+                    //set the data for the rest of the row
+                    title.text = v.title;
+                    desc.text = v.description;
+                    
+                    //make sure the video row is faded out if the user is not online
+                    if(![model.hostReachability isReachableViaWiFi]){
+                        //user is not connected to the internet
+                        NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
+
+                        //check if the user has the video saved locally
+                        if([model fileExists:lookupName]){
+                            rowContainer.alpha = 1.0;
+                            back.enabled = YES;
+                        }else{
+                            rowContainer.alpha = 0.6;
+                            model.layoutSync = NO;
+                            [offlineVideos setObject:rowContainer forKey:v.key];
+                        }
+                    }else{
                         rowContainer.alpha = 1.0;
                         back.enabled = YES;
-                    }else{
-                        rowContainer.alpha = 0.6;
-                        model.layoutSync = NO;
-                        [offlineVideos setObject:rowContainer forKey:v.key];
                     }
+                
+                    [offlineVideoRows addObject:rowContainer];
+                    //add the data set of data being held for easy reference
+                    [currentDocumentData setObject:v forKey:v.key];
                 }else{
-                    rowContainer.alpha = 1.0;
-                    back.enabled = YES;
-                }
-            
-                [offlineVideoRows addObject:rowContainer];
-                //add the data set of data being held for easy reference
-                [currentDocumentData setObject:v forKey:v.key];
-            }else{
-                
-                /*************** Documents ************************/
-                
-                //set a document object from the selected object
-                Document *d = [NSKeyedUnarchiver unarchiveObjectWithData:doc];
-                //set the key for the object
-                [back setTitle:d.key forState:UIControlStateNormal];
-                
-                if([d.image isEqualToString:@""]){
-                    //if there is no url set for the image at all, use the fallback jason gave me
-                    if([flag isEqualToString:@"case_study"]){
-                        [iv setImage:[UIImage imageNamed:@"tmb-FPO-casestudy.png"]];
-                    }else if([flag isEqualToString:@"white_paper"]){
-                        [iv setImage:[UIImage imageNamed:@"tmb-FPO-whitepaper.png"]];
-                    }else if([flag isEqualToString:@"product_spec"]){
-                        [iv setImage:[UIImage imageNamed:@"placeholder.png"]];
-                    }
-
-                }else{
-                    //try and load the image via the internet, otherwise use placeholder as a fallback
-                    NSString *u = [d.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-                    __weak typeof(UIImageView) *imgView = iv;
-                    [iv setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-                        if(error){
-                            ALog(@"Error %@", error);
-                            imgView.image = [UIImage imageNamed:@"placeholder.png"];
-                            [offlineImages setObject:imgView forKey:[NSURL URLWithString:u]];
-                            model.layoutSync = NO;
+                    
+                    /*************** Documents ************************/
+                    
+                    //set a document object from the selected object
+                    Document *d = [NSKeyedUnarchiver unarchiveObjectWithData:doc];
+                    //set the key for the object
+                    [back setTitle:d.key forState:UIControlStateNormal];
+                    
+                    if([d.image isEqualToString:@""]){
+                        //if there is no url set for the image at all, use the fallback jason gave me
+                        if([flag isEqualToString:@"case_study"]){
+                            [iv setImage:[UIImage imageNamed:@"tmb-FPO-casestudy.png"]];
+                        }else if([flag isEqualToString:@"white_paper"]){
+                            [iv setImage:[UIImage imageNamed:@"tmb-FPO-whitepaper.png"]];
+                        }else if([flag isEqualToString:@"product_spec"]){
+                            [iv setImage:[UIImage imageNamed:@"placeholder.png"]];
                         }
-                    }];
+
+                    }else{
+                        //try and load the image via the internet, otherwise use placeholder as a fallback
+                        NSString *u = [d.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+                        __weak typeof(UIImageView) *imgView = iv;
+                        [iv setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
+                            if(error){
+                                ALog(@"Error %@", error);
+                                imgView.image = [UIImage imageNamed:@"placeholder.png"];
+                                [offlineImages setObject:imgView forKey:[NSURL URLWithString:u]];
+                                model.layoutSync = NO;
+                            }
+                        }];
+                    }
+                    
+                    //set the data for the rest of the row
+                    title.frame = CGRectMake(328, 16, 400, 24);
+                    title.text = d.title;
+                    if([flag isEqualToString:@"product_spec"]){
+                        desc.text = @"Specifications document for the whole product series.";
+                    }else{
+                        desc.text = d.description;
+                    }
+                    desc.frame = CGRectMake(328, 48, 400, 121);
+                    horizontalLine.frame = CGRectMake(328, 40, 400, 1);
+                    
+                    //add the data set of data being held for easy reference
+                    [currentDocumentData setObject:d forKey:d.key];
                 }
+                //add sub view to the scroll container
+                [documentScroll addSubview:rowContainer];
+                i++;
                 
-                //set the data for the rest of the row
-                title.frame = CGRectMake(328, 16, 400, 24);
-                title.text = d.title;
-                if([flag isEqualToString:@"product_spec"]){
-                    desc.text = @"Specifications document for the whole product series.";
-                }else{
-                    desc.text = d.description;
+                if(i == count){
+                  [documentScroll setContentSize:CGSizeMake(748, (y + 193))];
+                  ALog(@"Completed 1");
+                  completeFlag(YES);
                 }
-                desc.frame = CGRectMake(328, 48, 400, 121);
-                horizontalLine.frame = CGRectMake(328, 40, 400, 1);
-                
-                //add the data set of data being held for easy reference
-                [currentDocumentData setObject:d forKey:d.key];
-            }
-            //add sub view to the scroll container
-            [documentScroll addSubview:rowContainer];
-            i++;
-            
-            if(i == count){
-              [documentScroll setContentSize:CGSizeMake(748, (y + 193))];
-              ALog(@"Completed 1");
-              completeFlag(YES);
             }
         }
     }else{
@@ -779,11 +914,11 @@
                 
                 downloadingURL = [model getVideoFileName:videoURLString];
                 downloadingURL = [downloadingURL stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
-                dispatch_queue_t model_queue = dispatch_queue_create(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-                dispatch_async(model_queue, ^{
-                    //ALog(@"Video string %@", videoURLString);
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
                     [network downloadVideo:videoURLString];
                 });
+                //GA
+                [model logData:@"Series View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Video to download: %@",videoURLString]];
             }else{
                 [self displayMessage:@"Please connect to the internet to download this video" withTitle:@"Alret"];
             }
@@ -792,7 +927,6 @@
     }else if(b.tag == 777){
 
         NSString *path = [videoURLString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        
         if([model videoExists:path]){
         
             //NSString *p  = @"file:///var/mobile/Applications/B751E322-DE11-4813-8D8B-0F7589B9FDEF/Documents/CS3000_Flexibility_1.mp4";
@@ -801,12 +935,29 @@
             NSURL *videoURL = [NSURL URLWithString:urlPath];
             MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
             [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
+            //GA
+            [model logData:@"Series View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Video to play from disk: %@",videoURLString]];
         }else{
             [self displayMessage:@"There was an error referencing your file" withTitle:@"Alert"];
         }
     }
     
     
+}
+
+//this function gets the partner that was tapped and send the user to the partner page
+-(void)partnerTapped:(id)sender
+{
+    UIButton *partnerTapped = (UIButton *)sender;
+
+    for(Partner *part in potentailPartners){
+        if([partnerTapped.titleLabel.text isEqualToString:[part.title uppercaseString]]){
+            model.selectedPartner = part;
+            break;
+        }
+    }
+
+    ALog(@"Here is the partner that was tapped: %@", model.selectedPartner.title);
 }
 
 //This function executes the functionality when a row is tapped on either a document of a video
@@ -827,6 +978,8 @@
             documentHeaderButton.titleLabel.text = @"white_papers";
             documentHeaderButton.tag = 228;
             [actualDocumentBanner setImage:[UIImage imageNamed:@"hdr-doc-whitepaper.png"]];
+            //GA
+            [model logData:@"Series View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected White Paper Document: %@",d.title]];
             
         }else if([d.type isEqualToString:@"case-study"]){
             //case study image assignment
@@ -836,12 +989,16 @@
             documentHeaderButton.titleLabel.text = @"case_studies";
             documentHeaderButton.tag = 294;
             [actualDocumentBanner setImage:[UIImage imageNamed:@"hdr-doc-casestudy.png"]];
+            //GA
+            [model logData:@"Series View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Case Study Document: %@",d.title]];
             
         }else if([d.type isEqualToString:@"product-spec"]){
             //product spec image assignment
             actualDocumentBanner.frame = CGRectMake(0, 0, 0, 0);
             actualDocumentBanner.image = nil;
             webPage.frame = CGRectMake(36, 45, 704, 555);
+            //GA
+            [model logData:@"Series View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Product Spec Document: %@",d.title]];
         }
         
         //rearrange view stack
@@ -871,13 +1028,11 @@
         
         Video *v = [currentDocumentData objectForKey: b.titleLabel.text];
         NSString *name = [model getVideoFileName:v.rawVideo];
-        //ALog(@"Name %@", name);
         NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
         
 
         if([model.hostReachability isReachableViaWiFi]){
             //stream if reachable
-            //ALog(@"Stream %@", v.streamingURL);
             NSString *videoURLString = [v.streamingURL stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
             NSURL *videoURL = [NSURL URLWithString:videoURLString];
             MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
@@ -885,7 +1040,6 @@
         }else{
             NSString *lookupNameAdvanced = [lookupName stringByReplacingOccurrencesOfString:@" " withString:@"_"];
             
-            //ALog(@"Inline %@",  lookupNameAdvanced);
             if([model fileExists:lookupNameAdvanced]){
                 
                 NSString *fullPath = [model returnFilePath:lookupNameAdvanced];
@@ -937,7 +1091,6 @@
 //this function sends the user back home
 -(void)triggerHome:(id)sender
 {
-    //ALog(@"HOME!");
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
@@ -953,8 +1106,9 @@
     //add the small main header
     mainShortBanner.image = [model.seriesBanners objectForKey:model.selectedSeries.key];
     
-    //#### setup image slider in overview view ####
+    //####################################### setup image slider in overview view ##############
     NSMutableArray *images = [self generateSeriesProductImages:model.selectedSeries.products];
+  
     int i = 0, width = 0;
     overviewImageDots.numberOfPages = [images count];
     for(NSString *url in images){
@@ -986,7 +1140,7 @@
         [mainView bringSubviewToFront:overviewImageDots];
     }
     
-    //#### setup the overview description boxes ###
+    //############################ setup the overview description boxes #########################
     int descCount = (int)[model.selectedSeries.description count], y = 0, e = 0, x = 0;
     int offset = descCount / 2;
     while(e < descCount){
@@ -1076,7 +1230,9 @@
     //download
     if (buttonIndex == 1){
         //remove nsuserdefaults
-        [model wipeOutAllModelDataForUpdate];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            [model wipeOutAllModelDataForUpdate];
+        });
         
         if([model.hostReachability isReachableViaWiFi]){
             //we have now loaded
@@ -1128,17 +1284,30 @@
  Utility Functions for this view controller
  
  -------------------------------------------------------*/
+-(NSMutableArray *)sortOutSolutionsForSeries
+{
+    NSMutableArray *returnedSolutions = [NSMutableArray array];
+
+    //iterate through the series solutions key and match it up to the a solution in the initial dataset
+    for(Solution *s in model.initialSolutionData){
+        if([model.selectedSeries.solutions containsObject:s.key]){
+            [returnedSolutions addObject:s];
+        }
+    }
+    return returnedSolutions;
+}
+
+
 -(NSMutableArray *)generateSeriesProductImages:(NSMutableArray *)products
 {
     NSMutableArray *images = [NSMutableArray array];
     NSMutableArray *filteredImages = [NSMutableArray array];
     for(NSString *filename in products){
-        //ALog(@"File name after 1 %@", filename);
         NSData *prod = [model getFileData:filename complete:^(BOOL completeFlag){}];
-        //ALog(@"File name after 2 %@", filename);
+
         Product *p = [NSKeyedUnarchiver unarchiveObjectWithData:prod];
         [images addObject:[p.images objectForKey:@"hero-image"]];
-        //ALog(@"Product name %@", p.title);
+ 
     }
     //filter the array of images
     for(NSString *url in images){
