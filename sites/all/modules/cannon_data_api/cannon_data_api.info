@@ -1,0 +1,6 @@
+name = Canon Data API
+description = Module to download data as JSON objects
+package = Canon Custom Modules
+core = 7.x
+php = 5.3
+files[] = cannon_data_api.module

@@ -1,0 +1,57 @@
+<?php
+/**
+ * @file
+ * Install, update, and uninstall functions for the cannon_media_valet module.
+ */
+
+/**
+ * Implements hook_field_schema().
+ *
+ * Defines the database schema of the field, using the format used by the
+ * Schema API.
+ *
+ * The data we will store here is just one 200-character element,
+ *
+ * All implementations of hook_field_schema() must be in the module's
+ * .install file.
+ *
+ * @see http://drupal.org/node/146939
+ * @see schemaapi
+ * @see hook_field_schema()
+ * @see hook_uninstall()
+ * @see hook_enable()
+ */
+ function cannon_media_valet_image_field_field_schema($field) {
+  $columns = array(
+    'url_text' => array(
+      'type' => 'varchar',
+      'length' => 500,
+      'not null' => FALSE
+    ),
+  );
+
+  $indexes = array(
+    'url_text' => array('url_text'),
+  );
+
+  return array(
+    'columns' => $columns,
+    'indexes' => $indexes,
+  );
+ }
+
+
+/**
+  * Implement hook_enable()
+  */
+ function cannon_media_valet_image_field_enable(){
+
+
+
+  drupal_set_message($message = t('Cannon Media Valet Image Field module was successfully enabled.'), $type = 'status');
+ }
+
+
+
+
+

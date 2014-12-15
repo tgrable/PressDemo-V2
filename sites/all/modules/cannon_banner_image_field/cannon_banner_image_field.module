@@ -1,0 +1,268 @@
+<?php
+
+  /*----------------------------------------
+   * @file
+   * Cannon banner Integration
+   *
+   *----------------------------------------*/
+
+/**
+  * Implements hook_field_info().
+  *
+  * Provides the description of the field.
+  */
+ function cannon_banner_image_field_field_info(){
+   return array(
+    // We name our field as the associative name of the array.
+    'cannon_banner_url_text' => array(
+      'label' => t('Banner Image File Reference'),
+      'description' => t('Selector given to the user to reference banner images from the asset store'),
+      'default_widget' => 'cannon_banner_text',
+      'default_formatter' => 'cannon_banner_simple_text',
+    ),
+  );
+ }
+
+ /**
+ * Implements hook_field_is_empty().
+ *
+ * hook_field_is_emtpy() is where Drupal asks us if this field is empty.
+ * Return TRUE if it does not contain data, FALSE if it does. This lets
+ * the form API flag an error when required fields are empty.
+ */
+ function cannon_banner_image_field_field_is_empty($item, $field) {
+   return empty($item['url_text']);
+ }
+
+
+/**
+  * Implements hook_field_formatter_info().
+  *
+  * We need to tell Drupal that what type of formatter we have
+  * for this field.
+  *
+  * @see cannon_banner_field_formatter_view()
+  */
+ function cannon_banner_image_field_field_formatter_info() {
+  return array(
+
+    'cannon_banner_simple_text' => array(
+      'label' => t('Simple selector button'),
+      'field types' => array('cannon_banner_url_text'),
+    ),
+  );
+ }
+
+/**
+ * Implements hook_field_formatter_view().
+ *
+ *
+ * - field_example_simple_text just outputs markup indicating the color that
+ *   was entered and uses an inline style to set the text color to that value.
+ * - field_example_color_background does the same but also changes the
+ *   background color of div.region-content.
+ *
+ * @see field_example_field_formatter_info()
+ */
+ function cannon_banner_image_field_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+
+  $element = array();
+
+  switch ($display['type']) {
+    // This formatter simply outputs the field as text and with a color.
+    case 'cannon_banner_simple_text':
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array(
+          '#type' => 'html_tag',
+          '#tag' => 'p',
+
+          '#value' => '<img src="' . $item['url_text'] . '" />',
+        );
+      }
+      break;
+  }
+
+  return $element;
+ }
+
+/**
+ * Implements hook_field_widget_info().
+ *
+ * One widget are provided.
+ * - A simple text-only widget where the user mouses into the textbox and the modal box will pop up.
+ *
+ *
+ * This widget types will eventually show up in hook_field_widget_form, where we will have to flesh it out.
+ *
+ * @see field_example_field_widget_form()
+ */
+ function cannon_banner_image_field_field_widget_info() {
+    return array(
+      'cannon_banner_text' => array(
+        'label' => t('Selector Button'),
+        'field types' => array('cannon_banner_url_text'),
+      ),
+    );
+ }
+
+ /**
+ * Implements hook_field_widget_form().
+ *
+ * hook_widget_form() is where Drupal tells us to create form elements for
+ * our field's widget.
+ *
+ * We provide one of three different forms, depending on the widget type of
+ * the Form API item provided.
+ *.
+ */
+ function cannon_banner_image_field_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+
+  $value = isset($items[$delta]['url_text']) ? $items[$delta]['url_text'] : '';
+
+  $widget = $element;
+  $widget['#delta'] = $delta;
+  $class = array('cannon-banner');
+
+  switch ($instance['widget']['type']) {
+
+    case 'cannon_banner_text':
+      $widget += array(
+        '#type' => 'hidden',
+        '#default_value' => $value,
+        '#attributes' => array('class' => $class ),
+        '#suffix' => _cannon_banner_image_field_get_suffix($delta),
+      );
+    break;
+  }
+
+  $element['url_text'] = $widget;
+  return $element;
+
+ }
+
+ function _cannon_banner_image_field_get_suffix($delta){
+
+
+   return '<a href="#" class="banner" >Select Image</a>
+           <div class="description">Select Image</div>
+           <div class="banner-thumb">
+              <img class="cannon-banner" src="/sites/all/modules/cannon_banner_image_field/images/placeholder.jpg" width="130" height="80" />
+           </div>
+           <div class="banner-url"></div>
+           <div class="banner-modal">
+             <div class="modal-header">
+               <h2>Select an image from the Asset Store</h2>
+             </div>
+             <div class="modal-body">
+               <div class="image-container"></div>
+             </div>
+             <div class="modal-footer">
+               <br />
+               <div class="column"><a href="#" class="modal-close">Close</a></div>
+               <div class="column"><a href="#" class="modal-select">Select Image</a></div>
+             </div>
+           </div>';
+ }
+
+ /**
+  * Implements hook_form
+  **/
+ function _cannon_banner_image_field_request_data_from_asset_store(){
+
+  $url = 'http://canoncache.trekkweb.com/data/api/image';
+  $data = _cannon_testing_api_call($url);
+  $decoded = json_decode($data);
+  $images = "";
+
+  if(count($decoded->data->image) > 0){
+    $e = 0;
+    foreach ($decoded->data->image as $key => $value) {
+      //grab the next object as the large image
+      $images .= '<div class="image-cell image' . $e . '"><img width="130" height="80" data-url="' . $value->image . '" src="' . $value->image . '" />' .$value->title . '</div>';
+      $e++;
+    }
+  }else{
+    return "";
+  }
+  //return the HTML string
+  print $images;
+  drupal_exit();
+ }
+
+ /**
+ * Utility function
+ *
+ * @param $url, the url to request images
+ */
+ function _cannon_banner_image_field_api_call($url){
+
+    // Initializing curl
+    $ch = curl_init($url);
+
+    // Configuring curl options
+    $options = array(
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_HTTPHEADER => array('Content-type: application/json') ,
+    );
+
+    // Setting curl options
+    curl_setopt_array($ch, $options);
+
+    // Getting results
+    $result = curl_exec($ch); // Getting jSON result string
+    return $result;
+ }
+
+
+
+/**
+ * Implements hook_field_widget_error().
+ *
+ * hook_field_widget_error() lets us figure out what to do with errors
+ * we might have generated in hook_field_validate(). Generally, we'll just
+ * call form_error().
+ *
+ * @see cannon_banner_field_validate()
+ * @see form_error()
+ */
+function cannon_banner_image_field_field_widget_error($element, $error, $form, &$form_state) {
+  switch ($error['error']) {
+    case 'cannon_banner_invalid':
+      form_error($element, $error['message']);
+      break;
+  }
+}
+
+
+/**
+ * Implements hook_menu().
+ *
+ * Provides a simple user interface that tells the developer where to go.
+ */
+function cannon_banner_image_field_menu() {
+  $items['admin/config/media/cannon_banner_images'] = array(
+    'title' => 'Banner Image Field',
+    'page callback' => '_cannon_banner_image_field_page',
+    'access callback' => TRUE,
+  );
+
+  $items['get/image/banners'] = array(
+    'title' => 'Get Banners',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_cannon_banner_image_field_request_data_from_asset_store'),
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM
+  );
+  return $items;
+}
+
+/**
+ * A simple page to explain to the developer what to do.
+ */
+function _cannon_banner_image_field_page() {
+  return t("A custom field developed specifically for Cannon to select banner images from the Asset Store.");
+}
+/**
+ * @} End of "defgroup field_example".
+ */
+

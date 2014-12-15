@@ -1,0 +1,275 @@
+<?php
+
+  /*----------------------------------------
+   * @file
+   * Cannon Media Valet Integration
+   *
+   *----------------------------------------*/
+
+/**
+  * Implements hook_field_info().
+  *
+  * Provides the description of the field.
+  */
+ function cannon_media_valet_image_field_field_info(){
+   return array(
+    // We name our field as the associative name of the array.
+    'cannon_media_valet_url_text' => array(
+      'label' => t('Media Valet Image File Reference'),
+      'description' => t('Selector given to the user to reference Media Valet images'),
+      'default_widget' => 'cannon_media_valet_text',
+      'default_formatter' => 'cannon_media_valet_simple_text',
+    ),
+  );
+ }
+
+ /**
+ * Implements hook_field_is_empty().
+ *
+ * hook_field_is_emtpy() is where Drupal asks us if this field is empty.
+ * Return TRUE if it does not contain data, FALSE if it does. This lets
+ * the form API flag an error when required fields are empty.
+ */
+ function cannon_media_valet_image_field_field_is_empty($item, $field) {
+   return empty($item['url_text']);
+ }
+
+
+/**
+  * Implements hook_field_formatter_info().
+  *
+  * We need to tell Drupal that what type of formatter we have
+  * for this field.
+  *
+  * @see cannon_media_valet_field_formatter_view()
+  */
+ function cannon_media_valet_image_field_field_formatter_info() {
+  return array(
+
+    'cannon_media_valet_simple_text' => array(
+      'label' => t('Simple selector button'),
+      'field types' => array('cannon_media_valet_url_text'),
+    ),
+  );
+ }
+
+/**
+ * Implements hook_field_formatter_view().
+ *
+ *
+ * - field_example_simple_text just outputs markup indicating the color that
+ *   was entered and uses an inline style to set the text color to that value.
+ * - field_example_color_background does the same but also changes the
+ *   background color of div.region-content.
+ *
+ * @see field_example_field_formatter_info()
+ */
+ function cannon_media_valet_image_field_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+
+  $element = array();
+
+  switch ($display['type']) {
+    // This formatter simply outputs the field as text and with a color.
+    case 'cannon_media_valet_simple_text':
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array(
+          '#type' => 'html_tag',
+          '#tag' => 'p',
+
+          '#value' => '<img src="' . $item['url_text'] . '" />',
+        );
+      }
+      break;
+  }
+
+  return $element;
+ }
+
+/**
+ * Implements hook_field_widget_info().
+ *
+ * One widget are provided.
+ * - A simple text-only widget where the user mouses into the textbox and the modal box will pop up.
+ *
+ *
+ * This widget types will eventually show up in hook_field_widget_form, where we will have to flesh it out.
+ *
+ * @see field_example_field_widget_form()
+ */
+ function cannon_media_valet_image_field_field_widget_info() {
+    return array(
+      'cannon_media_valet_text' => array(
+        'label' => t('Selector Button'),
+        'field types' => array('cannon_media_valet_url_text'),
+      ),
+    );
+ }
+
+ /**
+ * Implements hook_field_widget_form().
+ *
+ * hook_widget_form() is where Drupal tells us to create form elements for
+ * our field's widget.
+ *
+ * We provide one of three different forms, depending on the widget type of
+ * the Form API item provided.
+ *.
+ */
+ function cannon_media_valet_image_field_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+
+  $value = isset($items[$delta]['url_text']) ? $items[$delta]['url_text'] : '';
+
+  $widget = $element;
+  $widget['#delta'] = $delta;
+  $class = array('cannon-media-valet');
+
+  switch ($instance['widget']['type']) {
+
+    case 'cannon_media_valet_text':
+      $widget += array(
+        '#type' => 'hidden',
+        '#default_value' => $value,
+        '#attributes' => array('class' => $class ),
+        '#suffix' => _cannon_media_valet_image_field_get_suffix($delta),
+      );
+    break;
+  }
+
+  $element['url_text'] = $widget;
+  return $element;
+
+ }
+
+ function _cannon_media_valet_image_field_get_suffix($delta){
+   $html = ""; $label = "Select a hero image";
+
+   if($html == ""){
+     $html = 'There was an error requesting data from Media Valet, please refresh your page and try again';
+   }
+
+   if(($delta+1) % 2 == 0) $label = "Select a grid image";
+
+   return '<a href="#" class="media-valet" >Select Media Valet Image</a>
+           <div class="description">' . $label . '</div>
+           <div class="media-valet-thumb">
+              <img class="cannon-media-valet" src="/sites/all/modules/cannon_media_valet_image_field/images/placeholder.jpg" width="130" height="80" />
+           </div>
+           <div class="media-valet-url"></div>
+           <div class="media-valet-modal">
+             <div class="modal-header">
+               <h2>Select an Image From Media Valet</h2>
+             </div>
+             <div class="modal-body">
+               <div class="image-container"></div>
+             </div>
+             <div class="modal-footer">
+               <br />
+               <div class="column"><a href="#" class="modal-close">Close</a></div>
+               <div class="column"><a href="#" class="modal-select">Select Image</a></div>
+             </div>
+           </div>';
+ }
+
+ /**
+  * Implements hook_form
+  **/
+ function _cannon_media_valet_image_field_request_data_from_mdeia_valet(){
+
+  $url = 'http://canoncache.trekkweb.com/data/api/image';
+  $data = _cannon_testing_api_call($url);
+  $decoded = json_decode($data);
+  $images = "";
+
+  if(count($decoded->data->image) > 0){
+    $e = 0;
+    foreach ($decoded->data->image as $key => $value) {
+      //grab the next object as the large image
+      $images .= '<div class="image-cell image' . $e . '"><img width="130" height="80" data-url="' . $value->image . '" src="' . $value->image . '" />' .$value->title . '</div>';
+      $e++;
+    }
+  }else{
+    return "";
+  }
+  //return the HTML string
+  print $images;
+  drupal_exit();
+ }
+
+ /**
+ * Utility function
+ *
+ * @param $url, the url to request images
+ */
+ function _cannon_media_valet_image_field_api_call($url){
+
+    // Initializing curl
+    $ch = curl_init($url);
+
+    // Configuring curl options
+    $options = array(
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_HTTPHEADER => array('Content-type: application/json') ,
+    );
+
+    // Setting curl options
+    curl_setopt_array($ch, $options);
+
+    // Getting results
+    $result = curl_exec($ch); // Getting jSON result string
+    return $result;
+ }
+
+
+
+/**
+ * Implements hook_field_widget_error().
+ *
+ * hook_field_widget_error() lets us figure out what to do with errors
+ * we might have generated in hook_field_validate(). Generally, we'll just
+ * call form_error().
+ *
+ * @see cannon_media_valet_field_validate()
+ * @see form_error()
+ */
+function cannon_media_valet_image_field_field_widget_error($element, $error, $form, &$form_state) {
+  switch ($error['error']) {
+    case 'cannon_media_valet_invalid':
+      form_error($element, $error['message']);
+      break;
+  }
+}
+
+
+/**
+ * Implements hook_menu().
+ *
+ * Provides a simple user interface that tells the developer where to go.
+ */
+function cannon_media_valet_image_field_menu() {
+
+  $items['admin/config/media/cannon_media_valet_images'] = array(
+    'title' => 'Media Valet Image Field',
+    'page callback' => '_cannon_media_valet_image_field_page',
+    'access callback' => TRUE,
+  );
+
+  $items['get/image/assets'] = array(
+    'title' => 'Get Media Valet Assets',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_cannon_media_valet_image_field_request_data_from_mdeia_valet'),
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM
+  );
+  return $items;
+}
+
+/**
+ * A simple page to explain to the developer what to do.
+ */
+function _cannon_media_valet_image_field_page() {
+  return t("A custom field developed specifically for Cannon to select images from Media Valet.");
+}
+/**
+ * @} End of "defgroup field_example".
+ */
+

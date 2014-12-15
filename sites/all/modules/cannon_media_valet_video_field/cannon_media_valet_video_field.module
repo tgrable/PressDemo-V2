@@ -1,0 +1,277 @@
+<?php
+
+  /*----------------------------------------
+   * @file
+   * Cannon Media Valet Integration
+   *
+   *----------------------------------------*/
+
+/**
+  * Implements hook_field_info().
+  *
+  * Provides the description of the field.
+  */
+ function cannon_media_valet_video_field_field_info(){
+   return array(
+    // We name our field as the associative name of the array.
+    'cannon_media_valet_video_field_video_url_text' => array(
+      'label' => t('Media Valet Video File Reference'),
+      'description' => t('Selector given to the user to reference Media Valet videos'),
+      'default_widget' => 'cannon_media_valet_video_text',
+      'default_formatter' => 'cannon_media_valet_simple_video_text',
+    ),
+  );
+ }
+
+ /**
+ * Implements hook_field_is_empty().
+ *
+ * hook_field_is_emtpy() is where Drupal asks us if this field is empty.
+ * Return TRUE if it does not contain data, FALSE if it does. This lets
+ * the form API flag an error when required fields are empty.
+ */
+ function cannon_media_valet_video_field_field_is_empty($item, $field) {
+   return empty($item['video_url_text']);
+ }
+
+
+/**
+  * Implements hook_field_formatter_info().
+  *
+  * We need to tell Drupal that what type of formatter we have
+  * for this field.
+  *
+  * @see cannon_media_valet_field_formatter_view()
+  */
+ function cannon_media_valet_video_field_field_formatter_info() {
+  return array(
+
+    'cannon_media_valet_simple_video_text' => array(
+      'label' => t('Simple selector button'),
+      'field types' => array('cannon_media_valet_video_field_video_url_text'),
+    ),
+  );
+ }
+
+/**
+ * Implements hook_field_formatter_view().
+ *
+ *
+ * - field_example_simple_text just outputs markup indicating the color that
+ *   was entered and uses an inline style to set the text color to that value.
+ * - field_example_color_background does the same but also changes the
+ *   background color of div.region-content.
+ *
+ * @see field_example_field_formatter_info()
+ */
+ function cannon_media_valet_video_field_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+
+  $element = array();
+
+  switch ($display['type']) {
+    // This formatter simply outputs the field as text and with a color.
+    case 'cannon_media_valet_simple_video_text':
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array(
+          '#type' => 'html_tag',
+          '#tag' => 'p',
+          '#value' => $item['video_url_text'],
+        );
+      }
+      break;
+  }
+
+  return $element;
+ }
+
+/**
+ * Implements hook_field_widget_info().
+ *
+ * One widget are provided.
+ * - A simple text-only widget where the user mouses into the textbox and the modal box will pop up.
+ *
+ *
+ * This widget types will eventually show up in hook_field_widget_form, where we will have to flesh it out.
+ *
+ * @see field_example_field_widget_form()
+ */
+ function cannon_media_valet_video_field_field_widget_info() {
+    return array(
+      'cannon_media_valet_video_text' => array(
+        'label' => t('Selector Button'),
+        'field types' => array('cannon_media_valet_video_field_video_url_text'),
+      ),
+    );
+ }
+
+
+ /**
+ * Implements hook_field_widget_form().
+ *
+ * hook_widget_form() is where Drupal tells us to create form elements for
+ * our field's widget.
+ *
+ * We provide one of three different forms, depending on the widget type of
+ * the Form API item provided.
+ *.
+ */
+ function cannon_media_valet_video_field_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $img ='/sites/all/modules/cannon_media_valet_image_field/images/placeholder.jpg';
+  //check if we are editing the the video content
+  if(isset($form['#node']->field_media_valet_video[LANGUAGE_NONE][0]['video_url_text'])){
+    $src = explode('||||', $form['#node']->field_media_valet_video[LANGUAGE_NONE][0]['video_url_text']);
+    if(isset($src[1])){
+      $img = $src[1];
+    }
+  }
+
+  $value = isset($items[$delta]['video_url_text']) ? $items[$delta]['video_url_text'] : '';
+
+  $widget = $element;
+  $widget['#delta'] = $delta;
+  $class = array('cannon-media-valet');
+
+  switch ($instance['widget']['type']) {
+
+    case 'cannon_media_valet_video_text':
+      $widget += array(
+        '#type' => 'hidden',
+        '#default_value' => $value,
+        '#attributes' => array('class' => $class, ),
+        '#suffix' => _cannon_media_valet_video_field_get_suffix($img),
+      );
+    break;
+  }
+
+  $element['video_url_text'] = $widget;
+  return $element;
+
+ }
+
+ function _cannon_media_valet_video_field_get_suffix($img){
+
+   $html = "";
+   $html = _cannon_media_valet_video_field_request_data_from_mdeia_valet();
+   if($html == ""){
+     $html = 'There was an error requesting data from Media Valet, please refresh your page and try again';
+   }
+
+   return '<a href="#" id="media-valet" class="media-valet-selector">Select Media Valet Video</a>
+           <div class="description">Select a video</div>
+           <div id="media-valet-thumb"><img src="' . $img . '" width="130" height="80" /></div>
+           <div id="media-valet-url"></div>
+           <div id="media-valet-modal">
+             <div class="modal-header">
+               <h2>Select an Video From Media Valet</h2>
+             </div>
+             <div class="modal-body">
+               <div class="video-container">' . $html . '</div>
+             </div>
+             <div class="modal-footer">
+               <br />
+               <div class="column"><a href="#" class="modal-close">Close</a></div>
+               <div class="column"><a href="#" class="modal-select">Select Video</a></div>
+             </div>
+           </div>';
+ }
+
+
+  /**
+  * Implements hook_form
+  **/
+ function _cannon_media_valet_video_field_request_data_from_mdeia_valet(){
+
+  $url = 'http://canoncache.trekkweb.com/data/api/video';
+  $data = _cannon_testing_api_call($url);
+
+  $decoded = json_decode($data);
+  $video_icons = "";
+
+  if(count($decoded->data->video) > 0){
+     $e = 0;
+     foreach($decoded->data->video as $key => $value){
+        $video_icons .= '<div class="video-cell videos' . $e . '">
+                            <img width="130" height="80" data-source="' . $value->video_source .'"
+                                                         data-url="' . $value->video_ios_streaming . '"
+                                                         src="' .  $value->image . '" />
+                            <div class="video-title">' . $value->title . '</div>
+                        </div>';
+         $e++;
+     }
+  }else{
+    return "";
+  }
+  //return the HTML string
+  return $video_icons;
+ }
+
+
+ /**
+ * Utility function
+ *
+ * @param $url, the url to request images
+ */
+ function _cannon_media_valet_video_field_api_call($url){
+
+    // Initializing curl
+    $ch = curl_init($url);
+
+    // Configuring curl options
+    $options = array(
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_HTTPHEADER => array('Content-type: application/json') ,
+    );
+
+    // Setting curl options
+    curl_setopt_array($ch, $options);
+
+    // Getting results
+    $result = curl_exec($ch); // Getting jSON result string
+    return $result;
+ }
+
+
+
+/**
+ * Implements hook_field_widget_error().
+ *
+ * hook_field_widget_error() lets us figure out what to do with errors
+ * we might have generated in hook_field_validate(). Generally, we'll just
+ * call form_error().
+ *
+ * @see cannon_media_valet_field_validate()
+ * @see form_error()
+ */
+function cannon_media_valet_video_field_field_widget_error($element, $error, $form, &$form_state) {
+  switch ($error['error']) {
+    case 'cannon_media_valet_invalid':
+      form_error($element, $error['message']);
+      break;
+  }
+}
+
+
+/**
+ * Implements hook_menu().
+ *
+ * Provides a simple user interface that tells the developer where to go.
+ */
+function cannon_media_valet_video_field_menu() {
+  $items['admin/config/media/cannon_media_valet_videos'] = array(
+    'title' => 'Media Valet Video Field',
+    'page callback' => '_cannon_media_valet_video_field_page',
+    'access callback' => TRUE,
+  );
+  return $items;
+}
+
+/**
+ * A simple page to explain to the developer what to do.
+ */
+function _cannon_media_valet_video_field_page() {
+  return t("A custom field developed specifically for Cannon to select videos from Media Valet.");
+}
+/**
+ * @} End of "defgroup field_example".
+ */
+

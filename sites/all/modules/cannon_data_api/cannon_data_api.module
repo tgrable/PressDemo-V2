@@ -1,0 +1,487 @@
+<?php
+  /*----------------------------------------
+   *  Cannon Data API
+   *
+   *----------------------------------------*/
+
+  /**
+   *  Implements hook_menu()
+   */
+  function cannon_data_api_menu(){
+
+   $items['data/api/%'] = array(
+       'title' => 'Web Service',
+       'page callback' => 'drupal_get_form',
+       'page arguments' => array('cannon_data_api_form', 2),
+       'access callback' => TRUE,
+       'type' => MENU_NORMAL_ITEM
+   );
+
+   $items['data/update'] = array(
+       'title' => 'Update Check',
+       'page callback' => 'drupal_get_form',
+       'page arguments' => array('cannon_data_api_update_form'),
+       'access callback' => TRUE,
+       'type' => MENU_NORMAL_ITEM
+   );
+
+   return $items;
+  }
+
+  /**
+   *  Implements hook_form()
+   */
+  function cannon_data_api_form($form, &$form_state, $type){
+    //the translation between the incoming argument and the machine name content type
+    $machine_name = array('case-study' => 'case_study', 'product' => 'product', 'product-spec' => 'product_specification', 'video' => 'video', 'white-paper' => 'white_paper', 'product-series' => 'product_series', 'paper' => 'paper', 'mill' => 'mill', 'partner' => 'partner', 'software' => 'software', 'datasheet' => 'datasheet', 'brochure' => 'brochure', 'solution' => 'solution');
+
+    //if we match the argument in the machine name array that means we are dealing with a valid route
+    if(array_key_exists ($type, $machine_name)){
+      //make the database call based upon the incoming route
+
+      $data = array();
+      $data_query_result;
+
+      if($machine_name[$type] != 'solution'){
+        $data_query = db_select('node', 'n');
+        $data_query->fields('n', array('nid'));
+        $data_query->condition('n.type', $machine_name[$type], '=');
+        $data_query->condition('n.status', 1, '=');
+        $data_query_result = $data_query->execute();
+      }else{
+        $data_query_result = taxonomy_get_tree(4, 0, NULL, TRUE);
+      }
+
+
+      //loop through the returned nodes and break them out into JSON objects
+      foreach($data_query_result as $n){
+
+        //determine if we need to load noads or taxonomy terms
+        if($type != 'solution'){
+          $node = node_load($n->nid);
+        }else{
+          $term = $n;
+        }
+
+        $value = array();
+
+        $imageURI = "";
+        $desc = "";
+
+        //***************case studies**************
+        if($type == 'case-study'){
+
+            $value = array(
+              'title' => $node->title,
+              'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--case-study',
+              'description' => isset($node->field_case_study_description[LANGUAGE_NONE][0]['value']) ? $node->field_case_study_description[LANGUAGE_NONE][0]['value'] : '',
+              'image' => isset($node->field_preview_image[LANGUAGE_NONE][0]['url_text']) ? $node->field_preview_image[LANGUAGE_NONE][0]['url_text'] : '',
+              'document-data' => _cannon_data_api_html_wrap_data($node->field_case_study_body[LANGUAGE_NONE][0]['value']),
+            );
+        //*****************products****************
+        }else if($type == 'product'){
+
+           //product objects
+           $value = array(
+              'title' => $node->title,
+              'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--product',
+              'images' => isset($node->field_product_image[LANGUAGE_NONE]) ? _cannon_data_api_get_images($node->field_product_image[LANGUAGE_NONE]) : array(),
+              'product-description' => isset($node->field_short_product_description[LANGUAGE_NONE][0]['value']) ? $node->field_short_product_description[LANGUAGE_NONE][0]['value'] : '',
+              'what-do-you-want-to-print' =>  _cannon_get_taxonomy_key($node->field_what_do_you_want_to_print[LANGUAGE_NONE]),
+              'show-all' =>  _cannon_get_taxonomy_key($node->field_show_all_products[LANGUAGE_NONE]),
+              'series' => _cannon_data_api_get_series($node->nid),
+           );
+
+        //******************product specs***********
+        }else if($type == 'product-spec'){
+            $value = array(
+              'title' => $node->title,
+              'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--product-spec',
+              'document-data' => _cannon_data_api_html_wrap_data($node->field_product_data[LANGUAGE_NONE][0]['value']),
+            );
+        //*******************videos*****************
+        }else if($type == 'video'){
+            $video_urls = _cannon_data_api_break_up_video_url($node->field_media_valet_video[LANGUAGE_NONE][0]['video_url_text']);
+
+            $value = array(
+              'title' => $node->title,
+              'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--video',
+              'image' => $video_urls[1],
+              'video-description' => isset($node->field_video_description[LANGUAGE_NONE][0]['value']) ? $node->field_video_description[LANGUAGE_NONE][0]['value'] : '',
+              'streaming-url' => $video_urls[0],
+              'raw-video' => $video_urls[2],
+            );
+
+        //******************White Papers*************
+        }else if($type == 'white-paper'){
+
+            //white paper object
+            $value = array(
+              'title' => $node->title,
+              'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--white-paper',
+              'description' => isset($node->field_white_paper_description[LANGUAGE_NONE][0]['value']) ? $node->field_white_paper_description[LANGUAGE_NONE][0]['value'] : '',
+              'image' => isset($node->field_preview_image[LANGUAGE_NONE][0]['url_text']) ? $node->field_preview_image[LANGUAGE_NONE][0]['url_text'] : '',
+              'document-data' => _cannon_data_api_html_wrap_data($node->field_white_paper_body[LANGUAGE_NONE][0]['value']),
+            );
+        //******************product-series*************
+        }else if($type == 'product-series'){
+             //solutions
+             $solutions = array();
+             if(isset($node->field_solution_reference[LANGUAGE_NONE])){
+                $solutions_queried = _cannon_get_taxonomy_key($node->field_solution_reference[LANGUAGE_NONE]);
+                foreach ($solutions_queried as $key => $value) {;
+                   $solutions[] = $value . '--solution';
+                }
+             }
+
+            //product series objects
+            $value = array(
+              'title' => $node->title,
+              'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--series',
+              'description' => _cannon_data_api_breakup_description($node->field_series_overview[LANGUAGE_NONE]),
+              'product_spec' => _cannon_data_api_get_reference_key($node->field_product_specification_refe, '--product-spec'),
+              'case_studies' => isset($node->field_product_case_study_referen[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_product_case_study_referen, '--case-study') : array(),
+              'white_papers' => isset($node->field_product_white_paper_refere[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_product_white_paper_refere, '--white-paper') : array(),
+              'videos' =>  isset($node->field_video_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_video_reference, '--video') : array(),
+              'products' =>  isset($node->field_product_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_product_reference, '--product') : array(),
+              'solutions' => $solutions,
+            );
+        }else if($type == 'paper'){
+           //paper objects
+           $value = array(
+              'title' => $node->title,
+              'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--paper',
+              'mill' => _cannon_data_ap_get_mill_for_paper($node->nid),
+              'basis_weight' => _cannon_data_api_break_out_array_of_items($node->field_basis_weight[LANGUAGE_NONE], 'value'),
+              'brightness' => $node->field_white_brightness_range[LANGUAGE_NONE][0]['safe_value'],
+              'coating' => $node->field_type_two[LANGUAGE_NONE][0]['value'],
+              'color_capacity' => '',
+              'category' => $node->field_category[LANGUAGE_NONE][0]['value'],
+              'dye_pigment' => $node->field_color_capability[LANGUAGE_NONE][0]['value'],
+              'region' => $node->field_region[LANGUAGE_NONE][0]['value'],
+              'micr_capable' => $node->field_micr_capable[LANGUAGE_NONE][0]['value'],
+              'price_range' => $node->field_price_range[LANGUAGE_NONE][0]['value'],
+              'opacity_range' => $node->field_opacity_range[LANGUAGE_NONE][0]['value'],
+              'caliper' => $node->field_caliper_range[LANGUAGE_NONE][0]['value'],
+              'recycled_percentage' => $node->field_recycled_percentage[LANGUAGE_NONE][0]['value'],
+              'type_one' => $node->field_type_one[LANGUAGE_NONE][0]['value'],
+              'type_two' => $node->field_type_two[LANGUAGE_NONE][0]['value'],
+              'category' => $node->field_category[LANGUAGE_NONE][0]['value'],
+              'color_capability' => $node->field_color_capability[LANGUAGE_NONE][0]['value'],
+              'weights_available' => $node->field_weights_available[LANGUAGE_NONE][0]['value'],
+              'boost_sample' => $node->field_boost_sample_available[LANGUAGE_NONE][0]['value'],
+              'house_paper' => $node->field_house_paper[LANGUAGE_NONE][0]['value'],
+           );
+        }else if($type == 'mill'){
+           //mill objects
+           $value = array(
+              'title' => $node->title,
+              'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--mill',
+              'logo' => isset($node->field_mill_logo[LANGUAGE_NONE][0]['url_text']) ? $node->field_mill_logo[LANGUAGE_NONE][0]['url_text'] : '',
+              'banners' =>  isset($node->field_mill_banner[LANGUAGE_NONE]) ? _cannon_data_api_break_out_array_of_items($node->field_mill_banner[LANGUAGE_NONE], 'url_text') : array(),
+              'description' => isset($node->field_mill_description[LANGUAGE_NONE][0]['safe_value']) ? $node->field_mill_description[LANGUAGE_NONE][0]['safe_value'] : '',
+              'website' => $node->field_website_url[LANGUAGE_NONE][0]['value'],
+              'phone' => isset($node->field_mill_phone_number[LANGUAGE_NONE][0]['safe_value']) ? $node->field_mill_phone_number[LANGUAGE_NONE][0]['safe_value'] : '',
+              'address' => isset($node->field_mill_address[LANGUAGE_NONE][0]['safe_value']) ? $node->field_mill_address[LANGUAGE_NONE][0]['safe_value'] : '',
+              'videos' => isset($node->field_video_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_video_reference, '--video') : array(),
+              'papers' => isset($node->field_paper_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_paper_reference, '--paper') : array(),
+            );
+
+        }else if($type == 'software'){
+            //software objects
+            $value = array(
+              'title' => $node->title,
+              'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--software',
+              'logo' => isset($node->field_software_logo[LANGUAGE_NONE][0]['url_text']) ? $node->field_software_logo[LANGUAGE_NONE][0]['url_text'] : '',
+              'short_desc' => isset($node->field_software_short_description[LANGUAGE_NONE][0]['value']) ? $node->field_software_short_description[LANGUAGE_NONE][0]['value'] : '',
+              'banners' => isset($node->field_software_banner[LANGUAGE_NONE]) ? _cannon_data_api_break_out_array_of_items($node->field_software_banner[LANGUAGE_NONE], 'url_text') : array(),
+              'description' => isset($node->field_software_description[LANGUAGE_NONE][0]['value']) ? $node->field_software_description[LANGUAGE_NONE][0]['value'] : '',
+              'overview' => _cannon_data_api_breakup_description($node->field_series_overview[LANGUAGE_NONE]),
+              'datasheets' => isset($node->field_datasheet_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_datasheet_reference , '--data-sheet') : array(),
+              'brochures' => isset($node->field_brochure_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_brochure_reference, '--brochure') : array(),
+              'videos' => isset($node->field_video_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_video_reference, '--video') : array(),
+            );
+
+        }else if($type == 'partner'){
+            //solutions
+             $solutions = array();
+             if(isset($node->field_solution_reference[LANGUAGE_NONE])){
+                $solutions_queried = _cannon_get_taxonomy_key($node->field_solution_reference[LANGUAGE_NONE]);
+                foreach ($solutions_queried as $key => $value) {;
+                   $solutions[] = $value . '--solution';
+                }
+             }
+
+            //partner objects
+            $value = array(
+              'title' => $node->title,
+              'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--partner',
+              'logo' => isset($node->field_partner_logo[LANGUAGE_NONE][0]['url_text']) ? $node->field_partner_logo[LANGUAGE_NONE][0]['url_text'] : '',
+              'banners' => isset($node->field_partner_banner[LANGUAGE_NONE]) ? _cannon_data_api_break_out_array_of_items($node->field_partner_banner[LANGUAGE_NONE], 'url_text') : array(),
+              'description' => isset($node->field_partner_description[LANGUAGE_NONE][0]['value']) ? $node->field_partner_description[LANGUAGE_NONE][0]['value'] : '',
+              'white_paper' => isset($node->field_product_white_paper_refere[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_product_white_paper_refere, '--white-paper') : array(),
+              'case_study' => isset($node->field_product_case_study_referen[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_product_case_study_referen, '--case-study') : array(),
+              'videos' => isset($node->field_video_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_video_reference, '--video') : array(),
+              'solutions' => $solutions,
+            );
+        }else if($type == 'datasheet'){
+            //datasheet objects
+            $value = array(
+              'title' => $node->title,
+              'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--datasheet',
+              'image' => isset($node->field_preview_image[LANGUAGE_NONE][0]['url_text']) ? $node->field_preview_image[LANGUAGE_NONE][0]['url_text'] : '',
+              'description' => isset($node->field_datasheet_description[LANGUAGE_NONE][0]['value']) ? $node->field_datasheet_description[LANGUAGE_NONE][0]['value'] : '',
+              'document-data' => _cannon_data_api_html_wrap_data($node->field_datasheet_document_body[LANGUAGE_NONE][0]['value']),
+            );
+        }else if($type == 'brochure'){
+            //brochure objects
+            $value = array(
+              'title' => $node->title,
+              'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--brochure',
+              'image' => isset($node->field_preview_image[LANGUAGE_NONE][0]['url_text']) ? $node->field_preview_image[LANGUAGE_NONE][0]['url_text'] : '',
+              'description' => isset($node->field_brochure_description[LANGUAGE_NONE][0]['value']) ? $node->field_brochure_description[LANGUAGE_NONE][0]['value'] : '',
+              'document-data' => _cannon_data_api_html_wrap_data($node->field_brochure_document_body[LANGUAGE_NONE][0]['value']),
+            );
+        }else if($type == 'solution'){
+            //solution objects
+            $value = array(
+              'title' => $term->name,
+              'key' => strtolower(_cannon_data_api_normalize_string($term->name)) . '--solution',
+              'description' => isset($term->description) ? strip_tags($term->description) : '',
+            );
+        }
+        //add each node represented as JSON to the data array
+        $data[] = $value;
+      }
+
+      //print out the JSON
+      print json_encode(array('data'=> array($type => $data, 'last-updated' => date("Y-m-d H:i:s", _cannon_data_api_get_time_of_last_updated_node($machine_name[$type])))));
+      drupal_exit();
+    }else{
+      print json_encode(array('error'=>true, 'message'=>'Sorry, that is not a valid content type.'));
+      drupal_exit();
+    }
+  }
+
+  /**
+   *  Utility function that grabs the product series for the product
+   *
+   */
+  function _cannon_data_api_get_series($nid){
+      //make the database call based upon the incoming route
+      $data_query = db_select('field_data_field_product_reference', 'r');
+      $data_query->fields('r', array('entity_id'));
+      $data_query->condition('r.field_product_reference_nid', $nid, '=');
+      $data_query->range(0,1);
+      $series_nid = $data_query->execute()->fetchfield();
+      //make sure we are actually getting a nid before we try and load a node
+      if(!empty($series_nid)){
+        $node = node_load($series_nid);
+        return strtolower(_cannon_data_api_normalize_string($node->title)) . '--series';
+      }else{
+        return '';
+      }
+  }
+
+  /**
+   *  Utility function that grabs all of the banners for a node
+   *
+   */
+  function _cannon_data_api_break_out_array_of_items($field, $key_value){
+    $banner_array = array();
+
+    foreach($field as $key => $value){
+      $banner_array[] = $value[$key_value];
+    }
+
+    return $banner_array;
+  }
+
+  /**
+   *  Utility function that grabs the mill for a paper
+   *
+   */
+  function _cannon_data_ap_get_mill_for_paper($nid){
+    //the database call that selects the entity id based upon the $nid of the paper
+    $data_query = db_select('field_data_field_paper_reference', 'r');
+    $data_query->fields('r', array('entity_id'));
+    $data_query->condition('r.field_paper_reference_nid', $nid, '=');
+    $data_query->range(0,1);
+    $paper_nid = $data_query->execute()->fetchfield();
+    //make sure we are actually getting a nid before we try and load a node
+    if(!empty($paper_nid)){
+      $node = node_load($paper_nid);
+      return strtolower(_cannon_data_api_normalize_string($node->title)) . '--mill';
+    }else{
+      return '';
+    }
+
+  }
+
+  /**
+   *  Implements hook_form()
+   *  Outputs the date and time the latest content type was updated
+   */
+  function cannon_data_api_update_form($form, &$form_state){
+     $machine_name = array('case-study' => 'case_study', 'product' => 'product', 'product-spec' => 'product_specification', 'video' => 'video', 'white-paper' => 'white_paper', 'product-series' => 'product_series', 'paper' => 'paper', 'mill' => 'mill', 'partner' => 'partner', 'software' => 'software', 'datasheet' => 'datasheet', 'brochure' => 'brochure');
+     $dates = array();
+     foreach ($machine_name as $key => $value) {
+       $dates[$key] = date("Y-m-d H:i:s", _cannon_data_api_get_time_of_last_updated_node($value));
+     }
+     print json_encode(array('last-update' => $dates));
+     exit;
+  }
+
+  /**
+   * This function breaks out the grid and the hero images into an array to be returned
+   * @param $data is the image data at a level ready to be parsed
+   **/
+  function _cannon_data_api_get_images($data){
+    $image_urls = array();
+    $i = 0;
+    //create the grid and hero images
+    foreach ($data as $key => $value) {
+      if($i == 0){
+       $image_urls['hero-image'] = $value['url_text'];
+      }else{
+       $image_urls['grid-image'] = $value['url_text'];
+      }
+      $i++;
+    }
+    return $image_urls;
+  }
+
+  /**
+   * This function load the reference id and sends back the keys(titles) that associate with that id
+   * @param $data is the node id(s)
+   **/
+  function _cannon_data_api_get_reference_key($data, $uniqueKey){
+    $keys = array();
+
+    if(isset($data[LANGUAGE_NONE])){
+
+      foreach ($data[LANGUAGE_NONE] as $key => $value) {
+
+          $node = node_load($value['nid']);
+
+          if(isset($node->title)){
+            if($node->status == 1){
+              $keys[] = strtolower(_cannon_data_api_normalize_string($node->title)) . $uniqueKey;
+            }
+          }
+      }
+
+      return $keys;
+    }else{
+      return '';
+    }
+  }
+
+  /**
+   *
+   *
+   **/
+  function _cannon_data_api_check_to_make_sure_data_is_available(){
+
+  }
+
+  /**
+   * This function breaks apart the streaming url and the thumbnail url for the video from media valet
+   * @param $data is the straight up text data from the database
+   **/
+  function _cannon_data_api_break_up_video_url($data){
+    $urls = explode('||||', $data);
+    //make sure we do not leave part of this array empty
+    if(empty($urls[0])) $urls[0] = '';
+    if(empty($urls[1])) $urls[1] = '';
+    if(empty($urls[2])) $urls[2] = '';
+    return $urls;
+  }
+
+  /**
+   * This function get the timestamp of the last updated content type
+   **/
+  function _cannon_data_api_get_time_of_last_updated_node($type){
+     //make the database call based upon the incoming route
+      $data_query = db_select('node', 'n');
+      $data_query->fields('n', array('changed'));
+      $data_query->condition('n.type', $type, '=');
+      $data_query->orderBy('changed', 'DESC');
+      $data_query->range(0,1);
+      return $data_query->execute()->fetchfield();
+
+  }
+
+  /**
+   *  Utility function to break up the field collections
+   */
+  function _cannon_data_api_breakup_description($object){
+    $descs = array();
+    foreach($object as $key => $value){
+       $entity = field_collection_item_load($value['value']);
+       $descs[] = array(
+         'title' => isset($entity->field_title[LANGUAGE_NONE][0]['value']) ? $entity->field_title[LANGUAGE_NONE][0]['value'] : '',
+         'description' => isset($entity->field_description[LANGUAGE_NONE][0]['value']) ? $entity->field_description[LANGUAGE_NONE][0]['value'] : '',
+       );
+    }
+    return $descs;
+  }
+
+  /**
+   *  Utility function to break uo the document titles into keys to associate them with the product object
+   */
+  function _cannon_data_api_get_document_keys($object, $document_type){
+    $docs = array(); $i = 0;
+    foreach($object as $key => $value){
+      $doc = node_load($value['nid']);
+      $docs[$document_type . '-' . $i] = strtolower(_cannon_data_api_normalize_string($doc->title));
+      $i++;
+    }
+    return $docs;
+  }
+  /**
+   *  Utility function to add taxonomy reference to product object
+   */
+  function _cannon_get_taxonomy_key($object){
+    $categories = array();
+    $i = 0;
+    foreach($object as $key => $value){
+      $category = taxonomy_term_load($value['tid']);
+      $categories[$i] = strtolower(_cannon_data_api_normalize_string($category->name));
+      $i++;
+    }
+    return $categories;
+  }
+
+  /**
+   *  Utility function to base 64 encode HTML pass in JSON
+   */
+  function _cannon_data_api_normalize_string($string){
+     $search   = array('"', '\"', '/', '\\', '\b', '\f', '\n', '\r', '.', '\t', chr(34), chr(92), chr(8), chr(12), chr(13) . chr(10), chr(10), chr(13), chr(9));
+     $replace  = array(' ');
+     $string = str_replace($search, $replace, $string);
+
+     return str_replace(' ', '-', $string);
+
+  }
+
+  /**
+   *  Utility function to base normalize text data to avoid issues
+   */
+  function _cannon_data_api_package_text_data($string){
+    $search   = array('"', '\"', '\\', '\b', '\f', '\n', '\r', '\t', chr(34), chr(92), chr(8), chr(12), chr(13) . chr(10), chr(10), chr(13), chr(9));
+    $replace  = array(' ');
+    $string = preg_replace("#[^a-zA-Z0-9/,.'-():;]+#i", " ", html_entity_decode($string, ENT_QUOTES));
+    return str_replace($search, $replace, $string);
+  }
+
+  /**
+   *  Utility function to base 64 encode HTML pass in JSON
+   */
+   function _cannon_data_api_html_wrap_data($string){
+    $styles = "<script type=\"text/javascript\" async=\"\" src=\"http://hello.myfonts.net/count/2c5146\"></script><style type=\"text/css\">@font-face{font-family: AvantGardeGothicITCW01Bk;src:url(http://c9ccf4e3bde7da8fd9d0-01341bb0de659b00b3b529fc2866883b.r99.cf1.rackcdn.com/2C5146_0_unhinted_0.woff)format(\"woff2\");} @font-face{font-family: AvantGardeGothicITCW02Md;src:url(http://c9ccf4e3bde7da8fd9d0-01341bb0de659b00b3b529fc2866883b.r99.cf1.rackcdn.com/2C5146_1_unhinted_0.woff)format(\"woff2\");}@font-face {font-family: AvantGardeGothicITCW01Bk;src:url(http://c9ccf4e3bde7da8fd9d0-01341bb0de659b00b3b529fc2866883b.r99.cf1.rackcdn.com/2C5146_0_unhinted_0.ttf)format(\"truetype\");}@font-face {font-family: AvantGardeGothicITCW02Md;src:url(http://c9ccf4e3bde7da8fd9d0-01341bb0de659b00b3b529fc2866883b.r99.cf1.rackcdn.com/2C5146_1_unhinted_0.ttf)format(\"truetype\");} p,strong,li,span,tr,td,th,div{font-family: AvantGardeGothicITCW01Bk;} h1,h2,h3,h4,h5,b{font-family: AvantGardeGothicITCW02Md;} li{margin-left:30px;} ul{margin:20px 0;}</style>";
+    return base64_encode('<html><head>' . $styles . '</head><body><br />' .$string . '</body></html> ');
+   }
+
+
+

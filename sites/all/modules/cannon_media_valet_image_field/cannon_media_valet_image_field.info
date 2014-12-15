@@ -1,0 +1,8 @@
+name = Canon Media Valet Image Field
+description = Module that created a custom field to select image assets from Media Valet
+package = Canon Custom Modules
+core = 7.x
+php = 5.3
+files[] = cannon_media_valet_image_field.module
+scripts[] = js/cannon_media_valet_image_field.js
+stylesheets[all][] = css/cannon_media_valet_image_field.css

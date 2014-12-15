@@ -1,0 +1,7 @@
+name = Canon Testing Module
+description = Module that makes testing requests to Media Valet
+package = Canon Custom Modules
+core = 7.x
+php = 5.3
+files[] = cannon_testing.module
+

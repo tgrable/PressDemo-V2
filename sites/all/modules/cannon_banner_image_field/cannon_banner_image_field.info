@@ -1,0 +1,8 @@
+name = Canon Banner Image Field
+description = Module that created a custom field to select banner image assets from Canons Asset Store
+package = Canon Custom Modules
+core = 7.x
+php = 5.3
+files[] = cannon_banner_image_field.module
+scripts[] = js/cannon_banner_image_field.js
+stylesheets[all][] = css/cannon_banner_image_field.css

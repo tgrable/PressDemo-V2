@@ -1,0 +1,214 @@
+<?php
+
+  /*----------------------------------------
+   * @file
+   * Cannon Testing
+   *
+   *----------------------------------------*/
+
+/**
+  * Implements hook_menu().
+  *
+  * Provides a route to make a test request
+  */
+  function cannon_testing_menu(){
+
+    $items['testing/%'] = array(
+       'title' => 'Testing Calls',
+       'page callback' => 'drupal_get_form',
+       'page arguments' => array('cannon_testing_form', 1),
+       'access callback' => TRUE,
+       'type' => MENU_NORMAL_ITEM
+   );
+
+   return $items;
+ }
+
+  /**
+  * Implements hook_form
+  **/
+ function cannon_testing_form($form, &$form_state, $filter_value){
+
+   if($filter_value == 'images'){
+
+    drupal_set_message(t('Testing a call made to Media Valet for images.'), 'status');
+    /*
+    $url = 'http://mvpublishingservice.azurewebsites.net/v1/classifications/?isRecursive=true&includeMediaAssets=all&show=imagesonly';
+    $data = _cannon_testing_api_call($url);
+
+    $decoded = json_decode($data);
+
+
+
+    if(isset($decoded[0][0]->ChildClassifications)){
+      $decoded = $decoded[0][0]->ChildClassifications;
+
+      $images = ""; $e = 0;
+      for ($i = 1; $i < count($decoded); ++$i) {
+
+         if(isset($decoded[$i]->FiledMediaAssets) && $decoded[$i]->Name != 'Videos'){
+           dpm($decoded[$i]);
+           foreach($decoded[$i]->FiledMediaAssets as $key => $value){
+             if(isset($value->Renditions)){
+               if(isset($value->Renditions[0]->Url) && isset($value->Renditions[5]->Url)){
+                  $images .= '<div class="image-cell image' . $e . '"><img width="130" height="80" data-url="' . $value->Renditions[5]->Url . '" src="' . $value->Renditions[0]->Url . '" />' .$value->Title . '</div>';
+                  $e++;
+               }else if(isset($value->Renditions[0]->Url) && isset($value->Renditions[4]->Url)){
+                  //grab the 4th object as the large image
+                  $images .= '<div class="image-cell image' . $e . '"><img width="130" height="80" data-url="' . $value->Renditions[4]->Url . '" src="' . $value->Renditions[0]->Url . '" />' .$value->Title . '</div>';
+                  $e++;
+               }else if(isset($value->Renditions[0]->Url) && isset($value->Renditions[3]->Url)){
+                  //grab the 3rd object as the large image
+                  $images .= '<div class="image-cell image' . $e . '"><img width="130" height="80" data-url="' . $value->Renditions[3]->Url . '" src="' . $value->Renditions[0]->Url . '" />' .$value->Title . '</div>';
+                  $e++;
+               }else if(isset($value->Renditions[0]->Url) && isset($value->Renditions[2]->Url)){
+                  //grab the 2nd object as the large image
+                  $images .= '<div class="image-cell image' . $e . '"><img width="130" height="80" data-url="' . $value->Renditions[2]->Url . '" src="' . $value->Renditions[0]->Url . '" />' .$value->Title . '</div>';
+                  $e++;
+               }else if(isset($value->Renditions[0]->Url) && isset($value->Renditions[1]->Url)){
+                  //grab the next object as the large image
+                  $images .= '<div class="image-cell image' . $e . '"><img width="130" height="80" data-url="' . $value->Renditions[1]->Url . '" src="' . $value->Renditions[0]->Url . '" />' .$value->Title . '</div>';
+                  $e++;
+               }else{
+                  //grab the same object as the large image
+                  $images .= '<div class="image-cell image' . $e . '"><img width="130" height="80" data-url="' . $value->Renditions[0]->Url . '" src="' . $value->Renditions[0]->Url . '" />' .$value->Title . '</div>';
+                  $e++;
+               }
+             }
+           }
+         }
+      }
+    }else{
+      drupal_set_message(t('An error occurred and processing did not complete.'), 'error');
+    }
+    */
+
+    $url = 'http://canoncache.trekkweb.com/data/api/image';
+    $data = _cannon_testing_api_call($url);
+    $decoded = json_decode($data);
+    dpm($decoded);
+
+    $images = ""; $e = 0;
+    foreach ($decoded->data->image as $key => $value) {
+       //grab the next object as the large image
+       $images .= '<div class="image-cell image' . $e . '"><img width="130" height="80" data-url="' . $value->image . '" src="' . $value->image . '" />' .$value->title . '</div>';
+       $e++;
+    }
+
+
+
+   }else if($filter_value == 'videos'){
+
+      //The URL below is not the URL we are dealing with to reference the videos for download
+      //here is the URL
+      //https://csamvpublive.blob.core.windows.net/
+
+      //Next we need to append the repo ID
+      //<RepositoryId>24e6aa33-2aef-4f11-a339-d947a6c4bd16</RepositoryId>
+
+      //Next we need to append the source file and switch around the slash
+      //<SourceFilePath>0ff6f89d-6db4-4ca9-97ba-07338d64048b\ColorStream 10000 Flex Demo_D.mp4</SourceFilePath>
+
+      //here is the windows streaming service
+      //http://mediavaletcsa.origin.mediaservices.windows.net/593c7364-adc4-45aa-98e9-196d6155f496/ColorStream 10000 Flex Demo_D.ism/manifest(format=m3u8-aapl)
+
+      //here is the url to get the videos
+      //http://mvpublishingservice.azurewebsites.net/v1/classifications?id=b3e81636-7a9b-4b46-8e14-eb1c9b91f611&includeMediaAssets=all&show=videosonly
+
+
+      /*
+      $raw_video_url = 'https://csamvpublive.blob.core.windows.net/';
+      $repoID = "";
+      $filename = "";
+      $sourceID = "";
+      $videoSourceURL = "";
+      drupal_set_message(t('Testing a call made to Media Valet for videos.'), 'status');
+      $url = 'http://mvpublishingservice.azurewebsites.net/v1/classifications?id=b3e81636-7a9b-4b46-8e14-eb1c9b91f611&includeMediaAssets=all&show=videosonly';
+      $data = _cannon_testing_api_call($url);
+
+      $decoded = json_decode($data);
+      dpm($decoded);
+      $video_icons = "";
+      if(isset($decoded->FiledMediaAssets)){
+         $e = 0;
+         for ($i = 0; $i < count($decoded->FiledMediaAssets); ++$i) {
+             $repoID = $decoded->FiledMediaAssets[$i]->RepositoryId;
+             $filename = $decoded->FiledMediaAssets[$i]->FileName;
+             $sourceID = $decoded->FiledMediaAssets[$i]->Id;
+
+             if(isset($decoded->FiledMediaAssets[$i]->Renditions)){
+                if(isset($decoded->FiledMediaAssets[$i]->Renditions[5]->Url) && isset($decoded->FiledMediaAssets[$i]->Renditions[8]->Url)){
+                  if($repoID != "" && $filename != "" && $sourceID != ""){
+                    $videoSourceURL = $raw_video_url . $repoID . '/' . $sourceID . '/' .$filename;
+                  }
+                  dpm($decoded->FiledMediaAssets[$i]->Renditions[8]->Url);
+                  dpm($decoded->FiledMediaAssets[$i]->Renditions[5]->Url);
+                  $video_icons .= '<div class="video-cell videos' . $e . '">
+                      <img width="130" height="80" data-source="' . $videoSourceURL .'"
+                                                   data-url="' . $decoded->FiledMediaAssets[$i]->Renditions[8]->Url . '"
+                                                   src="' .  $decoded->FiledMediaAssets[$i]->Renditions[5]->Url. '" />
+                      <div class="video-title">' . $decoded->FiledMediaAssets[$i]->Title . '</div>
+                    </div>';
+                    $e++;
+                }
+             }
+         }
+      }
+
+
+      $form['videos'] = array(
+         '#markup' => $video_icons,
+      );
+
+
+   }else{
+    drupal_set_message(t('An error occurred and processing did not complete.'), 'error');
+   }
+   return $form;
+  */
+     $url = 'http://canoncache.trekkweb.com/data/api/video';
+     $data = _cannon_testing_api_call($url);
+
+     $decoded = json_decode($data);
+     $video_icons = "";
+
+     if(count($decoded->data->video) > 0){
+       $e = 0;
+       foreach($decoded->data->video as $key => $value){
+          $video_icons .= '<div class="video-cell videos' . $e . '">
+                              <img width="130" height="80" data-source="' . $value->video_source .'"
+                                                           data-url="' . $value->video_ios_streaming . '"
+                                                           src="' .  $value->image . '" />
+                              <div class="video-title">' . $value->title . '</div>
+                          </div>';
+           $e++;
+       }
+
+     }else{
+       return "";
+     }
+
+
+  }
+
+
+ }
+
+ function _cannon_testing_api_call($url){
+
+    // Initializing curl
+    $ch = curl_init($url);
+
+    // Configuring curl options
+    $options = array(
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_HTTPHEADER => array('Content-type: application/json') ,
+    );
+
+    // Setting curl options
+    curl_setopt_array($ch, $options);
+
+    // Getting results
+    $result = curl_exec($ch); // Getting jSON result string
+    return $result;
+ }
