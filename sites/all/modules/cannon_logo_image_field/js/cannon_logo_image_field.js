@@ -11,7 +11,7 @@
 
         $.fn.selectLogoAsset = function(){
              var self = $(this),
-             $overlay = $('<div id="logo-overlay"><div class="ajax-loader"><img src="/sites/default/modules/cannon_logo_image_field/images/gif-load.gif" /></div></div>'),
+             $overlay = $('<div id="logo-overlay"><div class="ajax-loader"><img src="/sites/all/modules/cannon_logo_image_field/images/gif-load.gif" /></div></div>'),
              $modal = $('.field-type-cannon-logo-url-text div.logo-modal'),
              $input,
              $images,

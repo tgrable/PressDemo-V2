@@ -147,7 +147,7 @@
    return '<a href="#" class="logo" >Select Image</a>
            <div class="description">Select Image</div>
            <div class="logo-thumb">
-              <img class="cannon-logo" src="/sites/default/modules/cannon_logo_image_field/images/placeholder.jpg" width="130" height="80" />
+              <img class="cannon-logo" src="/sites/all/modules/cannon_logo_image_field/images/placeholder.jpg" width="130" height="80" />
            </div>
            <div class="logo-url"></div>
            <div class="logo-modal">
