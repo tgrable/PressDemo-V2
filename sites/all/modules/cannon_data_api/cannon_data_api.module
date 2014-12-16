@@ -74,7 +74,7 @@
             $value = array(
               'title' => $node->title,
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--case-study',
-              'description' => isset($node->field_case_study_description[LANGUAGE_NONE][0]['value']) ? $node->field_case_study_description[LANGUAGE_NONE][0]['value'] : '',
+              'description' => isset($node->field_case_study_description[LANGUAGE_NONE][0]['value']) ? _cannon_data_api_cleanse_string($node->field_case_study_description[LANGUAGE_NONE][0]['value']) : '',
               'image' => isset($node->field_preview_image[LANGUAGE_NONE][0]['url_text']) ? $node->field_preview_image[LANGUAGE_NONE][0]['url_text'] : '',
               'document-data' => _cannon_data_api_html_wrap_data($node->field_case_study_body[LANGUAGE_NONE][0]['value']),
             );
@@ -86,7 +86,7 @@
               'title' => $node->title,
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--product',
               'images' => isset($node->field_product_image[LANGUAGE_NONE]) ? _cannon_data_api_get_images($node->field_product_image[LANGUAGE_NONE]) : array(),
-              'product-description' => isset($node->field_short_product_description[LANGUAGE_NONE][0]['value']) ? $node->field_short_product_description[LANGUAGE_NONE][0]['value'] : '',
+              'product-description' => isset($node->field_short_product_description[LANGUAGE_NONE][0]['value']) ? _cannon_data_api_cleanse_string($node->field_short_product_description[LANGUAGE_NONE][0]['value']) : '',
               'what-do-you-want-to-print' =>  _cannon_get_taxonomy_key($node->field_what_do_you_want_to_print[LANGUAGE_NONE]),
               'show-all' =>  _cannon_get_taxonomy_key($node->field_show_all_products[LANGUAGE_NONE]),
               'series' => _cannon_data_api_get_series($node->nid),
@@ -107,7 +107,7 @@
               'title' => $node->title,
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--video',
               'image' => $video_urls[1],
-              'video-description' => isset($node->field_video_description[LANGUAGE_NONE][0]['value']) ? $node->field_video_description[LANGUAGE_NONE][0]['value'] : '',
+              'video-description' => isset($node->field_video_description[LANGUAGE_NONE][0]['value']) ? _cannon_data_api_cleanse_string($node->field_video_description[LANGUAGE_NONE][0]['value']) : '',
               'streaming-url' => $video_urls[0],
               'raw-video' => $video_urls[2],
             );
@@ -119,7 +119,7 @@
             $value = array(
               'title' => $node->title,
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--white-paper',
-              'description' => isset($node->field_white_paper_description[LANGUAGE_NONE][0]['value']) ? $node->field_white_paper_description[LANGUAGE_NONE][0]['value'] : '',
+              'description' => isset($node->field_white_paper_description[LANGUAGE_NONE][0]['value']) ? _cannon_data_api_cleanse_string($node->field_white_paper_description[LANGUAGE_NONE][0]['value']) : '',
               'image' => isset($node->field_preview_image[LANGUAGE_NONE][0]['url_text']) ? $node->field_preview_image[LANGUAGE_NONE][0]['url_text'] : '',
               'document-data' => _cannon_data_api_html_wrap_data($node->field_white_paper_body[LANGUAGE_NONE][0]['value']),
             );
@@ -138,7 +138,7 @@
             $value = array(
               'title' => $node->title,
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--series',
-              'description' => _cannon_data_api_breakup_description($node->field_series_overview[LANGUAGE_NONE]),
+              'description' => _cannon_data_api_cleanse_string(_cannon_data_api_breakup_description($node->field_series_overview[LANGUAGE_NONE])),
               'product_spec' => _cannon_data_api_get_reference_key($node->field_product_specification_refe, '--product-spec'),
               'case_studies' => isset($node->field_product_case_study_referen[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_product_case_study_referen, '--case-study') : array(),
               'white_papers' => isset($node->field_product_white_paper_refere[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_product_white_paper_refere, '--white-paper') : array(),
@@ -179,7 +179,7 @@
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--mill',
               'logo' => isset($node->field_mill_logo[LANGUAGE_NONE][0]['url_text']) ? $node->field_mill_logo[LANGUAGE_NONE][0]['url_text'] : '',
               'banners' =>  isset($node->field_mill_banner[LANGUAGE_NONE]) ? _cannon_data_api_break_out_array_of_items($node->field_mill_banner[LANGUAGE_NONE], 'url_text') : array(),
-              'description' => isset($node->field_mill_description[LANGUAGE_NONE][0]['safe_value']) ? $node->field_mill_description[LANGUAGE_NONE][0]['safe_value'] : '',
+              'description' => isset($node->field_mill_description[LANGUAGE_NONE][0]['safe_value']) ? _cannon_data_api_cleanse_string($node->field_mill_description[LANGUAGE_NONE][0]['safe_value']) : '',
               'website' => $node->field_website_url[LANGUAGE_NONE][0]['value'],
               'phone' => isset($node->field_mill_phone_number[LANGUAGE_NONE][0]['safe_value']) ? $node->field_mill_phone_number[LANGUAGE_NONE][0]['safe_value'] : '',
               'address' => isset($node->field_mill_address[LANGUAGE_NONE][0]['safe_value']) ? $node->field_mill_address[LANGUAGE_NONE][0]['safe_value'] : '',
@@ -195,7 +195,7 @@
               'logo' => isset($node->field_software_logo[LANGUAGE_NONE][0]['url_text']) ? $node->field_software_logo[LANGUAGE_NONE][0]['url_text'] : '',
               'short_desc' => isset($node->field_software_short_description[LANGUAGE_NONE][0]['value']) ? $node->field_software_short_description[LANGUAGE_NONE][0]['value'] : '',
               'banners' => isset($node->field_software_banner[LANGUAGE_NONE]) ? _cannon_data_api_break_out_array_of_items($node->field_software_banner[LANGUAGE_NONE], 'url_text') : array(),
-              'description' => isset($node->field_software_description[LANGUAGE_NONE][0]['value']) ? $node->field_software_description[LANGUAGE_NONE][0]['value'] : '',
+              'description' => isset($node->field_software_description[LANGUAGE_NONE][0]['value']) ? _cannon_data_api_cleanse_string($node->field_software_description[LANGUAGE_NONE][0]['value']) : '',
               'overview' => _cannon_data_api_breakup_description($node->field_series_overview[LANGUAGE_NONE]),
               'datasheets' => isset($node->field_datasheet_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_datasheet_reference , '--data-sheet') : array(),
               'brochures' => isset($node->field_brochure_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_brochure_reference, '--brochure') : array(),
@@ -218,7 +218,7 @@
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--partner',
               'logo' => isset($node->field_partner_logo[LANGUAGE_NONE][0]['url_text']) ? $node->field_partner_logo[LANGUAGE_NONE][0]['url_text'] : '',
               'banners' => isset($node->field_partner_banner[LANGUAGE_NONE]) ? _cannon_data_api_break_out_array_of_items($node->field_partner_banner[LANGUAGE_NONE], 'url_text') : array(),
-              'description' => isset($node->field_partner_description[LANGUAGE_NONE][0]['value']) ? $node->field_partner_description[LANGUAGE_NONE][0]['value'] : '',
+              'description' => isset($node->field_partner_description[LANGUAGE_NONE][0]['value']) ? _cannon_data_api_cleanse_string($node->field_partner_description[LANGUAGE_NONE][0]['value']) : '',
               'white_paper' => isset($node->field_product_white_paper_refere[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_product_white_paper_refere, '--white-paper') : array(),
               'case_study' => isset($node->field_product_case_study_referen[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_product_case_study_referen, '--case-study') : array(),
               'videos' => isset($node->field_video_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_video_reference, '--video') : array(),
@@ -230,7 +230,7 @@
               'title' => $node->title,
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--datasheet',
               'image' => isset($node->field_preview_image[LANGUAGE_NONE][0]['url_text']) ? $node->field_preview_image[LANGUAGE_NONE][0]['url_text'] : '',
-              'description' => isset($node->field_datasheet_description[LANGUAGE_NONE][0]['value']) ? $node->field_datasheet_description[LANGUAGE_NONE][0]['value'] : '',
+              'description' => isset($node->field_datasheet_description[LANGUAGE_NONE][0]['value']) ? _cannon_data_api_cleanse_string($node->field_datasheet_description[LANGUAGE_NONE][0]['value']) : '',
               'document-data' => _cannon_data_api_html_wrap_data($node->field_datasheet_document_body[LANGUAGE_NONE][0]['value']),
             );
         }else if($type == 'brochure'){
@@ -239,7 +239,7 @@
               'title' => $node->title,
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--brochure',
               'image' => isset($node->field_preview_image[LANGUAGE_NONE][0]['url_text']) ? $node->field_preview_image[LANGUAGE_NONE][0]['url_text'] : '',
-              'description' => isset($node->field_brochure_description[LANGUAGE_NONE][0]['value']) ? $node->field_brochure_description[LANGUAGE_NONE][0]['value'] : '',
+              'description' => isset($node->field_brochure_description[LANGUAGE_NONE][0]['value']) ? _cannon_data_api_cleanse_string($node->field_brochure_description[LANGUAGE_NONE][0]['value']) : '',
               'document-data' => _cannon_data_api_html_wrap_data($node->field_brochure_document_body[LANGUAGE_NONE][0]['value']),
             );
         }else if($type == 'solution'){
@@ -247,7 +247,7 @@
             $value = array(
               'title' => $term->name,
               'key' => strtolower(_cannon_data_api_normalize_string($term->name)) . '--solution',
-              'description' => isset($term->description) ? strip_tags($term->description) : '',
+              'description' => isset($term->description) ? strip_tags(_cannon_data_api_cleanse_string($term->description)) : '',
             );
         }
         //add each node represented as JSON to the data array
@@ -454,7 +454,16 @@
   }
 
   /**
-   *  Utility function to base 64 encode HTML pass in JSON
+   *  Utility function to remove certain characters from a string
+   */
+  function _cannon_data_api_cleanse_string($string){
+    $string = str_replace('"', '\"', $string);
+    $string = str_replace('\\', ' ', $string);
+    return $string;
+  }
+
+  /**
+   *  Utility function to remove certain characters from a string
    */
   function _cannon_data_api_normalize_string($string){
      $search   = array('"', '\"', '/', '\\', '\b', '\f', '\n', '\r', '.', '\t', chr(34), chr(92), chr(8), chr(12), chr(13) . chr(10), chr(10), chr(13), chr(9));
