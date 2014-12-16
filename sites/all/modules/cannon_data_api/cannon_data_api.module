@@ -198,7 +198,7 @@
               'banners' => isset($node->field_software_banner[LANGUAGE_NONE]) ? _cannon_data_api_break_out_array_of_items($node->field_software_banner[LANGUAGE_NONE], 'url_text') : array(),
               'description' => isset($node->field_software_description[LANGUAGE_NONE][0]['value']) ? _cannon_data_api_cleanse_string($node->field_software_description[LANGUAGE_NONE][0]['value']) : '',
               'overview' => _cannon_data_api_breakup_description($node->field_series_overview[LANGUAGE_NONE]),
-              'datasheets' => isset($node->field_datasheet_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_datasheet_reference , '--data-sheet') : array(),
+              'datasheets' => isset($node->field_datasheet_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_datasheet_reference , '--datasheet') : array(),
               'brochures' => isset($node->field_brochure_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_brochure_reference, '--brochure') : array(),
               'videos' => isset($node->field_video_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_video_reference, '--video') : array(),
             );
