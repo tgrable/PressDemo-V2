@@ -153,7 +153,7 @@
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--paper',
               'mill' => _cannon_data_ap_get_mill_for_paper($node->nid),
               'basis_weight' => _cannon_data_api_break_out_array_of_items($node->field_basis_weight[LANGUAGE_NONE], 'value'),
-              'brightness' => $node->field_white_brightness_range[LANGUAGE_NONE][0]['safe_value'],
+              'brightness' => $node->field_white_brightness_range[LANGUAGE_NONE][0]['value'],
               'coating' => $node->field_type_two[LANGUAGE_NONE][0]['value'],
               'color_capacity' => '',
               'category' => $node->field_category[LANGUAGE_NONE][0]['value'],
@@ -173,16 +173,17 @@
               'house_paper' => $node->field_house_paper[LANGUAGE_NONE][0]['value'],
            );
         }else if($type == 'mill'){
+
            //mill objects
            $value = array(
               'title' => $node->title,
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--mill',
               'logo' => isset($node->field_mill_logo[LANGUAGE_NONE][0]['url_text']) ? $node->field_mill_logo[LANGUAGE_NONE][0]['url_text'] : '',
               'banners' =>  isset($node->field_mill_banner[LANGUAGE_NONE]) ? _cannon_data_api_break_out_array_of_items($node->field_mill_banner[LANGUAGE_NONE], 'url_text') : array(),
-              'description' => isset($node->field_mill_description[LANGUAGE_NONE][0]['safe_value']) ? _cannon_data_api_cleanse_string($node->field_mill_description[LANGUAGE_NONE][0]['safe_value']) : '',
+              'description' => isset($node->field_mill_description[LANGUAGE_NONE][0]['value']) ? _cannon_data_api_cleanse_string($node->field_mill_description[LANGUAGE_NONE][0]['value']) : '',
               'website' => $node->field_website_url[LANGUAGE_NONE][0]['value'],
-              'phone' => isset($node->field_mill_phone_number[LANGUAGE_NONE][0]['safe_value']) ? $node->field_mill_phone_number[LANGUAGE_NONE][0]['safe_value'] : '',
-              'address' => isset($node->field_mill_address[LANGUAGE_NONE][0]['safe_value']) ? $node->field_mill_address[LANGUAGE_NONE][0]['safe_value'] : '',
+              'phone' => isset($node->field_mill_phone_number[LANGUAGE_NONE][0]['value']) ? $node->field_mill_phone_number[LANGUAGE_NONE][0]['value'] : '',
+              'address' => isset($node->field_mill_address[LANGUAGE_NONE][0]['value']) ? $node->field_mill_address[LANGUAGE_NONE][0]['value'] : '',
               'videos' => isset($node->field_video_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_video_reference, '--video') : array(),
               'papers' => isset($node->field_paper_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_paper_reference, '--paper') : array(),
             );
@@ -457,7 +458,7 @@
    *  Utility function to remove certain characters from a string
    */
   function _cannon_data_api_cleanse_string($string){
-    $string = str_replace('"', '\"', $string);
+    $string = str_replace(array('"', chr(34), '”', '“'), '', $string);
     $string = str_replace('\\', ' ', $string);
     return $string;
   }
