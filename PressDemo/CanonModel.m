@@ -19,7 +19,7 @@
 
 @implementation CanonModel
 @synthesize orange, blue, green, dullBlack, lightGray, red, yellow, pink, purple, gray, testingString, ui;
-@synthesize localProds, currentFilter, filteredProducts, selectedSeries, tracker, selectedMill, selectedPartner;
+@synthesize localProds, currentFilter, filteredProducts, selectedSeries, tracker, selectedMill, selectedPartner, selectedSoftware;
 - (id)init
 {
     self = [super init];
@@ -31,6 +31,7 @@
         selectedSeries = [[ProductSeries alloc] init];
         selectedMill = [[Mill alloc] init];
         selectedPartner = [[Partner alloc] init];
+        selectedSoftware = [[Software alloc] init];
         
         self.hostReachability = [Reachability reachabilityWithHostname:@"www.apple.com"];
         [self.hostReachability startNotifier];
@@ -48,6 +49,7 @@
         initialSetOfMills = [NSMutableArray array];
         initialSetOfPaper = [NSMutableArray array];
         initialSolutionData = [NSMutableArray array];
+        initialSofware = [NSMutableArray array];
         
         //initial setup of products in the first view
         localProds = [NSMutableArray array];
@@ -75,6 +77,7 @@
         [showAll setObject:[UIImage imageNamed:@"home-nav-mono.png"] forKey:@"monochrome"];
         [showAll setObject:[UIImage imageNamed:@"home-nav-workflow.png"] forKey:@"workflow"];
         [showAll setObject:[UIImage imageNamed:@"home-nav-media.png"] forKey:@"media"];
+        [showAll setObject:[UIImage imageNamed:@"home-nav-software.png"] forKey:@"software"];
         
         //Full on UIImages to be referenced in the ViewController by Key
         topBanners = [[NSMutableDictionary alloc] init];
@@ -435,6 +438,7 @@
         NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:d];
         //save the html file and save the object
         [self saveHTMLFile:data andFileName:filename complete:^(BOOL completeFlag){
+
             [documentData setObject:encodedObject forKey:key];
         }];
     }
@@ -541,8 +545,7 @@
         s.brochures = [dict objectForKey:@"brochures"];
         s.videos = [dict objectForKey:@"videos"];
         
-        NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:s];
-        [softwareData setObject:encodedObject forKey:key];
+        [initialSofware addObject:s];
     }
 }
 
@@ -555,11 +558,12 @@
         Partner *p = [[Partner alloc] init];
         NSString *key = [dict objectForKey:@"key"];
         p.key = key;
+        p.logo = [dict objectForKey:@"logo"];
         p.title = [dict objectForKey:@"title"];
         p.banners = [dict objectForKey:@"banners"];
         p.description = [dict objectForKey:@"description"];
-        p.white_paper = [dict objectForKey:@"white_paper"];
-        p.case_study = [dict objectForKey:@"case_study"];
+        p.white_papers = [dict objectForKey:@"white_paper"];
+        p.case_studies = [dict objectForKey:@"case_study"];
         p.videos = [dict objectForKey:@"videos"];
         p.solutions = [dict objectForKey:@"solutions"];
         
@@ -721,34 +725,32 @@
                                                                         [self saveFile:[millData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
                                                                             c6++;
                                                                             if(c6 == [millData count]){
-                                                                                __block int c7 = 0;
-                                                                                for(id key in softwareData){
-                                                                                    [self saveFile:[softwareData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
-                                                                                        c7++;
-                                                                                        if(c7 == [softwareData count]){
-                                                                                            //save inital dataset of mills as object
-                                                                                            NSData *encodedMills = [NSKeyedArchiver archivedDataWithRootObject:initialSetOfMills];
-                                                                                            //save inital dataset of papers as object
-                                                                                            NSData *encodedPapers = [NSKeyedArchiver archivedDataWithRootObject:initialSetOfPaper];
-                                                                                            //save the initial dataset of solutions
-                                                                                            NSData *encodedSolutions = [NSKeyedArchiver archivedDataWithRootObject:initialSolutionData];
-                                                                                            //save the initial dataset of partners
-                                                                                            NSData *encodedPartners = [NSKeyedArchiver archivedDataWithRootObject:initialPartnerData];
-                                                                                            [self saveFile:encodedMills andFileName:@"initialMills" complete:^(BOOL completeFlag){
-                                                                                                [self saveFile:encodedPapers andFileName:@"initialPapers" complete:^(BOOL completeFlag){
-                                                                                                    [self saveFile:encodedSolutions andFileName:@"initialSolutions" complete:^(BOOL completeFlag){
-                                                                                                        [self saveFile:encodedPartners andFileName:@"initialPartners" complete:^(BOOL completeFlag){
-                                                                                                            ALog(@"COMPLETE SAVING!");
-                                                                                                            completeFlagArgument(YES);
-                                                                                                        }];
-                                                                                                    }];
-                                                                                                }];
                                                                                 
+                                                                                //save inital dataset of software as object
+                                                                                NSData *encodedSoftware = [NSKeyedArchiver archivedDataWithRootObject:initialSofware];
+                                                                                
+                                                                                //save inital dataset of mills as object
+                                                                                NSData *encodedMills = [NSKeyedArchiver archivedDataWithRootObject:initialSetOfMills];
+                                                                                //save inital dataset of papers as object
+                                                                                NSData *encodedPapers = [NSKeyedArchiver archivedDataWithRootObject:initialSetOfPaper];
+                                                                                //save the initial dataset of solutions
+                                                                                NSData *encodedSolutions = [NSKeyedArchiver archivedDataWithRootObject:initialSolutionData];
+                                                                                //save the initial dataset of partners
+                                                                                NSData *encodedPartners = [NSKeyedArchiver archivedDataWithRootObject:initialPartnerData];
+                                                                                [self saveFile:encodedMills andFileName:@"initialMills" complete:^(BOOL completeFlag){
+                                                                                    [self saveFile:encodedPapers andFileName:@"initialPapers" complete:^(BOOL completeFlag){
+                                                                                        [self saveFile:encodedSolutions andFileName:@"initialSolutions" complete:^(BOOL completeFlag){
+                                                                                            [self saveFile:encodedPartners andFileName:@"initialPartners" complete:^(BOOL completeFlag){
+                                                                                                [self saveFile:encodedSoftware andFileName:@"initialSoftware" complete:^(BOOL completeFlag){
+                                                                                                    ALog(@"COMPLETE SAVING!");
+                                                                                                    completeFlagArgument(YES);
+                                                                                                }];
                                                                                             }];
-                                                                                    
-                                                                                        }
+                                                                                        }];
                                                                                     }];
-                                                                                }
+                                                                    
+                                                                                }];
+                                                                            
                                                                             }
                                                                         }];
                                                                     }
@@ -813,6 +815,14 @@
     }
 }
 
+//function that gets the width of the field based upon the size of the text and the font of the text
+- (CGFloat)widthOfString:(NSString *)string withStringSize:(float)size andFontKey:(NSString *)key
+{
+    UIFont *font = [UIFont fontWithName:key size:size];
+    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
+    return [[[NSAttributedString alloc] initWithString:string attributes:attributes] size].width;
+}
+
 /*----------------------------------------------*
  Functionas that handle interaction with documents saved to the application
  -(void)saveHTMLFile:(NSData *)data andFileName:(NSString *)filename complete:(completeBlock)completeFlag
@@ -833,11 +843,11 @@
             NSString *documentsDirectory = [paths objectAtIndex:0];
             NSString* path = [documentsDirectory stringByAppendingPathComponent:filename];
             
-            //ALog("Filename %@", filename);
-            //ALog("Data length %d", [data length]);
+            ALog("Filename %@", filename);
+            ALog("Data length %d", [data length]);
             
             if([data writeToFile:path atomically:YES]){
-                //ALog(@"Model SAVED FILE SUCCESSFULLY %@", path);
+                ALog(@"Model SAVED FILE SUCCESSFULLY %@", path);
                 completeFlag(YES);
             }else{
                 ALog(@"ERROR SAVING FILE %@", path);

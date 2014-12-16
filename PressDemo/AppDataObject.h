@@ -25,12 +25,12 @@
     NSMutableDictionary *seriesBanners, *documentBanners;
     NSMutableDictionary *lastUpdated, *documentData, *productData, *productSeriesData, *videoData;
     NSMutableDictionary *millData, *paperData, *softwareData;
-    NSMutableArray *downloadedImages, *initialSetOfMills, *initialSetOfPaper, *initialSolutionData, *initialPartnerData;
+    NSMutableArray *downloadedImages, *initialSetOfMills, *initialSetOfPaper, *initialSolutionData, *initialPartnerData, *initialSofware;
 }
 
 @property (nonatomic, strong)NSMutableDictionary *whatDoYouWantToPrint, *showAll, *taxonomyReadableNames, *topBanners;
 @property (nonatomic, strong)NSMutableDictionary *lastUpdated, *documentData, *productData, *productSeriesData, *videoData;
 @property (nonatomic, strong)NSMutableDictionary *seriesBanners, *millData, *paperData, *softwareData;
-@property (nonatomic, strong)NSMutableArray *downloadedImages, *initialSetOfMills, *initialSetOfPaper, *initialSolutionData, *initialPartnerData;
+@property (nonatomic, strong)NSMutableArray *downloadedImages, *initialSetOfMills, *initialSetOfPaper, *initialSolutionData, *initialPartnerData, *initialSofware;
 @property BOOL layoutSync, needsUpdate;
 @end

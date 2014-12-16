@@ -1,14 +1,14 @@
 //
-//  FilterViewController.m
+//  CanonSoftwareGridViewController.m
 //  PressDemo
 //
-//  Created by Trekk mini-1 on 8/11/14.
+//  Created by Trekk mini-1 on 12/16/14.
 //  Copyright (c) 2014 Trekk. All rights reserved.
 //
 
-#import "FilterViewController.h"
+#import "CanonSoftwareGridViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
-#import "SeriesViewController.h"
+#import "CanonSoftwareViewController.h"
 
 #define ResourcePath(path)[[NSBundle mainBundle] pathForResource:path ofType:nil]
 
@@ -17,7 +17,7 @@
 //this is a local macro that sets up a class wide logging scheme
 #define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 
-@implementation FilterViewController
+@implementation CanonSoftwareGridViewController
 @synthesize topBanner, productScroll, customNavBar;
 @synthesize model, network, navBarHomeButton, offlineImages;
 
@@ -44,7 +44,7 @@
         //this notification is set to the reachability of the application
         //if the application cannot connect, then this function is called
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityDidChange:) name:kReachabilityChangedNotification object:nil];
-    
+        
     }
     return self;
 }
@@ -80,7 +80,7 @@
 {
     //start the update check here
     ALog(@"App came back into focus");
-
+    
     
     //make sure to check the connectivity again
     if ([model.hostReachability isReachableViaWiFi]) {
@@ -91,20 +91,20 @@
         });
         //resync the UI
         if(!model.layoutSync){
-           for (id key in offlineImages) {
-               UIImageView *i = [offlineImages objectForKey:key];
-               NSArray *url = [key componentsSeparatedByString:@"---"];
-               if([url objectAtIndex:1] != nil){
-                  [i setImageWithURL:[NSURL URLWithString:[url objectAtIndex:1]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]
-                         completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-                            ALog(@"Got the image %@", image);
-                  }];
-               }
+            for (id key in offlineImages) {
+                UIImageView *i = [offlineImages objectForKey:key];
+                NSArray *url = [key componentsSeparatedByString:@"---"];
+                if([url objectAtIndex:1] != nil){
+                    [i setImageWithURL:[NSURL URLWithString:[url objectAtIndex:1]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]
+                             completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
+                                 ALog(@"Got the image %@", image);
+                             }];
+                }
                 
-           }
+            }
             
-           [offlineImages removeAllObjects];
-           model.layoutSync = YES;
+            [offlineImages removeAllObjects];
+            model.layoutSync = YES;
         }
     }
 }
@@ -112,14 +112,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    //ALog(@"viewWillAppear FILTER");
     
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    //ALog(@"viewDidAppear FILTER");
     //app going into background notification
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appWentIntoBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -127,7 +125,7 @@
     //set observation notification on completion
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appCameBackIntoFocus) name:UIApplicationDidBecomeActiveNotification object:nil];
-
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -146,12 +144,20 @@
 {
     [super viewDidLoad];
     
-    self.screenName = @"Product Filter View";
+    self.screenName = @"Software Grid View";
     
     network = [[NetworkData alloc] init];
     network.delegate = self;
     
     model = [self AppDataObj];
+    
+    //make sure we have data
+    if([model.initialSetOfMills count] == 0){
+        
+        NSData *softwareData = [model getFileData:@"initialSoftware" complete:^(BOOL completeFlag){}];
+        
+        model.initialSofware = [NSKeyedUnarchiver unarchiveObjectWithData:softwareData];
+    }
     
     //***** Load up views to the local view controller ************//
     //the nav bar
@@ -185,15 +191,23 @@
     [topBanner setUserInteractionEnabled:YES];
     [self.view addSubview:topBanner];
     
+    UILabel *viewLabel = [[UILabel alloc] initWithFrame:CGRectMake(35, 4, 220, 60)];
+    [viewLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:36.0]];
+    viewLabel.textColor = [UIColor whiteColor];
+    viewLabel.numberOfLines = 1;
+    viewLabel.backgroundColor = [UIColor clearColor];
+    viewLabel.text = @"SOFTWARE";
+    [topBanner addSubview:viewLabel];
+    
     //save the offline images
     offlineImages = [[NSMutableDictionary alloc] init];
-
+    
     //load up the view with assets
     [self setupLocalUserInterface:^(BOOL completeFlag){}];
     [self loadupProducts];
     
     //GA
-    //[model logData:@"Product Filter View" withAction:@"View Tracker" withLabel:@"Landed on product filter view"];
+    //[model logData:@"Software Grid View" withAction:@"View Tracker" withLabel:@"Landed on product filter view"];
 }
 
 
@@ -205,109 +219,102 @@
     //cycle through the data and load up a grid of products
     NSArray *ends = [NSArray arrayWithObjects:@"0",@"3",@"4",@"7",@"8",@"11",@"12",@"15",@"16",@"19",@"20",@"23", nil];
     int x = 0, y = 24, e = 0, i = 1;
-    for(Product *p in model.filteredProducts){
-        //make sure a product is attached to a series
+    for(Software *s in model.initialSofware){
+        int width = 241;
+        if([ends containsObject:[NSString stringWithFormat:@"%d",e]]) width = 233;
         
-        if([p.series length] > 0){
-            
-            int width = 241;
-            if([ends containsObject:[NSString stringWithFormat:@"%d",e]]) width = 233;
-
-
-            UIView *v = [[UIView alloc] initWithFrame:CGRectMake(x, y, width, 300)];
-            v.backgroundColor = [UIColor whiteColor];
-            
-            UIButton *back = [UIButton buttonWithType:UIButtonTypeCustom];
-            [back setFrame:CGRectMake(0, 0, width, 300)];
-            [back addTarget:self action:@selector(productTouched:)forControlEvents:UIControlEventTouchUpInside];
-            back.showsTouchWhenHighlighted = YES;
-            [back setUserInteractionEnabled:YES];
-            [back setTitle:p.series forState:UIControlStateNormal];
-            [back setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
-            back.tag = e;
-            [back setBackgroundColor:[UIColor whiteColor]];
-            [v addSubview:back];
-            
-            if(x != 0){
-                UIView *leftLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 300)];
-                leftLine.backgroundColor = model.lightGray;
-                [v addSubview:leftLine];
+        
+        UIView *v = [[UIView alloc] initWithFrame:CGRectMake(x, y, width, 300)];
+        v.backgroundColor = [UIColor whiteColor];
+        
+        UIButton *back = [UIButton buttonWithType:UIButtonTypeCustom];
+        [back setFrame:CGRectMake(0, 0, width, 300)];
+        [back addTarget:self action:@selector(productTouched:)forControlEvents:UIControlEventTouchUpInside];
+        back.showsTouchWhenHighlighted = YES;
+        [back setUserInteractionEnabled:YES];
+        [back setTitle:s.key forState:UIControlStateNormal];
+        [back setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+        back.tag = e;
+        [back setBackgroundColor:[UIColor whiteColor]];
+        [v addSubview:back];
+        
+        if(x != 0){
+            UIView *leftLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 300)];
+            leftLine.backgroundColor = model.lightGray;
+            [v addSubview:leftLine];
+        }
+        
+        int imgX = 8;
+        if(x == 0) imgX = 0;
+        //below we add a placeholder image into the UIImageView, then we try and load the image on a background thread
+        //if the image loads, it is placed in the UIImageView, if it does not, the view is placed in a dictionary to be redownloaded when the app comes back online
+        //a flag is also set to make sure the app knows that we have to resync the UI
+        UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(imgX, 0, 224, 151)];
+        //check to make sure the everything is reachable
+        NSString *u = [s.logo  stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+        __weak typeof(UIImageView) *imgView = iv;
+        [iv setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
+            if(error){
+                ALog(@"Error %@", error);
+                NSString *key = [NSString stringWithFormat:@"%d---%@",i,u];
+                imgView.image = [UIImage imageNamed:@"placeholder.png"];
+                [offlineImages setObject:imgView forKey:key];
+                model.layoutSync = NO;
             }
-            
-            int imgX = 8;
-            if(x == 0) imgX = 0;
-    
-            
-            //below we add a placeholder image into the UIImageView, then we try and load the image on a background thread
-            //if the image loads, it is placed in the UIImageView, if it does not, the view is placed in a dictionary to be redownloaded when the app comes back online
-            //a flag is also set to make sure the app knows that we have to resync the UI
-            UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(imgX, 0, 224, 151)];
-            //check to make sure the everything is reachable
-            NSString *u = [[p.images objectForKey:@"grid-image"] stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-            __weak typeof(UIImageView) *imgView = iv;
-            [iv setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-                if(error){
-                    ALog(@"Error %@", error);
-                    NSString *key = [NSString stringWithFormat:@"%d---%@",i,u];
-                    imgView.image = [UIImage imageNamed:@"placeholder.png"];
-                    [offlineImages setObject:imgView forKey:key];
-                    model.layoutSync = NO;
-                }
-            }];
-            iv.contentMode = UIViewContentModeScaleAspectFit;
-            [back addSubview:iv];
-            
-            
-            UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(imgX, 155, 224, 42)];
-            [title setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:16.0]];
-            title.textColor = [UIColor blackColor];
-            title.numberOfLines = 2;
-            title.backgroundColor = [UIColor whiteColor];
-            title.text = [p.title uppercaseString];
-            [back addSubview:title];
-            
-            UITextView *desc = [[UITextView alloc] initWithFrame:CGRectMake(imgX, 200, 224, 100)];
-            [desc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:13.0]];
-            desc.textColor = [UIColor blackColor];
-            desc.contentSize = CGSizeMake(224, 100);
-            desc.editable = NO;
-            desc.backgroundColor = [UIColor whiteColor];
-            desc.text = p.description;
-            [back addSubview:desc];
-            
-            [productScroll addSubview:v];
-            
-            if((i % 4) == 0){
-                y += 350;
-                x = 0;
-            }else{
-                x += width;
-            }
-            
-            //counters
-            e++; i++;
-
-            //check to add the divider
-            if((i % 4) == 0){
-                if(i < [model.filteredProducts count]){
-                    int dy = y + 300;
-                    UIView *shadow = [[UIView alloc] initWithFrame:CGRectMake(0, dy, 952, 50)];
-                    shadow.backgroundColor = [UIColor whiteColor];
-                    
-                    UIImageView *divider = [[UIImageView alloc] initWithFrame:CGRectMake(0, 18, 952, 14)];
-                    [divider setImage:[UIImage imageNamed:@"img-div-shdw.png"]];
-                    [shadow addSubview:divider];
-                    [productScroll addSubview:shadow];
-                }
+        }];
+        iv.contentMode = UIViewContentModeScaleAspectFit;
+        [back addSubview:iv];
+        
+        
+        UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(imgX, 155, 224, 42)];
+        [title setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:16.0]];
+        title.textColor = [UIColor blackColor];
+        title.numberOfLines = 2;
+        title.backgroundColor = [UIColor whiteColor];
+        title.text = [s.title uppercaseString];
+        [back addSubview:title];
+        
+        UITextView *desc = [[UITextView alloc] initWithFrame:CGRectMake(imgX, 200, 224, 100)];
+        [desc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:13.0]];
+        desc.textColor = [UIColor blackColor];
+        desc.contentSize = CGSizeMake(224, 100);
+        desc.editable = NO;
+        desc.backgroundColor = [UIColor whiteColor];
+        desc.text = s.short_desc;
+        [back addSubview:desc];
+        
+        
+        [productScroll addSubview:v];
+        
+        if((i % 4) == 0){
+            y += 350;
+            x = 0;
+        }else{
+            x += width;
+        }
+        
+        //counters
+        e++; i++;
+        
+        //check to add the divider
+        if((i % 4) == 0){
+            if(i < [model.initialSofware count]){
+                int dy = y + 300;
+                UIView *shadow = [[UIView alloc] initWithFrame:CGRectMake(0, dy, 952, 50)];
+                shadow.backgroundColor = [UIColor whiteColor];
+                
+                UIImageView *divider = [[UIImageView alloc] initWithFrame:CGRectMake(0, 18, 952, 14)];
+                [divider setImage:[UIImage imageNamed:@"img-div-shdw.png"]];
+                [shadow addSubview:divider];
+                [productScroll addSubview:shadow];
             }
         }
     }
     //below I am calculating the content height for the scrollview that displays the products
     int multi = i / 4, add = multi * 50;
-    //if(mod >= 1) add += 324;
     //set the dynamic content height
-    [productScroll setContentSize:CGSizeMake(952, ((multi * 300) + add + 10))];
-
+    [productScroll setContentSize:CGSizeMake(952, ((multi * 300) + add))];
+    
 }
 
 
@@ -317,20 +324,18 @@
 {
     UIButton *b = (UIButton *)sender;
     
-    NSData *seriesData = [model getFileData:b.titleLabel.text complete:^(BOOL completeFlag){}];
-    if(seriesData != nil){
-        model.selectedSeries = [NSKeyedUnarchiver unarchiveObjectWithData:seriesData];
-     
-        SeriesViewController *series = [[SeriesViewController alloc] initWithNibName:@"SeriesViewController" bundle:nil];
-        [self.navigationController pushViewController:series animated:YES];
-    }else{
-        [self displayMessage:@"Alert" withTitle:@"There was an internal error, please contact support."];
+    for(Software *s in model.initialSofware){
+        if([s.key isEqualToString:b.titleLabel.text]){
+            model.selectedSoftware = s;
+            
+            CanonSoftwareViewController *softView = [[CanonSoftwareViewController alloc] initWithNibName:@"CanonSoftwareViewController" bundle:nil];
+            [self.navigationController pushViewController:softView animated:YES];
+            
+            //GA
+            //[model logData:@"Mill Grid View" withAction:@"Action Tracker" withLabel:m.key];
+        }
     }
     
-    //GA
-    //[model logData:@"Product Filter View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Product: %@",b.titleLabel.text]];
-    
-   
 }
 
 //function that pops the view controller off the stack and sends the user back home
@@ -343,9 +348,9 @@
 -(void)setupLocalUserInterface:(completeBlock)completeFlag
 {
     //setup top banner
-    topBanner.image = [model.topBanners objectForKey:model.currentFilter];
+    topBanner.image = [model.ui getImageWithName:@"/header-purple@2x.png"];
     
-    //home icon
+    //home icon;
     [navBarHomeButton setBackgroundImage:[UIImage imageNamed:@"icn-home.png"] forState:UIControlStateNormal];
     
     completeFlag(YES);

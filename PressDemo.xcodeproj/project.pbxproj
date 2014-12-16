@@ -70,6 +70,12 @@
 		30E9461119A14497002A996C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30E9461019A14497002A996C /* AVFoundation.framework */; };
 		30E9461319A1453E002A996C /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30E9461219A1453E002A996C /* MediaPlayer.framework */; };
 		30EC010D19A2CE9F006B4771 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 717F1639192E26A300554B39 /* SDWebImage.framework */; };
+		711FC2FF1A3F6373005BEDE7 /* PartnerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 711FC2FD1A3F6373005BEDE7 /* PartnerViewController.m */; };
+		711FC3001A3F6373005BEDE7 /* PartnerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 711FC2FE1A3F6373005BEDE7 /* PartnerViewController.xib */; };
+		711FC3071A40C574005BEDE7 /* CanonSoftwareGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 711FC3051A40C574005BEDE7 /* CanonSoftwareGridViewController.m */; };
+		711FC3081A40C574005BEDE7 /* CanonSoftwareGridViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 711FC3061A40C574005BEDE7 /* CanonSoftwareGridViewController.xib */; };
+		711FC30C1A40C61B005BEDE7 /* CanonSoftwareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 711FC30A1A40C61B005BEDE7 /* CanonSoftwareViewController.m */; };
+		711FC30D1A40C61B005BEDE7 /* CanonSoftwareViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 711FC30B1A40C61B005BEDE7 /* CanonSoftwareViewController.xib */; };
 		712728061A3BA6FB0040F89E /* Solution.m in Sources */ = {isa = PBXBuildFile; fileRef = 712728051A3BA6FB0040F89E /* Solution.m */; };
 		712946EA19A37BD800E0548D /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 712946E919A37BD800E0548D /* NetworkManager.m */; };
 		712946ED19A37C1E00E0548D /* QNetworkAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 712946EC19A37C1E00E0548D /* QNetworkAdditions.m */; };
@@ -411,6 +417,15 @@
 		30E9460E19A00E2C002A996C /* overviewPlaceholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "overviewPlaceholder@2x.png"; sourceTree = "<group>"; };
 		30E9461019A14497002A996C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		30E9461219A1453E002A996C /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		711FC2FC1A3F6373005BEDE7 /* PartnerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PartnerViewController.h; sourceTree = "<group>"; };
+		711FC2FD1A3F6373005BEDE7 /* PartnerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PartnerViewController.m; sourceTree = "<group>"; };
+		711FC2FE1A3F6373005BEDE7 /* PartnerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PartnerViewController.xib; sourceTree = "<group>"; };
+		711FC3041A40C574005BEDE7 /* CanonSoftwareGridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CanonSoftwareGridViewController.h; sourceTree = "<group>"; };
+		711FC3051A40C574005BEDE7 /* CanonSoftwareGridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CanonSoftwareGridViewController.m; sourceTree = "<group>"; };
+		711FC3061A40C574005BEDE7 /* CanonSoftwareGridViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CanonSoftwareGridViewController.xib; sourceTree = "<group>"; };
+		711FC3091A40C61B005BEDE7 /* CanonSoftwareViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CanonSoftwareViewController.h; sourceTree = "<group>"; };
+		711FC30A1A40C61B005BEDE7 /* CanonSoftwareViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CanonSoftwareViewController.m; sourceTree = "<group>"; };
+		711FC30B1A40C61B005BEDE7 /* CanonSoftwareViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CanonSoftwareViewController.xib; sourceTree = "<group>"; };
 		712728041A3BA6FB0040F89E /* Solution.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Solution.h; sourceTree = "<group>"; };
 		712728051A3BA6FB0040F89E /* Solution.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Solution.m; sourceTree = "<group>"; };
 		712946E819A37BD800E0548D /* NetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkManager.h; sourceTree = "<group>"; };
@@ -774,6 +789,9 @@
 				718E3131199957ED0000A5EB /* FilterViewController.m */,
 				718E3149199AC1B70000A5EB /* SeriesViewController.h */,
 				718E314A199AC1B70000A5EB /* SeriesViewController.m */,
+				711FC2FC1A3F6373005BEDE7 /* PartnerViewController.h */,
+				711FC2FD1A3F6373005BEDE7 /* PartnerViewController.m */,
+				711FC2FE1A3F6373005BEDE7 /* PartnerViewController.xib */,
 				718E314B199AC1B70000A5EB /* SeriesViewController.xib */,
 				718E3132199957ED0000A5EB /* FilterViewController.xib */,
 				30AC116B192D911600BE1072 /* CanonViewController.xib */,
@@ -1170,6 +1188,12 @@
 		718D21391A379E2200980FDF /* Software */ = {
 			isa = PBXGroup;
 			children = (
+				711FC3041A40C574005BEDE7 /* CanonSoftwareGridViewController.h */,
+				711FC3051A40C574005BEDE7 /* CanonSoftwareGridViewController.m */,
+				711FC3091A40C61B005BEDE7 /* CanonSoftwareViewController.h */,
+				711FC30A1A40C61B005BEDE7 /* CanonSoftwareViewController.m */,
+				711FC30B1A40C61B005BEDE7 /* CanonSoftwareViewController.xib */,
+				711FC3061A40C574005BEDE7 /* CanonSoftwareGridViewController.xib */,
 			);
 			name = Software;
 			sourceTree = "<group>";
@@ -1428,6 +1452,7 @@
 				71708CC71A38F92C0041F8D5 /* hdr-short-blue.png in Resources */,
 				30AC11D6192D931900BE1072 /* icon_144_144@2x.png in Resources */,
 				718E316D199D39620000A5EB /* icn-selected@2x.png in Resources */,
+				711FC30D1A40C61B005BEDE7 /* CanonSoftwareViewController.xib in Resources */,
 				71DBB840192FB60E002D7CA9 /* home-nav-dm.png in Resources */,
 				71DBB83D192FB60E002D7CA9 /* home-nav-color.png in Resources */,
 				71DBB7E8192FB60E002D7CA9 /* hdr-short-jetstreamcompact@2x.png in Resources */,
@@ -1445,6 +1470,7 @@
 				71DBB831192FB60E002D7CA9 /* header-healthcare.png in Resources */,
 				718D21371A379C4400980FDF /* home-nav-software.png in Resources */,
 				71708CE41A38F9450041F8D5 /* hdr-short-gray@X2.png in Resources */,
+				711FC3081A40C574005BEDE7 /* CanonSoftwareGridViewController.xib in Resources */,
 				71DBB7EA192FB60E002D7CA9 /* hdr-short-niagara@2x.png in Resources */,
 				7129482F19A3FFCF00E0548D /* ico-76.png in Resources */,
 				7129482A19A3FFCF00E0548D /* ico-40.png in Resources */,
@@ -1613,6 +1639,7 @@
 				71DBB7FF192FB60E002D7CA9 /* home-nav-brochures@2x.png in Resources */,
 				71708D081A39FC430041F8D5 /* CanonTableKeyViewController.xib in Resources */,
 				71DBB7E9192FB60E002D7CA9 /* hdr-short-jetstreamdual@2x.png in Resources */,
+				711FC3001A3F6373005BEDE7 /* PartnerViewController.xib in Resources */,
 				7129482819A3FFCF00E0548D /* ico-25.png in Resources */,
 				71DBB843192FB60E002D7CA9 /* home-nav-mono.png in Resources */,
 				71DBB848192FB60E002D7CA9 /* icn-download.png in Resources */,
@@ -1655,6 +1682,8 @@
 				7129480119A3C6AA00E0548D /* AFSecurityPolicy.m in Sources */,
 				30AC11A7192D92B900BE1072 /* SBJsonStreamWriter.m in Sources */,
 				30AC1174192D91B100BE1072 /* NetworkData.m in Sources */,
+				711FC3071A40C574005BEDE7 /* CanonSoftwareGridViewController.m in Sources */,
+				711FC2FF1A3F6373005BEDE7 /* PartnerViewController.m in Sources */,
 				30AC11A8192D92B900BE1072 /* SBJsonStreamWriterAccumulator.m in Sources */,
 				30AC11E1192D934100BE1072 /* Reachability.m in Sources */,
 				71708D021A39DC810041F8D5 /* UMTableView.m in Sources */,
@@ -1677,6 +1706,7 @@
 				712728061A3BA6FB0040F89E /* Solution.m in Sources */,
 				71708CB51A38E35E0041F8D5 /* CanonMediaGridViewController.m in Sources */,
 				30AC11AF192D92C400BE1072 /* NSObject+SBJson.m in Sources */,
+				711FC30C1A40C61B005BEDE7 /* CanonSoftwareViewController.m in Sources */,
 				718D21081A3793F600980FDF /* Software.m in Sources */,
 				712946ED19A37C1E00E0548D /* QNetworkAdditions.m in Sources */,
 				30AC1177192D91CF00BE1072 /* DownloadUrlOperation.m in Sources */,

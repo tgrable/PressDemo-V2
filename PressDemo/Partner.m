@@ -15,8 +15,8 @@
 @synthesize banners;
 @synthesize logo;
 @synthesize description;
-@synthesize case_study;
-@synthesize white_paper;
+@synthesize case_studies;
+@synthesize white_papers;
 @synthesize videos;
 @synthesize solutions;
 
@@ -29,9 +29,10 @@
         title = @"";
         key = @"";
         banners = [NSMutableArray array];
+        logo = @"";
         description = @"";
-        case_study = [NSMutableArray array];
-        white_paper = [NSMutableArray array];
+        case_studies = [NSMutableArray array];
+        white_papers = [NSMutableArray array];
         videos = [NSMutableArray array];
         solutions = [NSMutableArray array];
         
@@ -45,9 +46,10 @@
     [encoder encodeObject:self.title forKey:@"title"];
     [encoder encodeObject:self.key forKey:@"key"];
     [encoder encodeObject:self.banners forKey:@"banners"];
+    [encoder encodeObject:self.logo forKey:@"logo"];
     [encoder encodeObject:self.description forKey:@"description"];
-    [encoder encodeObject:self.case_study forKey:@"case_study"];
-    [encoder encodeObject:self.white_paper forKey:@"white_paper"];
+    [encoder encodeObject:self.case_studies forKey:@"case_studies"];
+    [encoder encodeObject:self.white_papers forKey:@"white_papers"];
     [encoder encodeObject:self.videos forKey:@"videos"];
     [encoder encodeObject:self.solutions forKey:@"solutions"];
 }
@@ -58,9 +60,10 @@
         self.title = [decoder decodeObjectForKey:@"title"];
         self.key = [decoder decodeObjectForKey:@"key"];
         self.banners = [decoder decodeObjectForKey:@"banners"];
+        self.logo = [decoder decodeObjectForKey:@"logo"];
         self.description = [decoder decodeObjectForKey:@"description"];
-        self.case_study = [decoder decodeObjectForKey:@"case_study"];
-        self.white_paper = [decoder decodeObjectForKey:@"white_paper"];
+        self.case_studies = [decoder decodeObjectForKey:@"case_studies"];
+        self.white_papers = [decoder decodeObjectForKey:@"white_papers"];
         self.videos = [decoder decodeObjectForKey:@"videos"];
         self.solutions = [decoder decodeObjectForKey:@"solutions"];
     }

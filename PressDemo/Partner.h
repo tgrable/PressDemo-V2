@@ -15,8 +15,8 @@
 @property(nonatomic, copy)NSMutableArray *banners;
 @property(nonatomic, copy)NSString *logo;
 @property(nonatomic, copy)NSString *description;
-@property(nonatomic, copy)NSMutableArray *case_study;
-@property(nonatomic, copy)NSMutableArray *white_paper;
+@property(nonatomic, copy)NSMutableArray *case_studies;
+@property(nonatomic, copy)NSMutableArray *white_papers;
 @property(nonatomic, copy)NSMutableArray *videos;
 @property(nonatomic, copy)NSMutableArray *solutions;
 

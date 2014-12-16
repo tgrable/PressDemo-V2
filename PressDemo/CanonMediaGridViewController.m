@@ -112,14 +112,13 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    //ALog(@"viewWillAppear FILTER");
     
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    //ALog(@"viewDidAppear FILTER");
+  
     //app going into background notification
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appWentIntoBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -159,7 +158,6 @@
         NSData *millData = [model getFileData:@"initialMills" complete:^(BOOL completeFlag){}];
         
         model.initialSetOfMills = [NSKeyedUnarchiver unarchiveObjectWithData:millData];
-        //ALog(@"Inital set of data %@", model.initialSetOfMills);
     }
     
     //***** Load up views to the local view controller ************//
@@ -265,6 +263,7 @@
                 model.layoutSync = NO;
             }
         }];
+        iv.contentMode = UIViewContentModeScaleAspectFit;
         [back addSubview:iv];
         
         
@@ -276,10 +275,11 @@
         title.text = [m.title uppercaseString];
         [back addSubview:title];
         
-        UILabel *desc = [[UILabel alloc] initWithFrame:CGRectMake(imgX, 200, 224, 95)];
+        UITextView *desc = [[UITextView alloc] initWithFrame:CGRectMake(imgX, 200, 224, 100)];
         [desc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:13.0]];
         desc.textColor = [UIColor blackColor];
-        desc.numberOfLines = 6;
+        desc.contentSize = CGSizeMake(224, 100);
+        desc.editable = NO;
         desc.backgroundColor = [UIColor whiteColor];
         desc.text = m.description;
         [back addSubview:desc];
@@ -312,8 +312,7 @@
         }
     }
     //below I am calculating the content height for the scrollview that displays the products
-    int multi = i / 4, add = multi * 50, mod = [model.filteredProducts count] % 4;
-    if(mod >= 1) add += 324;
+    int multi = i / 4, add = multi * 50;
     //set the dynamic content height
     [productScroll setContentSize:CGSizeMake(952, ((multi * 300) + add))];
     
@@ -325,8 +324,6 @@
 -(void)productTouched:(id)sender
 {
     UIButton *b = (UIButton *)sender;
-    
-    ALog(@"Mill touched %@", b.titleLabel.text);
     
     for(Mill *m in model.initialSetOfMills){
         if([m.key isEqualToString:b.titleLabel.text]){

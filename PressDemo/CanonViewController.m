@@ -9,6 +9,7 @@
 #import "CanonViewController.h"
 #import "FilterViewController.h"
 #import "CanonMediaGridViewController.h"
+#import "CanonSoftwareGridViewController.h"
 
 #define ResourcePath(path)[[NSBundle mainBundle] pathForResource:path ofType:nil]
 
@@ -271,15 +272,14 @@
     
     if([model.currentFilter isEqualToString:@"media"]){
         //filter towards media
-        ALog(@"I touched media");
-        ALog(@"Load up mills");
         
         CanonMediaGridViewController *mgvc = [[CanonMediaGridViewController alloc] initWithNibName:@"CanonMediaGridViewController" bundle:nil];
         [self.navigationController pushViewController:mgvc animated:YES];
         
     }else if([model.currentFilter isEqualToString:@"software"]){
         //filter towards software
-        
+        CanonSoftwareGridViewController *softGrid = [[CanonSoftwareGridViewController alloc] initWithNibName:@"CanonSoftwareGridViewController" bundle:nil];
+        [self.navigationController pushViewController:softGrid animated:YES];
     }else{
     
         //make sure and remove and objects this array may contain
@@ -299,7 +299,6 @@
                 [model.filteredProducts addObject:p];
             }
         }
-        
         FilterViewController *filter = [[FilterViewController alloc] initWithNibName:@"FilterViewController" bundle:nil];
         [self.navigationController pushViewController:filter animated:YES];
     }
@@ -327,6 +326,9 @@
         
         //add media into the show all array by default
         [showAllImageNames addObject:@"media"];
+        
+        //add media into the show all array by default
+        [showAllImageNames addObject:@"software"];
         
         for(Product *p in model.localProds){
             for(NSString *w in p.whatDoYouWantToPrint){

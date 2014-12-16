@@ -403,69 +403,79 @@
     borderBelowImageSlider.backgroundColor = [UIColor colorWithRed:251.0f/255.0f green:251.0f/255.0f blue:251.0f/255.0f alpha:1.0];
     [overviewContainer addSubview:borderBelowImageSlider];
     
+    
     //banner that sits on top of the overview slide.  this is th pink bar
     mainShortBanner = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 776, 64)];
     [mainShortBanner setUserInteractionEnabled:YES];
     [mainView addSubview:mainShortBanner];
     
     //name of the mill
-    millNameHeader = [[UILabel alloc] initWithFrame:CGRectMake(44, 7, 400, 40)];
+    millNameHeader = [[UILabel alloc] initWithFrame:CGRectMake(44, 7, 600, 40)];
     [millNameHeader setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:26.0]];
     millNameHeader.textColor = [UIColor whiteColor];
     millNameHeader.numberOfLines = 1;
+    millNameHeader.adjustsFontSizeToFitWidth = YES;
     millNameHeader.backgroundColor = [UIColor clearColor];
     [mainShortBanner addSubview:millNameHeader];
     
+    overviewContent = [[UIScrollView alloc] initWithFrame:CGRectMake(36, 342, 712, 342)];
+    overviewContent.showsHorizontalScrollIndicator = NO;
+    overviewContent.showsVerticalScrollIndicator = YES;
+    overviewContent.scrollEnabled = YES;
+    overviewContent.delegate = self;
+    overviewContent.backgroundColor = [UIColor clearColor];
+    [overviewContainer addSubview:overviewContent];
+    
     //logo of the mill in the overview container
-    millLogo = [[UIImageView alloc] initWithFrame:CGRectMake(36, 344, 120, 120)];
+    millLogo = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 120, 120)];
     millLogo.contentMode = UIViewContentModeScaleAspectFit;
     millLogo.userInteractionEnabled = YES;
-    [overviewContainer addSubview:millLogo];
+    [overviewContent addSubview:millLogo];
     
     //name of the mill next to the logo in the overview container
-    millNameOverview = [[UILabel alloc] initWithFrame:CGRectMake(176, 354, 564, 32)];
+    millNameOverview = [[UILabel alloc] initWithFrame:CGRectMake(140, 16, 564, 32)];
     [millNameOverview setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:22.0]];
     millNameOverview.textColor = model.dullBlack;
     millNameOverview.numberOfLines = 1;
     millNameOverview.backgroundColor = [UIColor clearColor];
-    [overviewContainer addSubview:millNameOverview];
+    [overviewContent addSubview:millNameOverview];
     
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(176, 386, 564, 1)];
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(140, 52, 557, 1)];
     line.backgroundColor = model.dullBlack;
-    [overviewContainer addSubview:line];
+    [overviewContent addSubview:line];
     
-    millPhone = [[UILabel alloc] initWithFrame:CGRectMake(176, 400, 400, 20)];
+    millPhone = [[UILabel alloc] initWithFrame:CGRectMake(140, 66, 400, 20)];
     [millPhone setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
     millPhone.textColor = model.dullBlack;
     millPhone.numberOfLines = 1;
     millPhone.backgroundColor = [UIColor clearColor];
-    [overviewContainer addSubview:millPhone];
+    [overviewContent addSubview:millPhone];
     
-    millAddress = [[UILabel alloc] initWithFrame:CGRectMake(176, 426, 564, 50)];
+    millAddress = [[UILabel alloc] initWithFrame:CGRectMake(140, 90, 564, 50)];
     [millAddress setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
     millAddress.textColor = model.dullBlack;
     millAddress.numberOfLines = 3;
     millAddress.backgroundColor = [UIColor clearColor];
-    [overviewContainer addSubview:millAddress];
+    [overviewContent addSubview:millAddress];
     
-    millDescription = [[UITextView alloc] initWithFrame:CGRectMake(36, 502, 704, 182)];
+    millDescription = [[UITextView alloc] initWithFrame:CGRectMake(0, 150, 697, 182)];
     millDescription.editable = NO;
     millDescription.clipsToBounds = YES;
     millDescription.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0];
     millDescription.backgroundColor = [UIColor clearColor];
-    millDescription.scrollEnabled = YES;
+    millDescription.scrollEnabled = NO;
     millDescription.textColor = model.dullBlack;
-    [overviewContainer addSubview:millDescription];
+    [overviewContent addSubview:millDescription];
     
     urlMill = [UIButton buttonWithType:UIButtonTypeCustom];
-    [urlMill setFrame:CGRectMake(400, 400, 340, 20)];
+    [urlMill setFrame:CGRectMake(379, 66, 305, 20)];
     [urlMill addTarget:self action:@selector(urlSelected:)forControlEvents:UIControlEventTouchDown];
     urlMill.showsTouchWhenHighlighted = YES;
     urlMill.titleLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0];
     [urlMill setTitleColor:model.dullBlack forState:UIControlStateNormal];
     urlMill.backgroundColor = [UIColor clearColor];
     urlMill.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
-    [overviewContainer addSubview:urlMill];
+    [overviewContent addSubview:urlMill];
     
     
     //########### ALL Sidebar Views ##############################
@@ -623,6 +633,11 @@
         [model sortInitialPaperDataAlpha:@"mill_name" complete:^(BOOL completeFlag){
             [self buildAllPaperData];
         }];
+        
+        NSString *bannerTitle = [NSString stringWithFormat:@"%@ : ALL MILLS MEDIA LIST", [model.selectedMill.title uppercaseString]];
+        //the name of the mill
+        millNameHeader.text = bannerTitle;
+        
     }else if([b.titleLabel.text isEqualToString:@"papers"]){
         //setup the initial paper data
         //reset the paper data
@@ -630,13 +645,24 @@
         [model sortInitialPaperDataAlpha:@"title" complete:^(BOOL completeFlag){
             [self buildPaperTableData];
         }];
+        
+        NSString *bannerTitle = [NSString stringWithFormat:@"%@ : MEDIA/PAPERS", [model.selectedMill.title uppercaseString]];
+        //the name of the mill
+        millNameHeader.text = bannerTitle;
+        
+    }else if([b.titleLabel.text isEqualToString:@"videos"]){
+        NSString *bannerTitle = [NSString stringWithFormat:@"%@ : VIDEOS", [model.selectedMill.title uppercaseString]];
+        //the name of the mill
+        millNameHeader.text = bannerTitle;
+    }else if([b.titleLabel.text isEqualToString:@"overview"]){
+        millNameHeader.text = [model.selectedMill.title uppercaseString];
     }
     
     
     //switch to overview from anything
     if([b.titleLabel.text isEqualToString:@"overview"]){
         [self rearrangeDocumentStack];
-        ALog(@"SWITCH TO OVERVIEW FROM ANYTHING");
+
         //perform the animation
         [UIView animateWithDuration:1.2f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
             overviewContainer.alpha = 1.0;
@@ -651,7 +677,7 @@
     }else if([b.titleLabel.text isEqualToString:@"videos"] && sidebarIndicator.frame.origin.y == 30){
         
         documentContainer.frame = CGRectMake(0, 884, 776, 684);
-        ALog(@"SWITCH FROM OVERVIEW TO VIDEOS");
+   
         //perform the animation to move the documet
         [UIView animateWithDuration:0.6f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
             overviewContainer.alpha = 0.0;
@@ -676,7 +702,6 @@
         [mainView sendSubviewToBack:documentContainer];
         [mainView bringSubviewToFront:mainShortBanner];
         
-        ALog(@"SWITCH FROM OVERVIEW TO TABLE");
         //perform the animation
         tableBackground.alpha = 1.0;
         tableBackground.frame = CGRectMake(0, 884, 776, 684);
@@ -699,7 +724,7 @@
         overviewContainer.alpha = 0.0;
         overviewImageDots.alpha = 0.0;
         documentContainer.frame = CGRectMake(0, 884, 776, 684);
-        ALog(@"SWITCH FROM PAPERS TO VIDEOS");
+
         //perform the animation to move the documet
         [UIView animateWithDuration:0.6f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
             tableBackground.frame = CGRectMake(1040, 0, 776, 684);
@@ -723,7 +748,7 @@
         overviewContainer.alpha = 0.0;
         overviewImageDots.alpha = 0.0;
         tableBackground.frame = CGRectMake(0, 884, 776, 684);
-        ALog(@"SWITCH FROM VIDEO TO PAPERS");
+
         //perform the animation to move the documet
         [UIView animateWithDuration:0.6f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
             documentContainer.frame = CGRectMake(1040, 0, 776, 684);
@@ -746,7 +771,7 @@
              && (sidebarIndicator.frame.origin.y == 228 || sidebarIndicator.frame.origin.y == 162)){
         overviewContainer.alpha = 0.0;
         overviewImageDots.alpha = 0.0;
-        ALog(@"SWITCH FROM TABLE TO TABLE");
+
         //perform the animation to move the documet
         [UIView animateWithDuration:0.6f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
             tableBackground.frame = CGRectMake(1040, 0, 776, 684);
@@ -1049,7 +1074,7 @@
     
     /************ Download the video to disk ************************/
     if(b.tag == 555){
-        //ALog(@"download video %@", b.titleLabel.text);
+
         if(network.videoDownloading){
             [self displayMessage:@"Another video is currently downloading." withTitle:@"Alret"];
         }else{
@@ -1196,8 +1221,8 @@
     
     //add the small main header
     mainShortBanner.image = [model.ui getImageWithName:@"/hdr-short-pink@X2.png"];
-    //the name of the mill
-    millNameHeader.text = model.selectedMill.title;
+    
+    millNameHeader.text = [model.selectedMill.title uppercaseString];
     
     //set the logo, or try and set the logo
     [millLogo setImageWithURL:[NSURL URLWithString:model.selectedMill.logo] placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"]];
@@ -1213,6 +1238,15 @@
     
     //set the mill description
     millDescription.text = model.selectedMill.description;
+    [millDescription sizeToFit];
+    
+    float h = millDescription.frame.size.height, offset = 0;
+    if(h > 182){
+        offset = millDescription.frame.size.height - 182;
+        
+    }
+    
+    [overviewContent setContentSize:CGSizeMake(712, (342 + offset))];
     
     //the mill's website name
     NSString *websiteName = [NSString stringWithFormat:@"%@'s Website", model.selectedMill.title];
@@ -1413,7 +1447,7 @@
 -(void)infoButtonForPaper:(id)sender
 {
     UIButton *b = (UIButton *)sender;
-    ALog(@"Paper key %@", b.titleLabel.text);
+
     
     Paper *selectedPaper;
     for(Paper *p in model.initialSetOfPaper){
@@ -1421,8 +1455,6 @@
             selectedPaper = p;
         }
     }
-    
-    ALog(@"Here is our selected paper %@", selectedPaper);
     
    
     //bring the overlay to the front
@@ -1478,8 +1510,11 @@
     header.userInteractionEnabled = YES;
     [modalView addSubview:header];
     
-    float millWidth = [self widthOfString:[obj.mill_name uppercaseString]];
-    float paperWidth = [self widthOfString:[obj.title uppercaseString]];
+    //float millWidth = [self widthOfString:[obj.mill_name uppercaseString]];
+    //float paperWidth = [self widthOfString:[obj.title uppercaseString]];
+    
+    float millWidth = [model widthOfString:[obj.mill_name uppercaseString] withStringSize:16.0 andFontKey:@"ITCAvantGardeStd-Md"];
+    float paperWidth = [model widthOfString:[obj.title uppercaseString] withStringSize:16.0 andFontKey:@"ITCAvantGardeStd-Md"];
     
     UILabel *paperMill = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, millWidth, 20)];
     [paperMill setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:16.0]];
@@ -1980,11 +2015,7 @@
     return modalView;
 }
 
-- (CGFloat)widthOfString:(NSString *)string  {
-    UIFont *font = [UIFont fontWithName:@"ITCAvantGardeStd-Md" size:16.0];
-    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
-    return [[[NSAttributedString alloc] initWithString:string attributes:attributes] size].width;
-}
+
 
 - (void)overlayTapped:(UITapGestureRecognizer *)sender
 {
@@ -2051,14 +2082,14 @@
 //this function adds the video URL to the button as the title for download
 -(void)videoDownloadResponse:(CanonModel *)model withFlag:(BOOL)flag
 {
-    //ALog(@"Made it with my video download response! %d", flag);
+   
     UIView *v = [videoButton viewWithTag:110];
     [v removeFromSuperview];
     
     if(flag){
         [videoButton setImage:[UIImage imageNamed:@"icn-load.png"] forState:UIControlStateNormal];
         videoButton.tag = 777;
-        //ALog(@"######### %@", downloadingURL);
+
         [videoButton setTitle:[self.model returnFilePath:downloadingURL] forState:UIControlStateNormal];
     }else{
         [self displayMessage:@"OOPS! Something went wrong downloading your video.  Please make sure you are connected to the internet and try again." withTitle:@"Alert"];
@@ -2069,7 +2100,6 @@
 //this response will let the view and the user know that there is an update available
 -(void)updateResponse:(CanonModel *)obj withFlag:(BOOL)flag{
     
-    //ALog(@"Update Response, %d.  This tells us if there is an update available.", flag);
     //update available
     if(flag){
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Update App"

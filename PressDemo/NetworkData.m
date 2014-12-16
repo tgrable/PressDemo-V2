@@ -45,7 +45,8 @@
                                                               @"partner",
                                                               @"software",
                                                               @"datasheet",
-                                                              @"solution", nil];
+                                                              @"solution",
+                                                              @"brochure", nil];
         downloadCount = (int)[machineName count];
         downloadURLs = [[NSMutableArray alloc] init];
     }
@@ -213,7 +214,6 @@
                             //sync data and wipe out model
                             ALog(@"Saving data to disk");
                             [model saveAllDataToDisk:^(BOOL completeFlagArgument){
-                                ALog(@"Success!");
                                 //Just as an option to have
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     [_delegate downloadResponse:model withFlag:YES];

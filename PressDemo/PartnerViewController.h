@@ -1,8 +1,8 @@
 //
-//  SeriesViewController.h
+//  PartnerViewController.h
 //  PressDemo
 //
-//  Created by Trekk mini-1 on 8/12/14.
+//  Created by Trekk mini-1 on 12/15/14.
 //  Copyright (c) 2014 Trekk. All rights reserved.
 //
 
@@ -14,7 +14,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "GAITrackedViewController.h"
 
-@interface SeriesViewController : GAITrackedViewController<NetworkDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate>{
+@interface PartnerViewController : GAITrackedViewController<NetworkDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate>{
     //objects
     NetworkData *network;
     
@@ -22,32 +22,31 @@
     UIImageView *topBanner, *logo;
     UIView *customNavBar, *mainView, *sideBar;
     UIButton *navBarHomeButton, *backButton, *videoButton;
-
+    
     //sidebar views
-    UIButton *overview, *videos, *productSpec, *whitePaper, *caseStudy, *prePostSolutionButton;
+    UIButton *overview, *videos, *whitePaper, *caseStudy;
     UIImageView *sidebarIndicator, *overViewIcon, *whitePaperIcon;
-    UIImageView *caseStudyIcon, *videoIcon, *productSpecIcon, *prePostSolutionImage;
-    UILabel *overviewLabel, *caseStudyLabel, *videoLabel, *productSpecLabel, *whitePaperLabel, *prePostSolutionLabel;
+    UIImageView *caseStudyIcon, *videoIcon;
+    UILabel *overviewLabel, *caseStudyLabel, *videoLabel, *whitePaperLabel;
     
     //main area views
-    UIImageView *mainShortBanner, *actualDocumentBanner;
+    UIImageView *mainShortBanner, *actualDocumentBanner, *partnerLogo;
     UIView *overviewContainer, *documentContainer, *actualDocumentView;
     UIScrollView *overviewImages;
     UIPageControl *overviewImageDots;
     UIScrollView *overviewContent, *documentScroll;
     UIWebView *webPage;
-    UILabel *documentLabel, *bannerTitle;
+    UILabel *documentLabel, *bannerTitle,*partnerHeader, *solutionHeader;
     UIButton *documentHeaderButton;
-    
+    UITextView *partnerDescription;
     
     //global data
     NSMutableDictionary *currentDocumentData;
     NSMutableDictionary *offlineImages;
     NSMutableDictionary *offlineVideos;
-    NSMutableArray *offlineVideoRows, *potentailPartners;
+    NSMutableArray *offlineVideoRows;
     NSString *downloadingURL;
-    BOOL decodedSolutions;
-
+    
 }
 @property(nonatomic)NetworkData *network;
 @property(nonatomic, readonly)CanonModel *model;
@@ -58,8 +57,8 @@
 -(void)displayMessage:(NSString *)message withTitle:(NSString *)title;
 -(void)setupLocalUserInterface:(completeBlock)completeFlag;
 -(void)animateSidebarIndicator:(int)yValue;
--(NSMutableArray *)generateSeriesProductImages:(NSMutableArray *)products;
 -(void)tearDownAndLoadUpDocuments:(NSString *)flag withComplete:(completeBlock)completeFlag;
 -(void)loadUPWebpage:(NSData *)data complete:(completeBlock)completeFlag;
 -(void)rearrangeDocumentStack;
+
 @end

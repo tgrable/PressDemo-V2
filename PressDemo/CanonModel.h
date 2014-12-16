@@ -27,6 +27,7 @@
 @property(nonatomic, strong)ProductSeries *selectedSeries;
 @property(nonatomic, strong)Mill *selectedMill;
 @property(nonatomic, strong)Partner *selectedPartner;
+@property(nonatomic, strong)Software *selectedSoftware;
 @property(nonatomic, strong)NSString *testingString, *currentFilter;
 @property(nonatomic, strong)NSMutableArray *localProds, *filteredProducts;
 @property(nonatomic, strong)UIColor *orange, *pink, *red, *blue, *dullBlack, *green, *purple, *gray, *yellow, *lightGray;
@@ -54,6 +55,7 @@ typedef void(^completeBlock)(BOOL);
 -(void)breakoutProductSeriesData:(NSArray *)series;
 -(void)saveAllDataToDisk:(completeBlock)completeFlagArgument;
 -(NSString *)cleanseStringName:(NSString *)filename;
+-(CGFloat)widthOfString:(NSString *)string withStringSize:(float)size andFontKey:(NSString *)key;
 //SDWebImage Functions
 //-(void)saveAllImagesToDisk:(NSMutableDictionary *)images complete:(completeBlock)completeFlagParent;
 //-(void)downloadAllImagesAndSaveThem:(completeBlock)completeFlagFirstParent;

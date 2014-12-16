@@ -34,7 +34,7 @@
     //main area views
     UIImageView *mainShortBanner, *actualDocumentBanner, *millLogo;
     UIView *overviewContainer, *documentContainer, *tableBackground, *tableHeaderRow, *overlay, *globalModal;
-    UIScrollView *overviewImages, *documentScroll;
+    UIScrollView *overviewImages, *documentScroll, *overviewContent;
     UIPageControl *overviewImageDots;
     UITextView *millDescription;
     UILabel *documentLabel, *millNameHeader, *millNameOverview, *millPhone, *millAddress, *tableHeader;
@@ -71,5 +71,4 @@
 -(void)setupTableHeaders;
 -(void)hideOverlay;
 -(UIView *)assembleModalView:(Paper *)obj;
-- (CGFloat)widthOfString:(NSString *)string;
 @end
