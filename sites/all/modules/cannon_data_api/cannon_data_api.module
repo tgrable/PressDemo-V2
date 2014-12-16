@@ -87,8 +87,8 @@
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--product',
               'images' => isset($node->field_product_image[LANGUAGE_NONE]) ? _cannon_data_api_get_images($node->field_product_image[LANGUAGE_NONE]) : new stdClass,
               'product-description' => isset($node->field_short_product_description[LANGUAGE_NONE][0]['value']) ? _cannon_data_api_cleanse_string($node->field_short_product_description[LANGUAGE_NONE][0]['value']) : '',
-              'what-do-you-want-to-print' =>  _cannon_get_taxonomy_key($node->field_what_do_you_want_to_print[LANGUAGE_NONE]),
-              'show-all' =>  _cannon_get_taxonomy_key($node->field_show_all_products[LANGUAGE_NONE]),
+              'what-do-you-want-to-print' =>  isset($node->field_what_do_you_want_to_print[LANGUAGE_NONE]) ? _cannon_get_taxonomy_key($node->field_what_do_you_want_to_print[LANGUAGE_NONE]) : array(),
+              'show-all' =>  isset($node->field_show_all_products[LANGUAGE_NONE]) ? _cannon_get_taxonomy_key($node->field_show_all_products[LANGUAGE_NONE]) : array(),
               'series' => _cannon_data_api_get_series($node->nid),
            );
 
@@ -138,7 +138,7 @@
             $value = array(
               'title' => $node->title,
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--series',
-              'description' => _cannon_data_api_cleanse_string(_cannon_data_api_breakup_description($node->field_series_overview[LANGUAGE_NONE])),
+              'description' => isset($node->field_series_overview[LANGUAGE_NONE]) ? _cannon_data_api_cleanse_string(_cannon_data_api_breakup_description($node->field_series_overview[LANGUAGE_NONE])) : array(),
               'product_spec' => _cannon_data_api_get_reference_key($node->field_product_specification_refe, '--product-spec'),
               'case_studies' => isset($node->field_product_case_study_referen[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_product_case_study_referen, '--case-study') : array(),
               'white_papers' => isset($node->field_product_white_paper_refere[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_product_white_paper_refere, '--white-paper') : array(),
@@ -276,12 +276,14 @@
       $data_query->range(0,1);
       $series_nid = $data_query->execute()->fetchfield();
       //make sure we are actually getting a nid before we try and load a node
+      $d = array();
       if(!empty($series_nid)){
         $node = node_load($series_nid);
         return strtolower(_cannon_data_api_normalize_string($node->title)) . '--series';
       }else{
         return '';
       }
+
   }
 
   /**
