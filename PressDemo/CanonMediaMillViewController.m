@@ -195,6 +195,9 @@
     
     model = [self AppDataObj];
     
+    downloadVideo = [[DownloadVideo alloc] init];
+    downloadVideo.delegate = self;
+    
     //***** Load up views to the local view controller ************//
     //the nav bar
     customNavBar = [[UIView alloc] initWithFrame:CGRectMake(0, 20, 1024, 64)];
@@ -410,7 +413,7 @@
     [mainView addSubview:mainShortBanner];
     
     //name of the mill
-    millNameHeader = [[UILabel alloc] initWithFrame:CGRectMake(44, 7, 600, 40)];
+    millNameHeader = [[UILabel alloc] initWithFrame:CGRectMake(44, 9, 691, 32)];
     [millNameHeader setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:26.0]];
     millNameHeader.textColor = [UIColor whiteColor];
     millNameHeader.numberOfLines = 1;
@@ -1075,7 +1078,7 @@
     /************ Download the video to disk ************************/
     if(b.tag == 555){
 
-        if(network.videoDownloading){
+        if(downloadVideo.videoDownloading){
             [self displayMessage:@"Another video is currently downloading." withTitle:@"Alret"];
         }else{
             //make sure we can access the internet first
@@ -1092,7 +1095,7 @@
                 downloadingURL = [model getVideoFileName:videoURLString];
                 downloadingURL = [downloadingURL stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                    [network downloadVideo:videoURLString];
+                    [downloadVideo downloadVideo:videoURLString];
                 });
                 //GA
                 //[model logData:@"Series View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Video to download: %@",videoURLString]];
@@ -1104,12 +1107,14 @@
     }else if(b.tag == 777){
         
         NSString *path = [videoURLString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        if([model videoExists:path]){
+        
+        if([model fileExists:[path lastPathComponent]]){
             
             //NSString *p  = @"file:///var/mobile/Applications/B751E322-DE11-4813-8D8B-0F7589B9FDEF/Documents/CS3000_Flexibility_1.mp4";
             //apply the file transfer protocol on to this path to make it a url
             NSString *urlPath = [NSString stringWithFormat:@"file://%@", path];
             NSURL *videoURL = [NSURL URLWithString:urlPath];
+            
             MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
             [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
             //GA
@@ -1143,16 +1148,18 @@
     }else{
         NSString *lookupNameAdvanced = [lookupName stringByReplacingOccurrencesOfString:@" " withString:@"_"];
         
-        if([model fileExists:lookupNameAdvanced]){
+        if([model fileExists:[lookupNameAdvanced lastPathComponent]]){
             
             NSString *fullPath = [model returnFilePath:lookupNameAdvanced];
             NSString *urlPath = [NSString stringWithFormat:@"file://%@", fullPath];
             NSURL *videoURL = [NSURL URLWithString:urlPath];
             MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
             [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
+            ALog(@"LOAD VIDEO FROM DEVICE %@", videoURL);
         }else{
             [self displayMessage:@"This video has not been downloaded to the device.  Please connect to the internet and stream the video, or download the video for offline usage." withTitle:@"Alert!"];
         }
+
     }
     
 }
@@ -2080,7 +2087,7 @@
 
 //function that is called when the video is done downloading
 //this function adds the video URL to the button as the title for download
--(void)videoDownloadResponse:(CanonModel *)model withFlag:(BOOL)flag
+-(void)videoDownloadResponse:(BOOL)flag
 {
    
     UIView *v = [videoButton viewWithTag:110];

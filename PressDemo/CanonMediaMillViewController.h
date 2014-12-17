@@ -10,15 +10,17 @@
 #import "Reachability.h"
 #import "NetworkData.h"
 #import "CanonModel.h"
+#import "DownloadVideo.h"
 #import "AppDelegateProtocol.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "GAITrackedViewController.h"
 #import "UMTableView.h"
 #import "CanonTableKeyViewController.h"
 
-@interface CanonMediaMillViewController : GAITrackedViewController<NetworkDelegate, UMTableViewDelegate, UIPopoverControllerDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate>{
+@interface CanonMediaMillViewController : GAITrackedViewController<NetworkDelegate, UMTableViewDelegate, VideoDelegate, UIPopoverControllerDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate>{
     //objects
     NetworkData *network;
+    DownloadVideo *downloadVideo;
     
     //global views
     UIImageView *topBanner, *logo;

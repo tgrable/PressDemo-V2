@@ -173,7 +173,7 @@
     
     //case studies
     if([localData objectForKey:@"case-study"]){
-        ALog(@"Case Study");
+    
         //set when the case studies content type was last updated
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"case-study"];
         //break out the data in files to be save to disk
@@ -181,7 +181,7 @@
        
         //white paper
     }else if([localData objectForKey:@"white-paper"]){
-        ALog(@"White Paper");
+     
         //set when the white paper content type was last updated
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"white-paper"];
         //break out the data in files to be save to disk
@@ -189,7 +189,7 @@
         
         //product spec
     }else if([localData objectForKey:@"product-spec"]){
-        ALog(@"Product Spec");
+    
         //set when the product spec content type was last updated
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"product-spec"];
         //break out the data in files to be save to disk
@@ -197,7 +197,7 @@
         
         //software
     }else if([localData objectForKey:@"software"]){
-        ALog(@"Software");
+       
         //set when the software content type was last updated
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"software"];
         //break out the data in files to be save to disk
@@ -205,7 +205,7 @@
         
         //mill
     }else if([localData objectForKey:@"mill"]){
-        ALog(@"Mill");
+ 
         //set when the mill content type was last updated
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"mill"];
         //break out the data in files to be save to disk
@@ -213,7 +213,7 @@
         
         //paper
     }else if([localData objectForKey:@"paper"]){
-        ALog(@"Paper");
+    
         //set when the paper content type was last updated
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"paper"];
         //break out the data in files to be save to disk
@@ -221,7 +221,7 @@
         
         //datasheet
     }else if([localData objectForKey:@"datasheet"]){
-        ALog(@"Data Sheet");
+       
         //set when the datasheet content type was last updated
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"datasheet"];
         //break out the data in files to be save to disk
@@ -229,7 +229,7 @@
         
         //brochure
     }else if([localData objectForKey:@"brochure"]){
-        ALog(@"Brochures");
+    
         //set when the brochure content type was last updated
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"brochure"];
         //break out the data in files to be save to disk
@@ -237,7 +237,7 @@
         
         //partner
     }else if([localData objectForKey:@"partner"]){
-        ALog(@"Partners");
+    
         //set when the brochure content type was last updated
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"partner"];
         //break out the data in files to be save to disk
@@ -245,7 +245,7 @@
         
         //product
     }else if([localData objectForKey:@"product"]){
-        ALog(@"Product");
+        
         //set when the product content type was last updated
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"product"];
         //break out the product data to be saved to memory
@@ -253,7 +253,6 @@
         
         //videos
     }else if([localData objectForKey:@"video"]){
-        ALog(@"Video");
         //set when the video content type was last updated
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"video"];
         //break out the product data to be saved to memory
@@ -261,7 +260,6 @@
         
         //product series
     }else if([localData objectForKey:@"product-series"]){
-        ALog(@"Product Series");
         //set when the video content type was last updated
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"product-series"];
         //break out the product data to be saved to memory
@@ -269,7 +267,6 @@
         
         //solution
     }else if([localData objectForKey:@"solution"]){
-        ALog(@"Solution");
         //set when the video content type was last updated
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"solution"];
         //break out the product data to be saved to memory
@@ -544,7 +541,8 @@
         s.datasheets = [dict objectForKey:@"datasheets"];
         s.brochures = [dict objectForKey:@"brochures"];
         s.videos = [dict objectForKey:@"videos"];
-        
+        //ALog(@"Software title %@", s.title);
+        //ALog(@"Software key %@", s.key);
         [initialSofware addObject:s];
     }
 }
@@ -688,75 +686,56 @@
         //save all product data
         __block int c1 = 0;
         for(id key in productData){
-            //ALog(@"Product Key %@", key);
+            
             [self saveFile:[productData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
                 c1++;
                 if(c1 == [productData count]){
                     __block int c2 = 0;
                     //save all product series data
                     for(id key in productSeriesData){
-                        //ALog(@"Product Series Key %@", key);
-                        ALog(@"Length %d", (int)[[productSeriesData objectForKey:key] length]);
+                        
                         [self saveFile:[productSeriesData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
                             c2++;
                             if(c2 == [productSeriesData count]){
                                 __block int c3 = 0;
                                 //save all video data
                                 for(id key in videoData){
-                                    //ALog(@"Video Key %@", key);
+ 
                                     [self saveFile:[videoData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
                                         c3++;
                                         if(c3 == [videoData count]){
                                             __block int c4 = 0;
                                             //save all document data
                                             for(id key in documentData){
-                                                //ALog(@"Document Key %@", key);
+  
                                                 [self saveFile:[documentData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
                                                     c4++;
                                                     if(c4 == [documentData count]){
-                                                        __block int c5 = 0;
-                                                        //save all paper data
-                                                        for(id key in paperData){
-                                                            [self saveFile:[paperData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
-                                                                c5++;
-                                                                if(c5 == [paperData count]){
-                                                                    __block int c6 = 0;
-                                                                    for(id key in millData){
-                                                                        [self saveFile:[millData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
-                                                                            c6++;
-                                                                            if(c6 == [millData count]){
-                                                                                
-                                                                                //save inital dataset of software as object
-                                                                                NSData *encodedSoftware = [NSKeyedArchiver archivedDataWithRootObject:initialSofware];
-                                                                                
-                                                                                //save inital dataset of mills as object
-                                                                                NSData *encodedMills = [NSKeyedArchiver archivedDataWithRootObject:initialSetOfMills];
-                                                                                //save inital dataset of papers as object
-                                                                                NSData *encodedPapers = [NSKeyedArchiver archivedDataWithRootObject:initialSetOfPaper];
-                                                                                //save the initial dataset of solutions
-                                                                                NSData *encodedSolutions = [NSKeyedArchiver archivedDataWithRootObject:initialSolutionData];
-                                                                                //save the initial dataset of partners
-                                                                                NSData *encodedPartners = [NSKeyedArchiver archivedDataWithRootObject:initialPartnerData];
-                                                                                [self saveFile:encodedMills andFileName:@"initialMills" complete:^(BOOL completeFlag){
-                                                                                    [self saveFile:encodedPapers andFileName:@"initialPapers" complete:^(BOOL completeFlag){
-                                                                                        [self saveFile:encodedSolutions andFileName:@"initialSolutions" complete:^(BOOL completeFlag){
-                                                                                            [self saveFile:encodedPartners andFileName:@"initialPartners" complete:^(BOOL completeFlag){
-                                                                                                [self saveFile:encodedSoftware andFileName:@"initialSoftware" complete:^(BOOL completeFlag){
-                                                                                                    ALog(@"COMPLETE SAVING!");
-                                                                                                    completeFlagArgument(YES);
-                                                                                                }];
-                                                                                            }];
-                                                                                        }];
-                                                                                    }];
-                                                                    
-                                                                                }];
-                                                                            
-                                                                            }
+                     
+                                                        //save inital dataset of software as object
+                                                        NSData *encodedSoftware = [NSKeyedArchiver archivedDataWithRootObject:initialSofware];
+                                                        
+                                                        //save inital dataset of mills as object
+                                                        NSData *encodedMills = [NSKeyedArchiver archivedDataWithRootObject:initialSetOfMills];
+                                                        //save inital dataset of papers as object
+                                                        NSData *encodedPapers = [NSKeyedArchiver archivedDataWithRootObject:initialSetOfPaper];
+                                                        //save the initial dataset of solutions
+                                                        NSData *encodedSolutions = [NSKeyedArchiver archivedDataWithRootObject:initialSolutionData];
+                                                        //save the initial dataset of partners
+                                                        NSData *encodedPartners = [NSKeyedArchiver archivedDataWithRootObject:initialPartnerData];
+                                                        [self saveFile:encodedMills andFileName:@"initialMills" complete:^(BOOL completeFlag){
+                                                            [self saveFile:encodedPapers andFileName:@"initialPapers" complete:^(BOOL completeFlag){
+                                                                [self saveFile:encodedSolutions andFileName:@"initialSolutions" complete:^(BOOL completeFlag){
+                                                                    [self saveFile:encodedPartners andFileName:@"initialPartners" complete:^(BOOL completeFlag){
+                                                                        [self saveFile:encodedSoftware andFileName:@"initialSoftware" complete:^(BOOL completeFlag){
+                                                                            ALog(@"COMPLETE SAVING!");
+                                                                            completeFlagArgument(YES);
                                                                         }];
-                                                                    }
-                                                                }
+                                                                    }];
+                                                                }];
                                                             }];
-                                                        }
+                                            
+                                                        }];
                                                         
                                                     }
                                                 }];
@@ -845,7 +824,7 @@
             
             ALog("Filename %@", filename);
             ALog("Data length %d", [data length]);
-            
+
             if([data writeToFile:path atomically:YES]){
                 ALog(@"Model SAVED FILE SUCCESSFULLY %@", path);
                 completeFlag(YES);
@@ -853,6 +832,7 @@
                 ALog(@"ERROR SAVING FILE %@", path);
                 completeFlag(NO);
             }
+            
         }
     }
 
@@ -978,7 +958,7 @@
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString* path = [documentsDirectory stringByAppendingPathComponent:filename];
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    
+    ALog(@"File %@", path);
     if([fileManager fileExistsAtPath:path]){
         return YES;
     }else{

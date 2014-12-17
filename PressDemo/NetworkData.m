@@ -15,7 +15,8 @@
 
 @implementation NetworkData
 @synthesize networkURL, threads, machineName;
-@synthesize downloadURLs, model, updateURL, videoDownloading;
+@synthesize downloadURLs, model, updateURL;
+
 - (id)init
 {
     self = [super init];
@@ -101,49 +102,7 @@
     }
 }
 
--(void)downloadVideo:(NSString *)url
-{
-    @autoreleasepool {
-        videoDownloading = YES;
-        NSURL *URL = [NSURL URLWithString:url];
-        [self downloadFile:URL complete:^(BOOL completeFlag){
-            if(completeFlag){
-                //success
-                [_delegate videoDownloadResponse:model withFlag:YES];
-                videoDownloading = NO;
-            }else{
-                //error
-                [_delegate videoDownloadResponse:model withFlag:NO];
-                videoDownloading = NO;
-            }
-        }];
-        
-    }
-}
 
--(void)downloadFile:(NSURL *)downloadURL complete:(completeBlock)completeFlag
-{
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
-    
-    NSURLRequest *request = [NSURLRequest requestWithURL:downloadURL];
-    
-    NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-        NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
-        NSString *path = [[response suggestedFilename] stringByReplacingOccurrencesOfString:@" " withString:@"_"];
-        return [documentsDirectoryURL URLByAppendingPathComponent:path];
-        //return [documentsDirectoryURL URLByAppendingPathComponent:[response suggestedFilename]];
-    } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-        if(error == nil){
-            ALog(@"File downloaded to: %@", filePath);
-            completeFlag(YES);
-        }else{
-            ALog(@"Error downloading video");
-            completeFlag(NO);
-        }
-    }];
-    [downloadTask resume];
-}
 
 
 //Here we are setting up the delegate method

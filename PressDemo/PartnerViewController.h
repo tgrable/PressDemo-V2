@@ -10,13 +10,15 @@
 #import "Reachability.h"
 #import "NetworkData.h"
 #import "CanonModel.h"
+#import "DownloadVideo.h"
 #import "AppDelegateProtocol.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "GAITrackedViewController.h"
 
-@interface PartnerViewController : GAITrackedViewController<NetworkDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate>{
+@interface PartnerViewController : GAITrackedViewController<NetworkDelegate, VideoDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate>{
     //objects
     NetworkData *network;
+    DownloadVideo *downloadVideo;
     
     //global views
     UIImageView *topBanner, *logo;

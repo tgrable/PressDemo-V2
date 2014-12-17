@@ -262,6 +262,7 @@
             [title setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:16.0]];
             title.textColor = [UIColor blackColor];
             title.numberOfLines = 2;
+            title.adjustsFontSizeToFitWidth = YES;
             title.backgroundColor = [UIColor whiteColor];
             title.text = [p.title uppercaseString];
             [back addSubview:title];
