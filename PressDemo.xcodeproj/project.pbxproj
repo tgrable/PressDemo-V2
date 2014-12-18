@@ -86,6 +86,10 @@
 		711FC32B1A41FAB4005BEDE7 /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 711FC3201A41FAB4005BEDE7 /* AFURLRequestSerialization.m */; };
 		711FC32C1A41FAB4005BEDE7 /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 711FC3221A41FAB4005BEDE7 /* AFURLResponseSerialization.m */; };
 		711FC32D1A41FAB4005BEDE7 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 711FC3241A41FAB4005BEDE7 /* AFURLSessionManager.m */; };
+		711FC32F1A4308F1005BEDE7 /* ico-blackwhite.png in Resources */ = {isa = PBXBuildFile; fileRef = 711FC32E1A4308F1005BEDE7 /* ico-blackwhite.png */; };
+		711FC3311A4308F5005BEDE7 /* ico-color.png in Resources */ = {isa = PBXBuildFile; fileRef = 711FC3301A4308F5005BEDE7 /* ico-color.png */; };
+		711FC3331A430903005BEDE7 /* ico-color@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 711FC3321A430903005BEDE7 /* ico-color@2x.png */; };
+		711FC3351A430909005BEDE7 /* ico-blackwhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 711FC3341A430909005BEDE7 /* ico-blackwhite@2x.png */; };
 		712728061A3BA6FB0040F89E /* Solution.m in Sources */ = {isa = PBXBuildFile; fileRef = 712728051A3BA6FB0040F89E /* Solution.m */; };
 		712946EA19A37BD800E0548D /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 712946E919A37BD800E0548D /* NetworkManager.m */; };
 		712946ED19A37C1E00E0548D /* QNetworkAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 712946EC19A37C1E00E0548D /* QNetworkAdditions.m */; };
@@ -448,6 +452,10 @@
 		711FC3221A41FAB4005BEDE7 /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLResponseSerialization.m; sourceTree = "<group>"; };
 		711FC3231A41FAB4005BEDE7 /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLSessionManager.h; sourceTree = "<group>"; };
 		711FC3241A41FAB4005BEDE7 /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLSessionManager.m; sourceTree = "<group>"; };
+		711FC32E1A4308F1005BEDE7 /* ico-blackwhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ico-blackwhite.png"; sourceTree = "<group>"; };
+		711FC3301A4308F5005BEDE7 /* ico-color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ico-color.png"; sourceTree = "<group>"; };
+		711FC3321A430903005BEDE7 /* ico-color@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ico-color@2x.png"; sourceTree = "<group>"; };
+		711FC3341A430909005BEDE7 /* ico-blackwhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ico-blackwhite@2x.png"; sourceTree = "<group>"; };
 		712728041A3BA6FB0040F89E /* Solution.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Solution.h; sourceTree = "<group>"; };
 		712728051A3BA6FB0040F89E /* Solution.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Solution.m; sourceTree = "<group>"; };
 		712946E819A37BD800E0548D /* NetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkManager.h; sourceTree = "<group>"; };
@@ -1128,6 +1136,8 @@
 		718D210F1A3799E500980FDF /* media */ = {
 			isa = PBXGroup;
 			children = (
+				711FC3341A430909005BEDE7 /* ico-blackwhite@2x.png */,
+				711FC3321A430903005BEDE7 /* ico-color@2x.png */,
 				71708D091A3A4AC10041F8D5 /* icn-info-blue@2x.png */,
 				718D21321A379C0A00980FDF /* home-nav-media@2x.png */,
 				718D212C1A379BFB00980FDF /* icn-mill@2x-2.png */,
@@ -1162,6 +1172,8 @@
 		718D21191A379AEC00980FDF /* media */ = {
 			isa = PBXGroup;
 			children = (
+				711FC3301A4308F5005BEDE7 /* ico-color.png */,
+				711FC32E1A4308F1005BEDE7 /* ico-blackwhite.png */,
 				71708D0B1A3A4ACE0041F8D5 /* icn-info-blue.png */,
 				718D21261A379B9800980FDF /* home-nav-media.png */,
 				718D21241A379B8500980FDF /* icn-mill-all.png */,
@@ -1398,7 +1410,7 @@
 				ORGANIZATIONNAME = Trekk;
 				TargetAttributes = {
 					30AC1132192D90D300BE1072 = {
-						DevelopmentTeam = BS4LR4L547;
+						DevelopmentTeam = 477HKM2JBJ;
 					};
 					30AC1153192D90D300BE1072 = {
 						TestTargetID = 30AC1132192D90D300BE1072;
@@ -1441,6 +1453,7 @@
 				71DBB830192FB60E002D7CA9 /* header-statements.png in Resources */,
 				7129480719A3EFDB00E0548D /* home-header-what.png in Resources */,
 				7129480B19A3EFEB00E0548D /* home-header-what@2x.png in Resources */,
+				711FC3331A430903005BEDE7 /* ico-color@2x.png in Resources */,
 				71DBB806192FB60E002D7CA9 /* home-nav-manuals@2x.png in Resources */,
 				718E3167199D39620000A5EB /* icn-home@2x.png in Resources */,
 				30AC11D1192D931900BE1072 /* icon_100_100@2x.png in Resources */,
@@ -1561,6 +1574,7 @@
 				71DBB81C192FB60E002D7CA9 /* tmb-FPO-whitepaper@2x.png in Resources */,
 				719D39F9199538B7008E56EC /* LastUpdated.plist in Resources */,
 				71DBB836192FB60E002D7CA9 /* hero-FPO.png in Resources */,
+				711FC3351A430909005BEDE7 /* ico-blackwhite@2x.png in Resources */,
 				714523D619DDB5D60024CCF6 /* hdr-doc-casestudy@2x.png in Resources */,
 				71DBB7F4192FB60E002D7CA9 /* header-healthcare@2x.png in Resources */,
 				7129482519A3FFCF00E0548D /* ico-120.png in Resources */,
@@ -1596,6 +1610,7 @@
 				718E3168199D39620000A5EB /* icn-load.png in Resources */,
 				71DBB82C192FB60E002D7CA9 /* header-color.png in Resources */,
 				7129482C19A3FFCF00E0548D /* ico-50.png in Resources */,
+				711FC3311A4308F5005BEDE7 /* ico-color.png in Resources */,
 				71DBB803192FB60E002D7CA9 /* home-nav-cutsheet@2x.png in Resources */,
 				718D211B1A379AFA00980FDF /* icn-brochure.png in Resources */,
 				718E3171199D39620000A5EB /* icn-trash@2x.png in Resources */,
@@ -1632,6 +1647,7 @@
 				71DBB7F1192FB60E002D7CA9 /* header-continuousfeed@2x.png in Resources */,
 				7129480919A3EFE400E0548D /* home-header-all@x2.png in Resources */,
 				7129481019A3FCC600E0548D /* icn-video.png in Resources */,
+				711FC32F1A4308F1005BEDE7 /* ico-blackwhite.png in Resources */,
 				7129481119A3FCC600E0548D /* icn-whitepaper.png in Resources */,
 				718E3174199D39620000A5EB /* icn-whitepaper.png in Resources */,
 				71DBB844192FB60E002D7CA9 /* home-nav-specialty.png in Resources */,
@@ -1850,8 +1866,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Trekk Design Inc.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Trekk Design Inc.";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/trekkmini-1/Desktop",
@@ -1866,7 +1882,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "17f344b2-a2fa-4ed0-9737-b8ddca4bf655";
 				VALID_ARCHS = "armv7s armv7";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1877,8 +1893,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Trekk Design Inc.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Trekk Design Inc.";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/trekkmini-1/Desktop",
@@ -1893,7 +1909,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "17f344b2-a2fa-4ed0-9737-b8ddca4bf655";
 				VALID_ARCHS = "armv7s armv7";
 				WRAPPER_EXTENSION = app;
 			};

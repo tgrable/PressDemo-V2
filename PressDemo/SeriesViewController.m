@@ -779,6 +779,7 @@
                 [title setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:16.0]];
                 title.textColor = [UIColor blackColor];
                 title.numberOfLines = 2;
+                title.adjustsFontSizeToFitWidth = YES;
                 title.backgroundColor = [UIColor clearColor];
                 [back addSubview:title];
                 

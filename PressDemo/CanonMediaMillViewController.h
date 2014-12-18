@@ -49,7 +49,7 @@
     NSMutableDictionary *offlineImages;
     NSMutableDictionary *offlineVideos;
     NSMutableArray *offlineVideoRows;
-    NSMutableArray *rowHeadersPaper, *rowHeadersMill, *paperData, *allPaperData, *headerLabelsPaper, *headerLabelsMill;
+    NSMutableArray *rowHeadersPaper, *rowHeadersMill, *paperData, *allPaperData, *headerLabelsPaper, *headerLabelsMill, *iconArray;
     NSString *downloadingURL, *websiteKey;
     BOOL paperTable, tableEmpty;
     int tableRows, tableColumns;

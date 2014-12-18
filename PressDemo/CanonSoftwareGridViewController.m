@@ -152,12 +152,14 @@
     model = [self AppDataObj];
     
     //make sure we have data
+    
     if([model.initialSetOfMills count] == 0){
         
-        NSData *softwareData = [model getFileData:@"initialSoftware" complete:^(BOOL completeFlag){}];
+        NSData *softwareData = [model getFileData:@"initialSoftwareData" complete:^(BOOL completeFlag){}];
         
         model.initialSofware = [NSKeyedUnarchiver unarchiveObjectWithData:softwareData];
     }
+    ALog(@"Software count %d", [model.initialSofware count]);
     
     //***** Load up views to the local view controller ************//
     //the nav bar
@@ -178,7 +180,7 @@
     navBarHomeButton.tag = 20;
     [customNavBar addSubview:navBarHomeButton];
     
-    productScroll = [[ProductScroll alloc] initWithFrame:CGRectMake(36, 145, 952, 620)];
+    productScroll = [[ProductScroll alloc] initWithFrame:CGRectMake(36, 145, 962, 620)];
     productScroll.showsHorizontalScrollIndicator = NO;
     productScroll.showsVerticalScrollIndicator = YES;
     productScroll.delaysContentTouches = NO;
@@ -329,14 +331,17 @@
         if([s.key isEqualToString:b.titleLabel.text]){
             model.selectedSoftware = s;
             
-            CanonSoftwareViewController *softView = [[CanonSoftwareViewController alloc] initWithNibName:@"CanonSoftwareViewController" bundle:nil];
-            [self.navigationController pushViewController:softView animated:YES];
-            
+            break;
             //GA
             //[model logData:@"Mill Grid View" withAction:@"Action Tracker" withLabel:m.key];
         }
     }
     
+    if(model.selectedSoftware.title != nil){
+        CanonSoftwareViewController *softView = [[CanonSoftwareViewController alloc] initWithNibName:@"CanonSoftwareViewController" bundle:nil];
+        [self.navigationController pushViewController:softView animated:YES];
+
+    }
 }
 
 //function that pops the view controller off the stack and sends the user back home

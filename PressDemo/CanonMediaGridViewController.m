@@ -179,7 +179,7 @@
     navBarHomeButton.tag = 20;
     [customNavBar addSubview:navBarHomeButton];
     
-    productScroll = [[ProductScroll alloc] initWithFrame:CGRectMake(36, 145, 952, 620)];
+    productScroll = [[ProductScroll alloc] initWithFrame:CGRectMake(36, 145, 962, 620)];
     productScroll.showsHorizontalScrollIndicator = NO;
     productScroll.showsVerticalScrollIndicator = YES;
     productScroll.delaysContentTouches = NO;
@@ -329,15 +329,17 @@
     for(Mill *m in model.initialSetOfMills){
         if([m.key isEqualToString:b.titleLabel.text]){
             model.selectedMill = m;
-            
-            CanonMediaMillViewController *millView = [[CanonMediaMillViewController alloc] initWithNibName:@"CanonMediaMillViewController" bundle:nil];
-            [self.navigationController pushViewController:millView animated:YES];
+            break;
             
             //GA
             //[model logData:@"Mill Grid View" withAction:@"Action Tracker" withLabel:m.key];
         }
     }
     
+    if(model.selectedMill.title != nil){
+        CanonMediaMillViewController *millView = [[CanonMediaMillViewController alloc] initWithNibName:@"CanonMediaMillViewController" bundle:nil];
+        [self.navigationController pushViewController:millView animated:YES];
+    }
  
     
 }

@@ -727,7 +727,7 @@
                                                             [self saveFile:encodedPapers andFileName:@"initialPapers" complete:^(BOOL completeFlag){
                                                                 [self saveFile:encodedSolutions andFileName:@"initialSolutions" complete:^(BOOL completeFlag){
                                                                     [self saveFile:encodedPartners andFileName:@"initialPartners" complete:^(BOOL completeFlag){
-                                                                        [self saveFile:encodedSoftware andFileName:@"initialSoftware" complete:^(BOOL completeFlag){
+                                                                        [self saveFile:encodedSoftware andFileName:@"initialSoftwareData" complete:^(BOOL completeFlag){
                                                                             ALog(@"COMPLETE SAVING!");
                                                                             completeFlagArgument(YES);
                                                                         }];
@@ -822,11 +822,11 @@
             NSString *documentsDirectory = [paths objectAtIndex:0];
             NSString* path = [documentsDirectory stringByAppendingPathComponent:filename];
             
-            ALog("Filename %@", filename);
-            ALog("Data length %d", [data length]);
+            //ALog("Filename %@", filename);
+            //ALog("Data length %d", [data length]);
 
             if([data writeToFile:path atomically:YES]){
-                ALog(@"Model SAVED FILE SUCCESSFULLY %@", path);
+                //ALog(@"Model SAVED FILE SUCCESSFULLY %@", path);
                 completeFlag(YES);
             }else{
                 ALog(@"ERROR SAVING FILE %@", path);

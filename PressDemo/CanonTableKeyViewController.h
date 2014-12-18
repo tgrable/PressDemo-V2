@@ -17,6 +17,8 @@
     UILabel *productionLabel, *productionValue;
     UILabel *productionPlusLabel, *productionPlusValue;
     UILabel *premiumLabel, *premiumPlusValue;
+    
+    
 }
 @property(nonatomic, readonly)CanonModel *model;
 @property(nonatomic, strong) UILabel *keyTitle;

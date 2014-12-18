@@ -607,6 +607,14 @@
     paperData = [NSMutableArray array];
     rowHeadersPaper = [NSMutableArray arrayWithObjects:model.selectedMill.title, @"BASIS WEIGHT", @"BRIGHTNESS", @"COATING", @"COLOR CAPACITY", @"CATEGORY", @"DYE / PIGMENT", @"FULL INFO", nil];
     rowHeadersMill = [NSMutableArray arrayWithObjects:@"MILL NAME", @"MEDIA NAME", @"BASIS WEIGHT", @"BRIGHTNESS", @"COATING", @"COLOR CAPACITY", @"CATEGORY", @"DYE / PIGMENT", @"FULL INFO", nil];
+    
+    iconArray = [NSMutableArray array];
+    [iconArray addObject:[UIImage imageNamed:@"ico-blackwhite.png"]];
+    [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
+    [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
+    [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
+    [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
+    
     paperTable = YES;
     tableEmpty = NO;
     tableRows = 0;
@@ -857,6 +865,7 @@
                 [title setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:16.0]];
                 title.textColor = [UIColor blackColor];
                 title.numberOfLines = 2;
+                title.adjustsFontSizeToFitWidth = YES;
                 title.backgroundColor = [UIColor clearColor];
                 [back addSubview:title];
                 
@@ -1368,9 +1377,14 @@
         //if we are not dealing with the last column, load text
         if(paperTable){
             //just mill specific paper
-            if(column != 7){
-                cellView.label.text = [rowArray objectAtIndex:column];
-            }else{
+            if(column == 6){
+                //dye pigment
+                int dyeValue = [[rowArray objectAtIndex:column] intValue];
+                UIView *iconView = [self getColorIconSet:YES withXValue:0 andYValue:16 withColorValue:dyeValue];
+                [cellView addSubview:iconView];
+                
+            }else if(column == 7){
+                //info button
                 UIButton *info = [UIButton buttonWithType:UIButtonTypeCustom];
                 [info setFrame:CGRectMake(30, 15, 20, 20)];
                 [info addTarget:self action:@selector(infoButtonForPaper:)forControlEvents:UIControlEventTouchDown];
@@ -1379,12 +1393,20 @@
                 info.titleLabel.text = [rowArray objectAtIndex:column];
                 info.backgroundColor = [UIColor clearColor];
                 [cellView addSubview:info];
+            }else{
+                //all other text
+                cellView.label.text = [rowArray objectAtIndex:column];
             }
         }else{
             //all paper table
-            if(column != 8){
-                cellView.label.text = [rowArray objectAtIndex:column];
-            }else{
+            if(column == 7){
+                //dye pigment
+                int dyeValue = [[rowArray objectAtIndex:column] intValue];
+                UIView *iconView = [self getColorIconSet:YES withXValue:0 andYValue:16 withColorValue:dyeValue];
+                [cellView addSubview:iconView];
+                
+            }else if(column == 8){
+                //info button
                 UIButton *info = [UIButton buttonWithType:UIButtonTypeCustom];
                 [info setFrame:CGRectMake(30, 15, 20, 20)];
                 [info addTarget:self action:@selector(infoButtonForPaper:)forControlEvents:UIControlEventTouchDown];
@@ -1393,15 +1415,48 @@
                 info.titleLabel.text = [rowArray objectAtIndex:column];
                 info.backgroundColor = [UIColor clearColor];
                 [cellView addSubview:info];
+            }else{
+                //all other text
+                cellView.label.text = [rowArray objectAtIndex:column];
             }
         }
         
         // This will center the label horizontally
         cellView.label.textAlignment = NSTextAlignmentCenter;
         cellView.label.numberOfLines = 3;
+        cellView.label.adjustsFontSizeToFitWidth = YES;
         
     }
 
+}
+
+-(UIView *)getColorIconSet:(BOOL)flag withXValue:(int)x andYValue:(int)y withColorValue:(int)value
+{
+    UIView *iconSet = [[UIView alloc] initWithFrame:CGRectMake(x, y, 120, 21)];
+    iconSet.backgroundColor = [UIColor clearColor];
+    int i = 0;
+    if(flag){
+        //small view
+        iconSet.frame = CGRectMake(x, y, 88, 15);
+        while(i < value){
+            int xOffset = i * 18;
+            UIImageView *icon = [[UIImageView alloc] initWithFrame:CGRectMake(xOffset, 0, 15, 15)];
+            [icon setImage:[iconArray objectAtIndex:i]];
+            [iconSet addSubview:icon];
+            i++;
+        }
+    }else{
+        //large view
+        while(i < value){
+            int xOffset = i * 25;
+            UIImageView *icon = [[UIImageView alloc] initWithFrame:CGRectMake(xOffset, 0, 18, 18)];
+            [icon setImage:[iconArray objectAtIndex:i]];
+            [iconSet addSubview:icon];
+            i++;
+        }
+        
+    }
+    return iconSet;
 }
 
 //this function rearranges the table headers based upon which table we are displaying
@@ -1485,11 +1540,11 @@
 -(void)tableKeySelected:(id)sender
 {
     //load up all attributes of the PopUpMenuViewController view controller
-    popView.view.frame = CGRectMake(0, 0, 540, 220);
+    popView.view.frame = CGRectMake(0, 0, 650, 220);
     
     //set the UIPopoverController with the PopUpMenuViewController object and set the frame
     pop = [[UIPopoverController alloc] initWithContentViewController:popView];
-    pop.popoverContentSize = CGSizeMake(540, 220);
+    pop.popoverContentSize = CGSizeMake(650, 220);
     pop.delegate = self;
     [pop presentPopoverFromRect:((UIButton *)sender).bounds inView:sender permittedArrowDirections:UIPopoverArrowDirectionRight animated:YES];
 }
@@ -1517,8 +1572,6 @@
     header.userInteractionEnabled = YES;
     [modalView addSubview:header];
     
-    //float millWidth = [self widthOfString:[obj.mill_name uppercaseString]];
-    //float paperWidth = [self widthOfString:[obj.title uppercaseString]];
     
     float millWidth = [model widthOfString:[obj.mill_name uppercaseString] withStringSize:16.0 andFontKey:@"ITCAvantGardeStd-Md"];
     float paperWidth = [model widthOfString:[obj.title uppercaseString] withStringSize:16.0 andFontKey:@"ITCAvantGardeStd-Md"];
@@ -1781,13 +1834,12 @@
     categoryValue.text = obj.category;
     [rowTwo addSubview:categoryValue];
     
-    UILabel *colorCapabilityValue = [[UILabel alloc] initWithFrame:CGRectMake(406, 10, 122, 20)];
-    [colorCapabilityValue setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:13.0]];
-    colorCapabilityValue.textColor = [UIColor blackColor];
-    colorCapabilityValue.numberOfLines = 1;
-    colorCapabilityValue.backgroundColor = [UIColor clearColor];
-    colorCapabilityValue.text = obj.color_capability;
-    [rowTwo addSubview:colorCapabilityValue];
+    //color capability
+    int colorValue = [obj.color_capability intValue], xValue = 406;
+    if(colorValue > 3) xValue = 390;
+    
+    UIView *colorIconSet = [self getColorIconSet:NO withXValue:xValue andYValue:10 withColorValue:[obj.color_capability intValue]];
+    [rowTwo addSubview:colorIconSet];
     
     UILabel *weightsAvailableValue = [[UILabel alloc] initWithFrame:CGRectMake(550, 10, 122, 20)];
     [weightsAvailableValue setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:13.0]];
@@ -1853,13 +1905,17 @@
     textLabel.text = @"TEXT";
     [modalView addSubview:textLabel];
     
-    UILabel *textValue = [[UILabel alloc] initWithFrame:CGRectMake(263, 374, 300, 20)];
+    UILabel *textValue = [[UILabel alloc] initWithFrame:CGRectMake(253, 374, 270, 20)];
     [textValue setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:15.0]];
     textValue.textColor = model.dullBlack;
     textValue.numberOfLines = 1;
     textValue.backgroundColor = [UIColor clearColor];
     textValue.text = @"UNTREATED B&W TEXT";
     [modalView addSubview:textValue];
+    
+    UIImageView *bwText = [[UIImageView alloc] initWithFrame:CGRectMake(513, 374, 15, 15)];
+    [bwText setImage:[UIImage imageNamed:@"ico-blackwhite.png"]];
+    [modalView addSubview:bwText];
     
     UILabel *textPlusLabel = [[UILabel alloc] initWithFrame:CGRectMake(73, 394, 190, 20)];
     [textPlusLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:15.0]];
@@ -1869,13 +1925,21 @@
     textPlusLabel.text = @"TEXT PLUS";
     [modalView addSubview:textPlusLabel];
     
-    UILabel *textPlusValue = [[UILabel alloc] initWithFrame:CGRectMake(263, 394, 300, 20)];
+    UILabel *textPlusValue = [[UILabel alloc] initWithFrame:CGRectMake(253, 394, 270, 20)];
     [textPlusValue setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:15.0]];
     textPlusValue.textColor = model.dullBlack;
     textPlusValue.numberOfLines = 1;
     textPlusValue.backgroundColor = [UIColor clearColor];
     textPlusValue.text = @"UNTREATED B & W 2/c, LIGHT 4/c";
     [modalView addSubview:textPlusValue];
+    
+    UIImageView *bwPlus = [[UIImageView alloc] initWithFrame:CGRectMake(513, 394, 15, 15)];
+    [bwPlus setImage:[UIImage imageNamed:@"ico-blackwhite.png"]];
+    [modalView addSubview:bwPlus];
+    
+    UIImageView *colorOnePlus = [[UIImageView alloc] initWithFrame:CGRectMake(533, 394, 15, 15)];
+    [colorOnePlus setImage:[UIImage imageNamed:@"ico-color.png"]];
+    [modalView addSubview:colorOnePlus];
     
     UILabel *productionLabel = [[UILabel alloc] initWithFrame:CGRectMake(73, 414, 190, 20)];
     [productionLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:15.0]];
@@ -1885,13 +1949,25 @@
     productionLabel.text = @"PRODUCTION";
     [modalView addSubview:productionLabel];
     
-    UILabel *productionValue = [[UILabel alloc] initWithFrame:CGRectMake(263, 414, 300, 20)];
+    UILabel *productionValue = [[UILabel alloc] initWithFrame:CGRectMake(253, 414, 270, 20)];
     [productionValue setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:15.0]];
     productionValue.textColor = model.dullBlack;
     productionValue.numberOfLines = 1;
     productionValue.backgroundColor = [UIColor clearColor];
     productionValue.text = @"TREATED 2/C, 4/C";
     [modalView addSubview:productionValue];
+    
+    UIImageView *bwProduction = [[UIImageView alloc] initWithFrame:CGRectMake(513, 414, 15, 15)];
+    [bwProduction setImage:[UIImage imageNamed:@"ico-blackwhite.png"]];
+    [modalView addSubview:bwProduction];
+    
+    UIImageView *colorOneProduction = [[UIImageView alloc] initWithFrame:CGRectMake(533, 414, 15, 15)];
+    [colorOneProduction setImage:[UIImage imageNamed:@"ico-color.png"]];
+    [modalView addSubview:colorOneProduction];
+    
+    UIImageView *colorTwoProduction = [[UIImageView alloc] initWithFrame:CGRectMake(553, 414, 15, 15)];
+    [colorTwoProduction setImage:[UIImage imageNamed:@"ico-color.png"]];
+    [modalView addSubview:colorTwoProduction];
     
     UILabel *productionPlusLabel = [[UILabel alloc] initWithFrame:CGRectMake(73, 434, 190, 20)];
     [productionPlusLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:15.0]];
@@ -1901,13 +1977,29 @@
     productionPlusLabel.text = @"PRODUCTION PLUS";
     [modalView addSubview:productionPlusLabel];
     
-    UILabel *productionPlusValue = [[UILabel alloc] initWithFrame:CGRectMake(263, 434, 300, 20)];
+    UILabel *productionPlusValue = [[UILabel alloc] initWithFrame:CGRectMake(253, 434, 270, 20)];
     [productionPlusValue setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:15.0]];
     productionPlusValue.textColor = model.dullBlack;
     productionPlusValue.numberOfLines = 1;
     productionPlusValue.backgroundColor = [UIColor clearColor];
     productionPlusValue.text = @"TREATED HIGH QUALITY 4/C";
     [modalView addSubview:productionPlusValue];
+    
+    UIImageView *bwProductionPlus = [[UIImageView alloc] initWithFrame:CGRectMake(513, 434, 15, 15)];
+    [bwProductionPlus setImage:[UIImage imageNamed:@"ico-blackwhite.png"]];
+    [modalView addSubview:bwProductionPlus];
+    
+    UIImageView *colorOneProductionPlus = [[UIImageView alloc] initWithFrame:CGRectMake(533, 434, 15, 15)];
+    [colorOneProductionPlus setImage:[UIImage imageNamed:@"ico-color.png"]];
+    [modalView addSubview:colorOneProductionPlus];
+    
+    UIImageView *colorTwoProductionPlus = [[UIImageView alloc] initWithFrame:CGRectMake(553, 434, 15, 15)];
+    [colorTwoProductionPlus setImage:[UIImage imageNamed:@"ico-color.png"]];
+    [modalView addSubview:colorTwoProductionPlus];
+    
+    UIImageView *colorThreeProductionPlus = [[UIImageView alloc] initWithFrame:CGRectMake(573, 434, 15, 15)];
+    [colorThreeProductionPlus setImage:[UIImage imageNamed:@"ico-color.png"]];
+    [modalView addSubview:colorThreeProductionPlus];
     
     UILabel *premiumLabel = [[UILabel alloc] initWithFrame:CGRectMake(73, 454, 190, 20)];
     [premiumLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:15.0]];
@@ -1917,7 +2009,7 @@
     premiumLabel.text = @"PREMIUM";
     [modalView addSubview:premiumLabel];
     
-    UILabel *premiumPlusValue = [[UILabel alloc] initWithFrame:CGRectMake(263, 454, 300, 20)];
+    UILabel *premiumPlusValue = [[UILabel alloc] initWithFrame:CGRectMake(253, 454, 270, 20)];
     [premiumPlusValue setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:15.0]];
     premiumPlusValue.textColor = model.dullBlack;
     premiumPlusValue.numberOfLines = 1;
@@ -1925,9 +2017,29 @@
     premiumPlusValue.text = @"COATED PREMIUM QUALITY 4/C";
     [modalView addSubview:premiumPlusValue];
     
+    UIImageView *bwPremium = [[UIImageView alloc] initWithFrame:CGRectMake(513, 454, 15, 15)];
+    [bwPremium setImage:[UIImage imageNamed:@"ico-blackwhite.png"]];
+    [modalView addSubview:bwPremium];
+    
+    UIImageView *colorOnePremium = [[UIImageView alloc] initWithFrame:CGRectMake(533, 454, 15, 15)];
+    [colorOnePremium setImage:[UIImage imageNamed:@"ico-color.png"]];
+    [modalView addSubview:colorOnePremium];
+    
+    UIImageView *colorTwoPremium = [[UIImageView alloc] initWithFrame:CGRectMake(553, 454, 15, 15)];
+    [colorTwoPremium setImage:[UIImage imageNamed:@"ico-color.png"]];
+    [modalView addSubview:colorTwoPremium];
+    
+    UIImageView *colorThreePremium = [[UIImageView alloc] initWithFrame:CGRectMake(573, 454, 15, 15)];
+    [colorThreePremium setImage:[UIImage imageNamed:@"ico-color.png"]];
+    [modalView addSubview:colorThreePremium];
+    
+    UIImageView *colorFourPremium = [[UIImageView alloc] initWithFrame:CGRectMake(593, 454, 15, 15)];
+    [colorFourPremium setImage:[UIImage imageNamed:@"ico-color.png"]];
+    [modalView addSubview:colorFourPremium];
+    
     /************************************ price range info *******************************************/
     
-    UILabel *priceTitle = [[UILabel alloc] initWithFrame:CGRectMake(550, 346, 300, 30)];
+    UILabel *priceTitle = [[UILabel alloc] initWithFrame:CGRectMake(660, 346, 300, 30)];
     [priceTitle setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:18.0]];
     priceTitle.textColor = [UIColor blackColor];
     priceTitle.numberOfLines = 1;
@@ -1935,7 +2047,7 @@
     priceTitle.text = @"PRICE RANGE INFORMATION";
     [modalView addSubview:priceTitle];
     
-    UILabel *oneLabel = [[UILabel alloc] initWithFrame:CGRectMake(550, 374, 80, 20)];
+    UILabel *oneLabel = [[UILabel alloc] initWithFrame:CGRectMake(660, 374, 80, 20)];
     [oneLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:15.0]];
     oneLabel.textColor = model.green;
     oneLabel.numberOfLines = 1;
@@ -1943,7 +2055,7 @@
     oneLabel.text = @"$";
     [modalView addSubview:oneLabel];
     
-    UILabel *oneValue = [[UILabel alloc] initWithFrame:CGRectMake(660, 374, 200, 20)];
+    UILabel *oneValue = [[UILabel alloc] initWithFrame:CGRectMake(760, 374, 200, 20)];
     [oneValue setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:15.0]];
     oneValue.textColor = model.dullBlack;
     oneValue.numberOfLines = 1;
@@ -1951,7 +2063,7 @@
     oneValue.text = @"O TO 53 PER CWT.";
     [modalView addSubview:oneValue];
     
-    UILabel *twoLabel = [[UILabel alloc] initWithFrame:CGRectMake(550, 394, 80, 20)];
+    UILabel *twoLabel = [[UILabel alloc] initWithFrame:CGRectMake(660, 394, 80, 20)];
     [twoLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:15.0]];
     twoLabel.textColor = model.green;
     twoLabel.numberOfLines = 1;
@@ -1959,7 +2071,7 @@
     twoLabel.text = @"$$";
     [modalView addSubview:twoLabel];
     
-    UILabel *twoValue = [[UILabel alloc] initWithFrame:CGRectMake(660, 394, 200, 20)];
+    UILabel *twoValue = [[UILabel alloc] initWithFrame:CGRectMake(760, 394, 200, 20)];
     [twoValue setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:15.0]];
     twoValue.textColor = model.dullBlack;
     twoValue.numberOfLines = 1;
@@ -1967,7 +2079,7 @@
     twoValue.text = @"54 TO 69 PER CWT.";
     [modalView addSubview:twoValue];
     
-    UILabel *threeLabel = [[UILabel alloc] initWithFrame:CGRectMake(550, 414, 80, 20)];
+    UILabel *threeLabel = [[UILabel alloc] initWithFrame:CGRectMake(660, 414, 80, 20)];
     [threeLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:15.0]];
     threeLabel.textColor = model.green;
     threeLabel.numberOfLines = 1;
@@ -1975,7 +2087,7 @@
     threeLabel.text = @"$$$";
     [modalView addSubview:threeLabel];
     
-    UILabel *threeValue = [[UILabel alloc] initWithFrame:CGRectMake(660, 414, 200, 20)];
+    UILabel *threeValue = [[UILabel alloc] initWithFrame:CGRectMake(760, 414, 200, 20)];
     [threeValue setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:15.0]];
     threeValue.textColor = model.dullBlack;
     threeValue.numberOfLines = 1;
@@ -1983,7 +2095,7 @@
     threeValue.text = @"70 TO 90 CWT.";
     [modalView addSubview:threeValue];
     
-    UILabel *fourLabel = [[UILabel alloc] initWithFrame:CGRectMake(550, 434, 80, 20)];
+    UILabel *fourLabel = [[UILabel alloc] initWithFrame:CGRectMake(660, 434, 80, 20)];
     [fourLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:15.0]];
     fourLabel.textColor = model.green;
     fourLabel.numberOfLines = 1;
@@ -1991,7 +2103,7 @@
     fourLabel.text = @"$$$$";
     [modalView addSubview:fourLabel];
     
-    UILabel *fourValue = [[UILabel alloc] initWithFrame:CGRectMake(660, 434, 200, 20)];
+    UILabel *fourValue = [[UILabel alloc] initWithFrame:CGRectMake(760, 434, 200, 20)];
     [fourValue setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:15.0]];
     fourValue.textColor = model.dullBlack;
     fourValue.numberOfLines = 1;

@@ -172,7 +172,7 @@
     navBarHomeButton.tag = 20;
     [customNavBar addSubview:navBarHomeButton];
     
-    productScroll = [[ProductScroll alloc] initWithFrame:CGRectMake(36, 145, 952, 620)];
+    productScroll = [[ProductScroll alloc] initWithFrame:CGRectMake(36, 145, 962, 620)];
     productScroll.showsHorizontalScrollIndicator = NO;
     productScroll.showsVerticalScrollIndicator = YES;
     productScroll.delaysContentTouches = NO;
