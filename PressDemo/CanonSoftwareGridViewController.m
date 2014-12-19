@@ -314,8 +314,11 @@
         }
     }
     //below I am calculating the content height for the scrollview that displays the products
-    int multi = i / 4, add = multi * 50;
+    int multi = e / 4, add = multi * 50;
     //set the dynamic content height
+    int mod = e % 4;
+    //ALog(@"mod %d e %d", mod, e);
+    if(mod >= 1) add += 344;
     [productScroll setContentSize:CGSizeMake(952, ((multi * 300) + add))];
     
 }

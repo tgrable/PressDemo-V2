@@ -16,6 +16,7 @@
 #import "GAITrackedViewController.h"
 #import "UMTableView.h"
 #import "CanonTableKeyViewController.h"
+#import "UIBorderLabel.h"
 
 @interface CanonMediaMillViewController : GAITrackedViewController<NetworkDelegate, UMTableViewDelegate, VideoDelegate, UIPopoverControllerDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate>{
     //objects
@@ -40,7 +41,7 @@
     UIPageControl *overviewImageDots;
     UITextView *millDescription;
     UILabel *documentLabel, *millNameHeader, *millNameOverview, *millPhone, *millAddress, *tableHeader;
-    UILabel *cell0, *cell1, *cell2, *cell3, *cell4, *cell5, *cell6, *cell7, *cell8;
+    UIBorderLabel *cell0, *cell1, *cell2, *cell3, *cell4, *cell5, *cell6, *cell7, *cell8;
     UIButton *documentHeaderButton, *urlMill, *tableKey;
     UMTableView *tableView;
     
@@ -53,7 +54,7 @@
     NSString *downloadingURL, *websiteKey;
     BOOL paperTable, tableEmpty;
     int tableRows, tableColumns;
-    
+    float contentHeight;
     
 }
 @property(nonatomic)NetworkData *network;
@@ -63,6 +64,7 @@
 @property(nonatomic, strong)UIView *customNavBar, *mainView, *sideBar;
 @property(nonatomic, strong)NSMutableDictionary *offlineImages;
 @property(nonatomic, strong)UIPopoverController *pop;
+@property float contentHeight;
 
 -(void)displayMessage:(NSString *)message withTitle:(NSString *)title;
 -(void)setupLocalUserInterface:(completeBlock)completeFlag;

@@ -21,4 +21,5 @@
 - (Boolean) hasColumnFixedWidth: (int) columnIndex;
 - (UIColor*) borderColor;
 - (void) didDeleteRowAt: (int) rowIndex;
+- (void)totalContentHeightOffScrollView:(float)height;
 @end

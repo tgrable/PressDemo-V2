@@ -56,7 +56,7 @@ typedef enum {
 
 @property(nonatomic) UMTableViewBorderMode borderMode;
 @property(nonatomic) UMTableViewOutlineMode outlineMode;
-
+@property float contentHeight;
 /*
  * This will mark all rows as "dirty" and will kick-off `layoutSubviews` which will then redraw all visible rows
  */ 

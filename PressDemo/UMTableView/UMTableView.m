@@ -6,6 +6,9 @@
 #import "UMTableView.h"
 #import <QuartzCore/QuartzCore.h>
 
+//this is a local macro that sets up a class wide logging scheme
+#define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+
 @interface UMTableView() 
 
 @property(nonatomic,strong) NSMutableDictionary* rowMap;
@@ -26,11 +29,17 @@
 @implementation UMTableView
 
 @synthesize tableViewDelegate, borderMode, outlineMode;
-@synthesize columnWidths, borderView, reusableCellViews, rowMap;
+@synthesize columnWidths, borderView, reusableCellViews, rowMap, contentHeight;
 
 - (id) initWithFrame: (CGRect) frame {
+    
     self = [super initWithFrame:frame];
+
+    
     if (self) {
+        
+        contentHeight = 0;
+        
         borderMode = UMTableViewBordersRows | UMTableViewBordersColumns;
         outlineMode = UMTableViewOutlineTop | UMTableViewOutlineBottom | UMTableViewOutlineLeft | UMTableViewOutlineRight;
         self.backgroundColor = [UIColor clearColor];
@@ -38,12 +47,13 @@
         lastColumns = 0;
         self.alwaysBounceVertical = YES;
         self.rowMap = [NSMutableDictionary dictionaryWithCapacity:64];
-        self.columnWidths = [NSMutableArray array];        
+        self.columnWidths = [NSMutableArray array];
         UMTableBorderView* tableBorderView = [[UMTableBorderView alloc] initWithTableView:self];
         self.borderView = tableBorderView;
         // self.borderView.alpha = 0;
-        [self addSubview:borderView];	
+        [self addSubview:borderView];
         self.reusableCellViews = [NSMutableArray array];
+        
         
 #if ! __has_feature(objc_arc)
         [tableBorderView release];
@@ -292,7 +302,10 @@
 }
 
 - (float) totalContentHeight {
-    return [tableViewDelegate rowHeight] * [tableViewDelegate numRows];
+    float h = ([tableViewDelegate rowHeight] * [tableViewDelegate numRows]) + 160;
+    contentHeight = ([tableViewDelegate rowHeight] * [tableViewDelegate numRows]);
+    [tableViewDelegate totalContentHeightOffScrollView:contentHeight];
+    return h;
 }
 
 - (int) totalContentWidth {

@@ -90,6 +90,7 @@
 		711FC3311A4308F5005BEDE7 /* ico-color.png in Resources */ = {isa = PBXBuildFile; fileRef = 711FC3301A4308F5005BEDE7 /* ico-color.png */; };
 		711FC3331A430903005BEDE7 /* ico-color@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 711FC3321A430903005BEDE7 /* ico-color@2x.png */; };
 		711FC3351A430909005BEDE7 /* ico-blackwhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 711FC3341A430909005BEDE7 /* ico-blackwhite@2x.png */; };
+		711FC33B1A4388B5005BEDE7 /* UIBorderLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 711FC33A1A4388B5005BEDE7 /* UIBorderLabel.m */; };
 		712728061A3BA6FB0040F89E /* Solution.m in Sources */ = {isa = PBXBuildFile; fileRef = 712728051A3BA6FB0040F89E /* Solution.m */; };
 		712946EA19A37BD800E0548D /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 712946E919A37BD800E0548D /* NetworkManager.m */; };
 		712946ED19A37C1E00E0548D /* QNetworkAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 712946EC19A37C1E00E0548D /* QNetworkAdditions.m */; };
@@ -456,6 +457,8 @@
 		711FC3301A4308F5005BEDE7 /* ico-color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ico-color.png"; sourceTree = "<group>"; };
 		711FC3321A430903005BEDE7 /* ico-color@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ico-color@2x.png"; sourceTree = "<group>"; };
 		711FC3341A430909005BEDE7 /* ico-blackwhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ico-blackwhite@2x.png"; sourceTree = "<group>"; };
+		711FC3391A4388B5005BEDE7 /* UIBorderLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIBorderLabel.h; sourceTree = "<group>"; };
+		711FC33A1A4388B5005BEDE7 /* UIBorderLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIBorderLabel.m; sourceTree = "<group>"; };
 		712728041A3BA6FB0040F89E /* Solution.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Solution.h; sourceTree = "<group>"; };
 		712728051A3BA6FB0040F89E /* Solution.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Solution.m; sourceTree = "<group>"; };
 		712946E819A37BD800E0548D /* NetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkManager.h; sourceTree = "<group>"; };
@@ -950,6 +953,8 @@
 				30AC11B5192D92D200BE1072 /* UIImage+Resize.m */,
 				30AC11B6192D92D200BE1072 /* UIImage+RoundedCorner.h */,
 				30AC11B7192D92D200BE1072 /* UIImage+RoundedCorner.m */,
+				711FC3391A4388B5005BEDE7 /* UIBorderLabel.h */,
+				711FC33A1A4388B5005BEDE7 /* UIBorderLabel.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -1410,7 +1415,7 @@
 				ORGANIZATIONNAME = Trekk;
 				TargetAttributes = {
 					30AC1132192D90D300BE1072 = {
-						DevelopmentTeam = 477HKM2JBJ;
+						DevelopmentTeam = BS4LR4L547;
 					};
 					30AC1153192D90D300BE1072 = {
 						TestTargetID = 30AC1132192D90D300BE1072;
@@ -1743,6 +1748,7 @@
 				711FC3291A41FAB4005BEDE7 /* AFSecurityPolicy.m in Sources */,
 				711FC3101A41E7A7005BEDE7 /* DownloadVideo.m in Sources */,
 				30AC11BA192D92D200BE1072 /* UIImage+Resize.m in Sources */,
+				711FC33B1A4388B5005BEDE7 /* UIBorderLabel.m in Sources */,
 				718D21011A32172300980FDF /* ShowAll.m in Sources */,
 				30AC11A4192D92B900BE1072 /* SBJsonStreamParserAccumulator.m in Sources */,
 				71708D031A39DC810041F8D5 /* UMTableViewController.m in Sources */,

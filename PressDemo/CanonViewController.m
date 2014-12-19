@@ -324,12 +324,6 @@
     
     if(model.localProds != nil){
         
-        //add media into the show all array by default
-        [showAllImageNames addObject:@"media"];
-        
-        //add media into the show all array by default
-        [showAllImageNames addObject:@"software"];
-        
         for(Product *p in model.localProds){
             for(NSString *w in p.whatDoYouWantToPrint){
                 if(![whatImageNames containsObject:w]){
@@ -341,6 +335,16 @@
                     [showAllImageNames addObject:s];
                 }
             }
+        }
+        
+        if(![showAllImageNames containsObject:@"media"]){
+            //add media into the show all array by default
+            [showAllImageNames addObject:@"media"];
+        }
+        
+        if(![showAllImageNames containsObject:@"software"]){
+            //add media into the show all array by default
+            [showAllImageNames addObject:@"software"];
         }
    
         //load all what do your want to print buttons

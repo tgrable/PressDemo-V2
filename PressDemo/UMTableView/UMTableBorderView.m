@@ -6,6 +6,9 @@
 #import "UMTableBorderView.h"
 #import "UMTableView.h"
 
+//this is a local macro that sets up a class wide logging scheme
+#define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+
 @implementation UMTableBorderView
 @synthesize delegate;
 
@@ -15,7 +18,9 @@
 		tableView = _tableView;
 		self.backgroundColor = [UIColor clearColor];
         //[[UIColor redColor] colorWithAlphaComponent:0.2];//
-		self.userInteractionEnabled = NO;	
+		self.userInteractionEnabled = NO;
+        
+        //ALog(@"HERE table %@", tableView);
 	}
 	return self;
 }
@@ -83,6 +88,7 @@
 		CGPoint end = ccp([tableView totalContentWidth]-1, totalh);
 		[self drawLineWithColor:borderColor lineWidth:borderSize start:start end:end];	
 	}
+    
 }
 
 - (void) drawLineWithColor: (UIColor*) color lineWidth:(float) lineWidth start:(CGPoint) start end:(CGPoint) end {

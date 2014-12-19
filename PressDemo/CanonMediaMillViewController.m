@@ -21,7 +21,7 @@
 
 @implementation CanonMediaMillViewController
 @synthesize customNavBar, sideBar, mainView, videoButton;
-@synthesize model, network, navBarHomeButton, offlineImages, pop, popView;
+@synthesize model, network, navBarHomeButton, offlineImages, pop, popView, contentHeight;
 
 //Here we are setting up the delegate method
 - (CanonModel *) AppDataObj;
@@ -261,92 +261,102 @@
     headerLabelsPaper = [NSMutableArray array];
     headerLabelsMill = [NSMutableArray array];
     
-    cell0 =  [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 120, 50)];
+    
+    cell0 =  [[UIBorderLabel alloc] initWithFrame:CGRectMake(8, 0, 104, 50)];
     cell0.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:12.0];
     cell0.textColor = [UIColor whiteColor];
     cell0.numberOfLines = 2;
-    cell0.textAlignment = NSTextAlignmentCenter;
+    cell0.textAlignment = NSTextAlignmentLeft;
     cell0.backgroundColor = model.pink;
+    cell0.leftInset = 8;
     [tableHeaderRow addSubview:cell0];
     [headerLabelsPaper addObject:cell0];
     [headerLabelsMill addObject:cell0];
     
-    cell1 =  [[UILabel alloc] initWithFrame:CGRectMake(120, 0, 88, 50)];
+    cell1 =  [[UIBorderLabel alloc] initWithFrame:CGRectMake(120, 0, 88, 50)];
     cell1.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:12.0];
     cell1.textColor = [UIColor whiteColor];
     cell1.numberOfLines = 2;
-    cell1.textAlignment = NSTextAlignmentCenter;
+    cell1.textAlignment = NSTextAlignmentLeft;
+    cell1.leftInset = 8;
     cell1.backgroundColor = [UIColor blackColor];
     [tableHeaderRow addSubview:cell1];
     [headerLabelsPaper addObject:cell1];
     [headerLabelsMill addObject:cell1];
     
-    cell2 =  [[UILabel alloc] initWithFrame:CGRectMake(208, 0, 88, 50)];
+    cell2 =  [[UIBorderLabel alloc] initWithFrame:CGRectMake(208, 0, 88, 50)];
     cell2.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:12.0];
     cell2.textColor = [UIColor whiteColor];
     cell2.numberOfLines = 2;
-    cell2.textAlignment = NSTextAlignmentCenter;
+    cell2.textAlignment = NSTextAlignmentLeft;
     cell2.backgroundColor = [UIColor blackColor];
+    cell2.leftInset = 8;
     [tableHeaderRow addSubview:cell2];
     [headerLabelsPaper addObject:cell2];
     [headerLabelsMill addObject:cell2];
     
-    cell3 =  [[UILabel alloc] initWithFrame:CGRectMake(296, 0, 88, 50)];
+    cell3 =  [[UIBorderLabel alloc] initWithFrame:CGRectMake(296, 0, 88, 50)];
     cell3.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:12.0];
     cell3.textColor = [UIColor whiteColor];
     cell3.numberOfLines = 2;
-    cell3.textAlignment = NSTextAlignmentCenter;
+    cell3.textAlignment = NSTextAlignmentLeft;
+    cell3.leftInset = 8;
     cell3.backgroundColor = [UIColor blackColor];
     [tableHeaderRow addSubview:cell3];
     [headerLabelsPaper addObject:cell3];
     [headerLabelsMill addObject:cell3];
     
-    cell4 =  [[UILabel alloc] initWithFrame:CGRectMake(384, 0, 88, 50)];
+    cell4 =  [[UIBorderLabel alloc] initWithFrame:CGRectMake(384, 0, 88, 50)];
     cell4.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:12.0];
     cell4.textColor = [UIColor whiteColor];
     cell4.numberOfLines = 2;
-    cell4.textAlignment = NSTextAlignmentCenter;
+    cell4.textAlignment = NSTextAlignmentLeft;
+    cell4.leftInset = 8;
     cell4.backgroundColor = [UIColor blackColor];
     [tableHeaderRow addSubview:cell4];
     [headerLabelsPaper addObject:cell4];
     [headerLabelsMill addObject:cell4];
     
-    cell5 =  [[UILabel alloc] initWithFrame:CGRectMake(472, 0, 88, 50)];
+    cell5 =  [[UIBorderLabel alloc] initWithFrame:CGRectMake(472, 0, 88, 50)];
     cell5.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:12.0];
     cell5.textColor = [UIColor whiteColor];
     cell5.numberOfLines = 2;
-    cell5.textAlignment = NSTextAlignmentCenter;
+    cell5.textAlignment = NSTextAlignmentLeft;
     cell5.backgroundColor = [UIColor blackColor];
+    cell5.leftInset = 8;
     [tableHeaderRow addSubview:cell5];
     [headerLabelsPaper addObject:cell5];
     [headerLabelsMill addObject:cell5];
     
-    cell6 =  [[UILabel alloc] initWithFrame:CGRectMake(560, 0, 88, 50)];
+    cell6 =  [[UIBorderLabel alloc] initWithFrame:CGRectMake(560, 0, 88, 50)];
     cell6.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:12.0];
     cell6.textColor = [UIColor whiteColor];
     cell6.numberOfLines = 2;
-    cell6.textAlignment = NSTextAlignmentCenter;
+    cell6.textAlignment = NSTextAlignmentLeft;
     cell6.backgroundColor = [UIColor blackColor];
+    cell6.leftInset = 8;
     [tableHeaderRow addSubview:cell6];
     [headerLabelsPaper addObject:cell6];
     [headerLabelsMill addObject:cell6];
     
-    cell7 =  [[UILabel alloc] initWithFrame:CGRectMake(648, 0, 88, 50)];
+    cell7 =  [[UIBorderLabel alloc] initWithFrame:CGRectMake(648, 0, 88, 50)];
     cell7.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:12.0];
     cell7.textColor = [UIColor whiteColor];
     cell7.numberOfLines = 2;
     cell7.textAlignment = NSTextAlignmentCenter;
     cell7.backgroundColor = [UIColor blackColor];
+    cell7.leftInset = 8;
     [tableHeaderRow addSubview:cell7];
     [headerLabelsPaper addObject:cell7];
     [headerLabelsMill addObject:cell7];
     
-    cell8 =  [[UILabel alloc] initWithFrame:CGRectMake(736, 0, 88, 50)];
+    cell8 =  [[UIBorderLabel alloc] initWithFrame:CGRectMake(736, 0, 88, 50)];
     cell8.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:12.0];
     cell8.textColor = [UIColor whiteColor];
     cell8.numberOfLines = 2;
     cell8.textAlignment = NSTextAlignmentCenter;
     cell8.backgroundColor = [UIColor blackColor];
+    cell8.leftInset = 8;
     [tableHeaderRow addSubview:cell8];
     [headerLabelsMill addObject:cell8];
     
@@ -357,7 +367,7 @@
     notice.text = @"NOTE: All papers on this list are available in the use either from the mill directly or through distribution. Some papers may require a minimum order from the mill. Availability can and will change based on supply and demand for papers, contact your mill or distributor for the most up to date availablility. Many mills will have stocking levels incicated on their web sites with the most up to date information. Follow the links provided to access mill web sites.";
     notice.numberOfLines = 4;
     notice.backgroundColor = [UIColor clearColor];
-    [tableBackground addSubview:notice];
+    //[tableBackground addSubview:notice];
     
     UILabel *noticeTwo = [[UILabel alloc] initWithFrame:CGRectMake(20, 600, 736, 50)];
     [noticeTwo setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:12.0]];
@@ -365,7 +375,7 @@
     noticeTwo.text = @"The papers listed in this document have been evaluated on Canon Solutions America and Oce production printing equipment. Canon Solutions America does not guarantee the performance or availability of any papers listed. Results may vary.This list is only to be used as a guide for selecting papers for further testing in specific applications. For more information consult your local sales represenitive It is recommended that a paper trial including linerization of the trial.";
     noticeTwo.numberOfLines = 4;
     noticeTwo.backgroundColor = [UIColor clearColor];
-    [tableBackground addSubview:noticeTwo];
+    //[tableBackground addSubview:noticeTwo];
     
     
     //########### Video Setup ####################################
@@ -605,7 +615,7 @@
     offlineVideos = [[NSMutableDictionary alloc] init];
     offlineVideoRows = [NSMutableArray array];
     paperData = [NSMutableArray array];
-    rowHeadersPaper = [NSMutableArray arrayWithObjects:model.selectedMill.title, @"BASIS WEIGHT", @"BRIGHTNESS", @"COATING", @"COLOR CAPACITY", @"CATEGORY", @"DYE / PIGMENT", @"FULL INFO", nil];
+    rowHeadersPaper = [NSMutableArray arrayWithObjects:[model.selectedMill.title uppercaseString], @"BASIS WEIGHT", @"BRIGHTNESS", @"COATING", @"COLOR CAPACITY", @"CATEGORY", @"DYE / PIGMENT", @"FULL INFO", nil];
     rowHeadersMill = [NSMutableArray arrayWithObjects:@"MILL NAME", @"MEDIA NAME", @"BASIS WEIGHT", @"BRIGHTNESS", @"COATING", @"COLOR CAPACITY", @"CATEGORY", @"DYE / PIGMENT", @"FULL INFO", nil];
     
     iconArray = [NSMutableArray array];
@@ -620,6 +630,7 @@
     tableRows = 0;
     tableColumns = 0;
     websiteKey = @"";
+    contentHeight = 0;
     
     [self setupLocalUserInterface:^(BOOL completeFlag){
         //GA
@@ -998,13 +1009,14 @@
                [self setupTableHeaders];
                 
                //build a new tableview and add it to the super view
-               CGRect frm = CGRectMake(20, 160, 736, 350);
+               CGRect frm = CGRectMake(20, 160, 736, 500);
                tableView = [[UMTableView alloc] initWithFrame: frm];
                tableView.tableViewDelegate = self;
                tableView.tag = 130;
                tableView.borderMode = UMTableViewBordersRows;
                tableView.outlineMode = UMTableViewOutlineNone;
                [tableBackground addSubview:tableView];
+                
                
             }else{
                 
@@ -1042,7 +1054,7 @@
                 //setup the table headers based upon the current table we are using
                 [self setupTableHeaders];
                 
-                CGRect frm = CGRectMake(20, 160, 736, 350);
+                CGRect frm = CGRectMake(20, 160, 736, 500);
                 tableView = [[UMTableView alloc] initWithFrame: frm];
                 tableView.tableViewDelegate = self;
                 tableView.tag = 130;
@@ -1051,6 +1063,7 @@
                 
                 [tableBackground addSubview:tableView];
                 
+               
             }
             
             completeFlag(YES);
@@ -1334,6 +1347,40 @@
     return tableRows;
 }
 
+-(void)totalContentHeightOffScrollView:(float)height
+{
+    self.contentHeight = height;
+   
+    [self addNoticeToTable:self.contentHeight andView:tableView];
+}
+
+-(void)addNoticeToTable:(float)offset andView:(UMTableView *)view
+{
+    
+    if([view viewWithTag:3] == nil){
+    
+        UIView *tableNotice = [[UIView alloc] initWithFrame:CGRectMake(0, (offset + 20), 736, 120)];
+        tableNotice.tag = 3;
+        [view addSubview:tableNotice];
+        
+        UILabel *notice = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 736, 50)];
+        [notice setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:12.0]];
+        notice.textColor = [UIColor colorWithRed:85.0f/255.0f green:85.0f/255.0f blue:85.0f/255.0f alpha:1.0];
+        notice.text = @"NOTE: All papers on this list are available in the use either from the mill directly or through distribution. Some papers may require a minimum order from the mill. Availability can and will change based on supply and demand for papers, contact your mill or distributor for the most up to date availablility. Many mills will have stocking levels incicated on their web sites with the most up to date information. Follow the links provided to access mill web sites.";
+        notice.numberOfLines = 4;
+        notice.backgroundColor = [UIColor clearColor];
+        [tableNotice addSubview:notice];
+        
+        UILabel *noticeTwo = [[UILabel alloc] initWithFrame:CGRectMake(0, 70, 736, 50)];
+        [noticeTwo setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:12.0]];
+        noticeTwo.textColor = [UIColor colorWithRed:1.0f/255.0f green:120.0f/255.0f blue:180.0f/255.0f alpha:1.0];
+        noticeTwo.text = @"The papers listed in this document have been evaluated on Canon Solutions America and Oce production printing equipment. Canon Solutions America does not guarantee the performance or availability of any papers listed. Results may vary.This list is only to be used as a guide for selecting papers for further testing in specific applications. For more information consult your local sales represenitive It is recommended that a paper trial including linerization of the trial.";
+        noticeTwo.numberOfLines = 4;
+        noticeTwo.backgroundColor = [UIColor clearColor];
+        [tableNotice addSubview:noticeTwo];
+    }
+}
+
 // Only 3rd column has a fixed size, the other columns share the remainder
 - (int) fixedWidthForColumn: (int) columnIndex {
     
@@ -1374,13 +1421,14 @@
         cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:12.0];
         cellView.label.textColor = [UIColor blackColor];
         
+        
         //if we are not dealing with the last column, load text
         if(paperTable){
             //just mill specific paper
             if(column == 6){
                 //dye pigment
                 int dyeValue = [[rowArray objectAtIndex:column] intValue];
-                UIView *iconView = [self getColorIconSet:YES withXValue:0 andYValue:16 withColorValue:dyeValue];
+                UIView *iconView = [self getColorIconSet:YES withXValue:8 andYValue:16 withColorValue:dyeValue];
                 [cellView addSubview:iconView];
                 
             }else if(column == 7){
@@ -1402,7 +1450,7 @@
             if(column == 7){
                 //dye pigment
                 int dyeValue = [[rowArray objectAtIndex:column] intValue];
-                UIView *iconView = [self getColorIconSet:YES withXValue:0 andYValue:16 withColorValue:dyeValue];
+                UIView *iconView = [self getColorIconSet:YES withXValue:8 andYValue:16 withColorValue:dyeValue];
                 [cellView addSubview:iconView];
                 
             }else if(column == 8){
@@ -1422,10 +1470,11 @@
         }
         
         // This will center the label horizontally
-        cellView.label.textAlignment = NSTextAlignmentCenter;
+        //cellView.label.textAlignment = NSTextAlignmentCenter;
+        cellView.label.textAlignment = NSTextAlignmentLeft;
         cellView.label.numberOfLines = 3;
         cellView.label.adjustsFontSizeToFitWidth = YES;
-        
+                
     }
 
 }

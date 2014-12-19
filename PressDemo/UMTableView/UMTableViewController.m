@@ -5,6 +5,9 @@
 
 #import "UMTableViewController.h"
 
+//this is a local macro that sets up a class wide logging scheme
+#define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+
 
 @implementation UMTableViewController
 
@@ -15,7 +18,10 @@
 	self.tableView = _tableView;
 	self.tableView.tableViewDelegate = self;		
 	self.view = self.tableView;
-	self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;			
+	self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    ALog(@"HERE table %@", _tableView);
+    
 #if ! __has_feature(objc_arc)
 	[_tableView release];
 #endif
