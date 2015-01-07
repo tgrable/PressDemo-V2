@@ -211,6 +211,11 @@
                    $solutions[] = $value . '--solution';
                 }
              }
+             //premier partner flag
+             $premier_partner = FALSE;
+             if(isset($node->field_premier_partner[LANGUAGE_NONE][0]['value']) && $node->field_premier_partner[LANGUAGE_NONE][0]['value']){
+               $premier_partner = TRUE;
+             }
 
             //partner objects
             $value = array(
@@ -219,10 +224,12 @@
               'logo' => isset($node->field_partner_logo[LANGUAGE_NONE][0]['url_text']) ? $node->field_partner_logo[LANGUAGE_NONE][0]['url_text'] : '',
               'banners' => isset($node->field_partner_banner[LANGUAGE_NONE]) ? _cannon_data_api_break_out_array_of_items($node->field_partner_banner[LANGUAGE_NONE], 'url_text') : array(),
               'description' => isset($node->field_partner_description[LANGUAGE_NONE][0]['value']) ? _cannon_data_api_cleanse_string($node->field_partner_description[LANGUAGE_NONE][0]['value']) : '',
+              'website' => isset($node->field_partner_website[LANGUAGE_NONE][0]['value']) ? trim($node->field_partner_website[LANGUAGE_NONE][0]['value']) : '',
               'white_paper' => isset($node->field_product_white_paper_refere[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_product_white_paper_refere, '--white-paper') : array(),
               'case_study' => isset($node->field_product_case_study_referen[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_product_case_study_referen, '--case-study') : array(),
               'videos' => isset($node->field_video_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_video_reference, '--video') : array(),
               'solutions' => $solutions,
+              'premier_partner' => $premier_partner,
             );
         }else if($type == 'datasheet'){
             //datasheet objects
