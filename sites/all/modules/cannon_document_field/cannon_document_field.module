@@ -2,23 +2,24 @@
 
   /*----------------------------------------
    * @file
-   * Cannon banner Integration
+   * Cannon logo Integration
    *
    *----------------------------------------*/
+
 
 /**
   * Implements hook_field_info().
   *
   * Provides the description of the field.
   */
- function cannon_banner_image_field_field_info(){
+ function cannon_document_field_field_info(){
    return array(
     // We name our field as the associative name of the array.
-    'cannon_banner_url_text' => array(
-      'label' => t('Banner Image File Reference'),
-      'description' => t('Selector given to the user to reference banner images from the asset store'),
-      'default_widget' => 'cannon_banner_text',
-      'default_formatter' => 'cannon_banner_simple_text',
+    'canon_document_url_text' => array(
+      'label' => t('Document File Reference'),
+      'description' => t('Selector given to the user to reference documents from the asset store'),
+      'default_widget' => 'document_text',
+      'default_formatter' => 'document_simple_text',
     ),
   );
  }
@@ -30,8 +31,8 @@
  * Return TRUE if it does not contain data, FALSE if it does. This lets
  * the form API flag an error when required fields are empty.
  */
- function cannon_banner_image_field_field_is_empty($item, $field) {
-   return empty($item['url_text']);
+ function cannon_document_field_field_is_empty($item, $field) {
+   return empty($item['document_url_text']);
  }
 
 
@@ -41,14 +42,14 @@
   * We need to tell Drupal that what type of formatter we have
   * for this field.
   *
-  * @see cannon_banner_field_formatter_view()
+  * @see cannon_logo_field_formatter_view()
   */
- function cannon_banner_image_field_field_formatter_info() {
+ function cannon_document_field_field_formatter_info() {
   return array(
 
-    'cannon_banner_simple_text' => array(
+    'document_simple_text' => array(
       'label' => t('Simple selector button'),
-      'field types' => array('cannon_banner_url_text'),
+      'field types' => array('canon_document_url_text'),
     ),
   );
  }
@@ -64,19 +65,19 @@
  *
  * @see field_example_field_formatter_info()
  */
- function cannon_banner_image_field_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+ function cannon_document_field_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
 
   $element = array();
 
   switch ($display['type']) {
     // This formatter simply outputs the field as text and with a color.
-    case 'cannon_banner_simple_text':
+    case 'document_simple_text':
       foreach ($items as $delta => $item) {
         $element[$delta] = array(
           '#type' => 'html_tag',
           '#tag' => 'p',
 
-          '#value' => '<img src="' . $item['url_text'] . '" />',
+          '#value' => '<div >' . $item['document_url_text'] . ' </div>',
         );
       }
       break;
@@ -96,11 +97,11 @@
  *
  * @see field_example_field_widget_form()
  */
- function cannon_banner_image_field_field_widget_info() {
+ function cannon_document_field_field_widget_info() {
     return array(
-      'cannon_banner_text' => array(
+      'document_text' => array(
         'label' => t('Selector Button'),
-        'field types' => array('cannon_banner_url_text'),
+        'field types' => array('canon_document_url_text'),
       ),
     );
  }
@@ -115,77 +116,93 @@
  * the Form API item provided.
  *.
  */
- function cannon_banner_image_field_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+ function cannon_document_field_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
 
-  $value = isset($items[$delta]['url_text']) ? $items[$delta]['url_text'] : '';
+  //check if we are editing the the video content
+  $title = "";
+  $img = "/sites/all/modules/cannon_document_field/images/placeholder.jpg";
+  if(isset($form['#node']->field_asset_store_document[LANGUAGE_NONE][0]['document_url_text'])){
+    $src = explode('||||', $form['#node']->field_asset_store_document[LANGUAGE_NONE][0]['document_url_text']);
+    if(isset($src[0])){
+      $img = "/sites/all/modules/cannon_document_field/images/csa_icons-02.png";
+    }
+    if(isset($src[1])){
+      $title = $src[1];
+    }
+  }
+
+  //get the actual document
+  $value = isset($items[$delta]['document_url_text']) ? $items[$delta]['document_url_text'] : '';
 
   $widget = $element;
   $widget['#delta'] = $delta;
-  $class = array('cannon-banner');
+  $class = array('canon-document');
 
   switch ($instance['widget']['type']) {
 
-    case 'cannon_banner_text':
+    case 'document_text':
       $widget += array(
         '#type' => 'hidden',
         '#default_value' => $value,
         '#attributes' => array('class' => $class ),
-        '#suffix' => _cannon_banner_image_field_get_suffix($delta),
+        '#suffix' => _cannon_document_field_get_suffix($delta, $img, $title),
       );
     break;
   }
 
-  $element['url_text'] = $widget;
+  $element['document_url_text'] = $widget;
   return $element;
 
  }
 
- function _cannon_banner_image_field_get_suffix($delta){
+ function _cannon_document_field_get_suffix($delta, $img, $title){
 
 
-   return '<a href="#" class="banner" >Select Image</a>
-           <div class="description">Select Image</div>
-           <div class="banner-thumb">
-              <img class="cannon-banner" src="/sites/all/modules/cannon_banner_image_field/images/placeholder.jpg" width="130" height="80" />
+   return '<a href="#" class="document" >Select Document</a>
+           <div class="description">Select Document</div>
+           <div class="document-thumb">
+              <img class="cannon-document" src="' . $img . '" width="95" height="80" />
+              <div class="document-title">' . $title . '</div>
            </div>
-           <div class="banner-url"></div>
-           <div class="banner-modal">
+           <div class="document-url"></div>
+           <div class="document-modal">
              <div class="modal-header">
-               <h2>Select an image from the Asset Store</h2>
+               <h2>Select a Document from the Asset Store</h2>
              </div>
              <div class="modal-body">
-               <div class="image-container"></div>
+               <div class="document image-container"></div>
              </div>
              <div class="modal-footer">
                <br />
                <div class="column"><a href="#" class="modal-close">Close</a></div>
-               <div class="column"><a href="#" class="modal-select">Select Image</a></div>
+               <div class="column"><a href="#" class="modal-select">Select Document</a></div>
              </div>
            </div>';
  }
 
+
  /**
   * Implements hook_form
   **/
- function _cannon_banner_image_field_request_data_from_asset_store(){
+ function _cannon_document_field_request_data_from_asset_store(){
 
-  $url = 'http://canoncache.trekkweb.com/data/api/image';
-  $data = _cannon_testing_api_call($url);
+  $url = 'http://canoncache.trekkweb.com/data/api/document';
+  $data = _cannon_document_field_api_call($url);
   $decoded = json_decode($data);
-  $images = "";
+  $doc = "";
 
-  if(count($decoded->data->image) > 0){
+  if(count($decoded->data->document) > 0){
     $e = 0;
-    foreach ($decoded->data->image as $key => $value) {
+    foreach ($decoded->data->document as $key => $value) {
       //grab the next object as the large image
-      $images .= '<div class="image-cell image' . $e . '"><img width="130" height="80" data-url="' . $value->image . '" src="' . $value->image . '" />' .$value->title . '</div>';
+      $doc .= '<div class="document-cell document' . $e . '"><img width="130" height="80" data-url="' . $value->document . '" src="/sites/all/modules/cannon_document_field/images/csa_icons-02.png" /><div class="title">' .$value->title . '</div></div>';
       $e++;
     }
   }else{
     return "";
   }
   //return the HTML string
-  print $images;
+  print $doc;
   drupal_exit();
  }
 
@@ -194,7 +211,7 @@
  *
  * @param $url, the url to request images
  */
- function _cannon_banner_image_field_api_call($url){
+ function _cannon_document_field_api_call($url){
 
     // Initializing curl
     $ch = curl_init($url);
@@ -222,12 +239,12 @@
  * we might have generated in hook_field_validate(). Generally, we'll just
  * call form_error().
  *
- * @see cannon_banner_field_validate()
+ * @see cannon_logo_field_validate()
  * @see form_error()
  */
-function cannon_banner_image_field_field_widget_error($element, $error, $form, &$form_state) {
+function cannon_document_field_field_widget_error($element, $error, $form, &$form_state) {
   switch ($error['error']) {
-    case 'cannon_banner_invalid':
+    case 'cannon_logo_invalid':
       form_error($element, $error['message']);
       break;
   }
@@ -239,13 +256,13 @@ function cannon_banner_image_field_field_widget_error($element, $error, $form, &
  *
  * Provides a simple user interface that tells the developer where to go.
  */
-function cannon_banner_image_field_menu() {
+function cannon_document_field_menu() {
 
 
-  $items['get/image/banners'] = array(
-    'title' => 'Get Banners',
+  $items['get/image/documents'] = array(
+    'title' => 'Get Documents',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('_cannon_banner_image_field_request_data_from_asset_store'),
+    'page arguments' => array('_cannon_document_field_request_data_from_asset_store'),
     'access callback' => TRUE,
     'type' => MENU_NORMAL_ITEM
   );

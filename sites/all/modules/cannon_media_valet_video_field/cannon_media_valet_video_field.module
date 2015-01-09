@@ -15,8 +15,8 @@
    return array(
     // We name our field as the associative name of the array.
     'cannon_media_valet_video_field_video_url_text' => array(
-      'label' => t('Media Valet Video File Reference'),
-      'description' => t('Selector given to the user to reference Media Valet videos'),
+      'label' => t('Asset Management Store Video File Reference'),
+      'description' => t('Selector given to the user to reference Asset Management Store videos'),
       'default_widget' => 'cannon_media_valet_video_text',
       'default_formatter' => 'cannon_media_valet_simple_video_text',
     ),
@@ -153,10 +153,10 @@
    $html = "";
    $html = _cannon_media_valet_video_field_request_data_from_mdeia_valet();
    if($html == ""){
-     $html = 'There was an error requesting data from Media Valet, please refresh your page and try again';
+     $html = 'There was an error requesting data from the Asset Management Store, please refresh your page and try again';
    }
 
-   return '<a href="#" id="media-valet" class="media-valet-selector">Select Media Valet Video</a>
+   return '<a href="#" id="media-valet" class="media-valet-selector">Select Video</a>
            <div class="description">Select a video</div>
            <div id="media-valet-thumb"><img src="' . $img . '" width="130" height="80" /></div>
            <div id="media-valet-url"></div>
@@ -251,27 +251,5 @@ function cannon_media_valet_video_field_field_widget_error($element, $error, $fo
 }
 
 
-/**
- * Implements hook_menu().
- *
- * Provides a simple user interface that tells the developer where to go.
- */
-function cannon_media_valet_video_field_menu() {
-  $items['admin/config/media/cannon_media_valet_videos'] = array(
-    'title' => 'Media Valet Video Field',
-    'page callback' => '_cannon_media_valet_video_field_page',
-    'access callback' => TRUE,
-  );
-  return $items;
-}
 
-/**
- * A simple page to explain to the developer what to do.
- */
-function _cannon_media_valet_video_field_page() {
-  return t("A custom field developed specifically for Cannon to select videos from Media Valet.");
-}
-/**
- * @} End of "defgroup field_example".
- */
 

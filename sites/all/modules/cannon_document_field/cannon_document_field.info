@@ -1,0 +1,8 @@
+name = Canon Document Field
+description = Module that created a custom field to select video assets from the Canon Asset Management System
+package = Canon Custom Modules
+core = 7.x
+php = 5.3
+files[] = cannon_document_field.module
+scripts[] = js/cannon_document_field.js
+stylesheets[all][] = css/cannon_document_field.css

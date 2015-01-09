@@ -1,5 +1,5 @@
 name = Canon Media Valet Video Field
-description = Module that created a custom field to select video assets from Media Valet
+description = Module that created a custom field to select video assets from the Canon Asset Management System
 package = Canon Custom Modules
 core = 7.x
 php = 5.3

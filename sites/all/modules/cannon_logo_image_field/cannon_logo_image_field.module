@@ -172,7 +172,7 @@
  function _cannon_logo_image_field_request_data_from_asset_store(){
 
   $url = 'http://canoncache.trekkweb.com/data/api/image';
-  $data = _cannon_testing_api_call($url);
+  $data = _cannon_logo_image_field_api_call($url);
   $decoded = json_decode($data);
   $images = "";
 
@@ -242,11 +242,7 @@ function cannon_logo_image_field_field_widget_error($element, $error, $form, &$f
  * Provides a simple user interface that tells the developer where to go.
  */
 function cannon_logo_image_field_menu() {
-  $items['admin/config/media/cannon_logo_images'] = array(
-    'title' => 'Logo Image Field',
-    'page callback' => '_cannon_logo_image_field_page',
-    'access callback' => TRUE,
-  );
+
 
   $items['get/image/logos'] = array(
     'title' => 'Get Logo',
@@ -258,13 +254,4 @@ function cannon_logo_image_field_menu() {
   return $items;
 }
 
-/**
- * A simple page to explain to the developer what to do.
- */
-function _cannon_logo_image_field_page() {
-  return t("A custom field developed specifically for Cannon to select logo images from the Asset Store.");
-}
-/**
- * @} End of "defgroup field_example".
- */
 

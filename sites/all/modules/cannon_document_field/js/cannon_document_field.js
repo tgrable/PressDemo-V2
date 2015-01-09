@@ -1,27 +1,30 @@
 /*------------------------------------------------
  *
- * @File Cannon logo Asset Selection
+ * @File Cannon document Asset Selection
  * Performs the selection for the asset store icons
  *
  *-----------------------------------------------*/
 (function ($, Drupal, window, document, undefined) {
-  Drupal.behaviors.cannon_logo_image_field = {
+  Drupal.behaviors.cannon_document_field = {
      attach: function (context, settings) {
        var $window = $(window);
 
         $.fn.selectLogoAsset = function(){
              var self = $(this),
-             $overlay = $('<div id="logo-overlay"><div class="ajax-loader"><img src="/sites/all/modules/cannon_logo_image_field/images/gif-load.gif" /></div></div>'),
-             $modal = $('.field-type-cannon-logo-url-text div.logo-modal'),
+             $overlay = $('<div id="document-overlay"><div class="ajax-loader"><img src="/sites/all/modules/cannon_document_field/images/gif-load.gif" /></div></div>'),
+             $modal = $('.field-type-canon-document-url-text div.document-modal'),
              $input,
              $images,
              $body = $('body'),
              imageSelectedFlag = false,
              loadedFlag = false,
-             $close = $('.logo-modal .modal-close'),
-             $select = $('.logo-modal .modal-select'),
+             $close = $('.document-modal .modal-close'),
+             $select = $('.document-modal .modal-select'),
              $srcImage = "",
              src = "",
+             imgSrc = "",
+             $title = $('.document-title'),
+             title_string = "",
              $thumb = $('.banner-thumb'),
              $window = $(window),
              w = $window.width(),
@@ -43,7 +46,7 @@
                 if(!loadedFlag){
                   //ajax call to to the back end to grab the images
                   $.ajax({
-                     url: host+'/get/image/logos',
+                     url: host+'/get/image/documents',
                      type: 'GET',
                      success: function(data) {
 
@@ -71,14 +74,15 @@
              function attachEventHandlers(){
 
                  //make sure and bind to all of the newly loaded images
-                 $images = $('.logo-modal .image-container img');
+                 $images = $('.document-modal .image-container img');
 
                  //this is the select button to select an image
                  $select.once().click(function(e){
                     e.preventDefault();
                     if(imageSelectedFlag){
-                      $srcImage.attr('src', src);
+                      $srcImage.attr('src', imgSrc);
                       $input.attr('value', src);
+                      $title.text(title_string);
                       $srcImage.css({'display':'block'});
                       closeOverlay();
                     }else{
@@ -96,8 +100,9 @@
                  //this handler with create a selection on an image
                  $images.dblclick(function() {
                     handleClick($(this));
-                    $srcImage.attr('src', src);
+                    $srcImage.attr('src', imgSrc);
                     $input.attr('value', src);
+                    $title.text(title_string);
                     closeOverlay();
                  });
              }
@@ -111,7 +116,7 @@
              function openOverlay(obj, e){
                 $('.ajax-loader').css('display', 'none');
                 $input = obj.siblings('input');
-                $srcImage =  obj.siblings('.logo-thumb').find('img');
+                $srcImage =  obj.siblings('.document-thumb').find('img');
                 e.preventDefault();
                 $modal.css({'margin-top': '100px', 'margin-left': ((w/2 - 365) -40)+ 'px', 'display': 'block'});
              }
@@ -124,6 +129,9 @@
                 $select.css({'opacity':1.0});
                 imageSelectedFlag = true;
                 src = obj.attr('data-url');
+                imgSrc = obj.attr('src');
+                title_string = obj.siblings('div').text();
+                src = src + '||||' + title_string;
              }
              //this function closes the overlay
              function closeOverlay(){
@@ -139,17 +147,19 @@
              }
 
 
+
              if(document.URL.indexOf("edit") != -1){
-                $('input.cannon-logo').each(function(k, v){
+                $('input.cannon-document').each(function(k, v){
                      if($(v).attr('value') != ''){
-                        $(v).siblings('.logo-thumb').find('img').attr('src', $(v).attr('value'));
+                        $(v).siblings('.document-thumb').find('img').attr('src', $(v).attr('value'));
                      }
                 });
              }
 
        };
-       if($('a.logo').length > 0){
-          $('a.logo').selectLogoAsset();
+
+       if($('a.document').length > 0){
+          $('a.document').selectLogoAsset();
        }
 
      },

@@ -15,8 +15,8 @@
    return array(
     // We name our field as the associative name of the array.
     'cannon_media_valet_url_text' => array(
-      'label' => t('Media Valet Image File Reference'),
-      'description' => t('Selector given to the user to reference Media Valet images'),
+      'label' => t('Asset Store Image File Reference'),
+      'description' => t('Selector given to the user to reference Asset Management Store Images'),
       'default_widget' => 'cannon_media_valet_text',
       'default_formatter' => 'cannon_media_valet_simple_text',
     ),
@@ -144,12 +144,12 @@
    $html = ""; $label = "Select a hero image";
 
    if($html == ""){
-     $html = 'There was an error requesting data from Media Valet, please refresh your page and try again';
+     $html = 'There was an error requesting data from the Asset Management Store, please refresh your page and try again';
    }
 
    if(($delta+1) % 2 == 0) $label = "Select a grid image";
 
-   return '<a href="#" class="media-valet" >Select Media Valet Image</a>
+   return '<a href="#" class="media-valet" >Select an Image</a>
            <div class="description">' . $label . '</div>
            <div class="media-valet-thumb">
               <img class="cannon-media-valet" src="/sites/all/modules/cannon_media_valet_image_field/images/placeholder.jpg" width="130" height="80" />
@@ -176,7 +176,7 @@
  function _cannon_media_valet_image_field_request_data_from_mdeia_valet(){
 
   $url = 'http://canoncache.trekkweb.com/data/api/image';
-  $data = _cannon_testing_api_call($url);
+  $data = _cannon_media_valet_image_field_api_call($url);
   $decoded = json_decode($data);
   $images = "";
 
@@ -247,11 +247,6 @@ function cannon_media_valet_image_field_field_widget_error($element, $error, $fo
  */
 function cannon_media_valet_image_field_menu() {
 
-  $items['admin/config/media/cannon_media_valet_images'] = array(
-    'title' => 'Media Valet Image Field',
-    'page callback' => '_cannon_media_valet_image_field_page',
-    'access callback' => TRUE,
-  );
 
   $items['get/image/assets'] = array(
     'title' => 'Get Media Valet Assets',
@@ -263,13 +258,5 @@ function cannon_media_valet_image_field_menu() {
   return $items;
 }
 
-/**
- * A simple page to explain to the developer what to do.
- */
-function _cannon_media_valet_image_field_page() {
-  return t("A custom field developed specifically for Cannon to select images from Media Valet.");
-}
-/**
- * @} End of "defgroup field_example".
- */
+
 
