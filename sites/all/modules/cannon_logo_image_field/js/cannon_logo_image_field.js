@@ -46,7 +46,7 @@
                      url: host+'/get/image/logos',
                      type: 'GET',
                      success: function(data) {
-
+                        $('.image-container').empty();
                         $('.image-container').append(data);
                         loadedFlag = true;
                         //make sure all the events are attached to the thumbnails

@@ -49,7 +49,7 @@
                      url: host+'/get/image/documents',
                      type: 'GET',
                      success: function(data) {
-
+                        $('.document.image-container').empty();
                         $('.document.image-container').append(data);
                         loadedFlag = true;
                         //make sure all the events are attached to the thumbnails

@@ -45,7 +45,7 @@
                      url: host+'/get/image/banners',
                      type: 'GET',
                      success: function(data) {
-
+                        $('.image-container').empty();
                         $('.image-container').append(data);
                         loadedFlag = true;
                         //make sure all the events are attached to the thumbnails
