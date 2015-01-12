@@ -109,8 +109,8 @@
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--video',
               'image' => $video_urls[1],
               'video-description' => isset($node->field_video_description[LANGUAGE_NONE][0]['value']) ? _cannon_data_api_cleanse_string($node->field_video_description[LANGUAGE_NONE][0]['value']) : '',
-              'streaming-url' => str_replace(' ', '%20', $video_urls[0]),
-              'raw-video' => str_replace( ' ', '%20', $video_urls[2]),
+              'streaming-url' => $video_urls[0],
+              'raw-video' => $video_urls[2],
             );
 
         //******************White Papers*************
