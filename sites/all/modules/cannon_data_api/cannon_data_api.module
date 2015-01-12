@@ -76,8 +76,9 @@
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--case-study',
               'description' => isset($node->field_case_study_description[LANGUAGE_NONE][0]['value']) ? _cannon_data_api_cleanse_string($node->field_case_study_description[LANGUAGE_NONE][0]['value']) : '',
               'image' => isset($node->field_preview_image[LANGUAGE_NONE][0]['url_text']) ? $node->field_preview_image[LANGUAGE_NONE][0]['url_text'] : '',
-              'document-data' => _cannon_data_api_html_wrap_data($node->field_case_study_body[LANGUAGE_NONE][0]['value']),
+              'document-data' => isset($node->field_asset_store_document[LANGUAGE_NONE][0]['document_url_text']) ? _cannon_data_api_break_out_document_url($node->field_asset_store_document[LANGUAGE_NONE][0]['document_url_text']) : '',
             );
+
         //*****************products****************
         }else if($type == 'product'){
 
@@ -97,7 +98,7 @@
             $value = array(
               'title' => $node->title,
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--product-spec',
-              'document-data' => _cannon_data_api_html_wrap_data($node->field_product_data[LANGUAGE_NONE][0]['value']),
+              'document-data' => isset($node->field_asset_store_document[LANGUAGE_NONE][0]['document_url_text']) ? _cannon_data_api_break_out_document_url($node->field_asset_store_document[LANGUAGE_NONE][0]['document_url_text']) : '',
             );
         //*******************videos*****************
         }else if($type == 'video'){
@@ -121,7 +122,7 @@
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--white-paper',
               'description' => isset($node->field_white_paper_description[LANGUAGE_NONE][0]['value']) ? _cannon_data_api_cleanse_string($node->field_white_paper_description[LANGUAGE_NONE][0]['value']) : '',
               'image' => isset($node->field_preview_image[LANGUAGE_NONE][0]['url_text']) ? $node->field_preview_image[LANGUAGE_NONE][0]['url_text'] : '',
-              'document-data' => _cannon_data_api_html_wrap_data($node->field_white_paper_body[LANGUAGE_NONE][0]['value']),
+              'document-data' => isset($node->field_asset_store_document[LANGUAGE_NONE][0]['document_url_text']) ? _cannon_data_api_break_out_document_url($node->field_asset_store_document[LANGUAGE_NONE][0]['document_url_text']) : '',
             );
         //******************product-series*************
         }else if($type == 'product-series'){
@@ -238,7 +239,7 @@
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--datasheet',
               'image' => isset($node->field_preview_image[LANGUAGE_NONE][0]['url_text']) ? $node->field_preview_image[LANGUAGE_NONE][0]['url_text'] : '',
               'description' => isset($node->field_datasheet_description[LANGUAGE_NONE][0]['value']) ? _cannon_data_api_cleanse_string($node->field_datasheet_description[LANGUAGE_NONE][0]['value']) : '',
-              'document-data' => _cannon_data_api_html_wrap_data($node->field_datasheet_document_body[LANGUAGE_NONE][0]['value']),
+              'document-data' => isset($node->field_asset_store_document[LANGUAGE_NONE][0]['document_url_text']) ? _cannon_data_api_break_out_document_url($node->field_asset_store_document[LANGUAGE_NONE][0]['document_url_text']) : '',
             );
         }else if($type == 'brochure'){
             //brochure objects
@@ -247,7 +248,7 @@
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--brochure',
               'image' => isset($node->field_preview_image[LANGUAGE_NONE][0]['url_text']) ? $node->field_preview_image[LANGUAGE_NONE][0]['url_text'] : '',
               'description' => isset($node->field_brochure_description[LANGUAGE_NONE][0]['value']) ? _cannon_data_api_cleanse_string($node->field_brochure_description[LANGUAGE_NONE][0]['value']) : '',
-              'document-data' => _cannon_data_api_html_wrap_data($node->field_brochure_document_body[LANGUAGE_NONE][0]['value']),
+              'document-data' => isset($node->field_asset_store_document[LANGUAGE_NONE][0]['document_url_text']) ? _cannon_data_api_break_out_document_url($node->field_asset_store_document[LANGUAGE_NONE][0]['document_url_text']) : '',
             );
         }else if($type == 'solution'){
             //solution objects
@@ -290,6 +291,25 @@
         return '';
       }
 
+  }
+
+  /**
+   * Utility function to handle document URLs
+   *
+   **/
+  function _cannon_data_api_break_out_document_url($field){
+
+    if(!empty($field)){
+      $url_array = explode('||||', $field);
+
+      if(isset($url_array[0])){
+        return $url_array[0];
+      }else{
+        return "";
+      }
+    }else{
+      return "";
+    }
   }
 
   /**
@@ -495,10 +515,12 @@
 
   /**
    *  Utility function to base 64 encode HTML pass in JSON
+   *  **** Function has been deprecated ****
    */
    function _cannon_data_api_html_wrap_data($string){
-    $styles = "<script type=\"text/javascript\" async=\"\" src=\"http://hello.myfonts.net/count/2c5146\"></script><style type=\"text/css\">@font-face{font-family: AvantGardeGothicITCW01Bk;src:url(http://c9ccf4e3bde7da8fd9d0-01341bb0de659b00b3b529fc2866883b.r99.cf1.rackcdn.com/2C5146_0_unhinted_0.woff)format(\"woff2\");} @font-face{font-family: AvantGardeGothicITCW02Md;src:url(http://c9ccf4e3bde7da8fd9d0-01341bb0de659b00b3b529fc2866883b.r99.cf1.rackcdn.com/2C5146_1_unhinted_0.woff)format(\"woff2\");}@font-face {font-family: AvantGardeGothicITCW01Bk;src:url(http://c9ccf4e3bde7da8fd9d0-01341bb0de659b00b3b529fc2866883b.r99.cf1.rackcdn.com/2C5146_0_unhinted_0.ttf)format(\"truetype\");}@font-face {font-family: AvantGardeGothicITCW02Md;src:url(http://c9ccf4e3bde7da8fd9d0-01341bb0de659b00b3b529fc2866883b.r99.cf1.rackcdn.com/2C5146_1_unhinted_0.ttf)format(\"truetype\");} p,strong,li,span,tr,td,th,div{font-family: AvantGardeGothicITCW01Bk;} h1,h2,h3,h4,h5,b{font-family: AvantGardeGothicITCW02Md;} li{margin-left:30px;} ul{margin:20px 0;}</style>";
-    return base64_encode('<html><head>' . $styles . '</head><body><br />' .$string . '</body></html> ');
+
+    //$styles = "<script type=\"text/javascript\" async=\"\" src=\"http://hello.myfonts.net/count/2c5146\"></script><style type=\"text/css\">@font-face{font-family: AvantGardeGothicITCW01Bk;src:url(http://c9ccf4e3bde7da8fd9d0-01341bb0de659b00b3b529fc2866883b.r99.cf1.rackcdn.com/2C5146_0_unhinted_0.woff)format(\"woff2\");} @font-face{font-family: AvantGardeGothicITCW02Md;src:url(http://c9ccf4e3bde7da8fd9d0-01341bb0de659b00b3b529fc2866883b.r99.cf1.rackcdn.com/2C5146_1_unhinted_0.woff)format(\"woff2\");}@font-face {font-family: AvantGardeGothicITCW01Bk;src:url(http://c9ccf4e3bde7da8fd9d0-01341bb0de659b00b3b529fc2866883b.r99.cf1.rackcdn.com/2C5146_0_unhinted_0.ttf)format(\"truetype\");}@font-face {font-family: AvantGardeGothicITCW02Md;src:url(http://c9ccf4e3bde7da8fd9d0-01341bb0de659b00b3b529fc2866883b.r99.cf1.rackcdn.com/2C5146_1_unhinted_0.ttf)format(\"truetype\");} p,strong,li,span,tr,td,th,div{font-family: AvantGardeGothicITCW01Bk;} h1,h2,h3,h4,h5,b{font-family: AvantGardeGothicITCW02Md;} li{margin-left:30px;} ul{margin:20px 0;}</style>";
+    //return base64_encode('<html><head>' . $styles . '</head><body><br />' .$string . '</body></html> ');
    }
 
 
