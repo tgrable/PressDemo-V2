@@ -132,6 +132,7 @@
 
         layoutSync = YES;
         needsUpdate = NO;
+        initialDownload = NO;
     }
     return self;
 }
@@ -461,7 +462,6 @@
         p.basis_weight = [dict objectForKey:@"basis_weight"];
         p.brightness = [dict objectForKey:@"brightness"];
         p.coating = [dict objectForKey:@"coating"];
-        p.color_capacity = [dict objectForKey:@"color_capacity"];
         
         p.category = [dict objectForKey:@"category"];
         p.dye_pigment = [dict objectForKey:@"dye_pigment"];
@@ -560,10 +560,12 @@
         p.title = [dict objectForKey:@"title"];
         p.banners = [dict objectForKey:@"banners"];
         p.description = [dict objectForKey:@"description"];
+        p.website = [dict objectForKey:@"website"];
         p.white_papers = [dict objectForKey:@"white_paper"];
         p.case_studies = [dict objectForKey:@"case_study"];
         p.videos = [dict objectForKey:@"videos"];
         p.solutions = [dict objectForKey:@"solutions"];
+        p.premier_partner = [[dict objectForKey:@"premier_partner"] boolValue];
         
         [initialPartnerData addObject:p];
     }
@@ -615,8 +617,15 @@
         [softwareData removeAllObjects];
         [paperData removeAllObjects];
         [millData removeAllObjects];
+        [initialSetOfMills removeAllObjects];
+        [initialSetOfPaper removeAllObjects];
+        [initialSofware removeAllObjects];
+        [initialSolutionData removeAllObjects];
+        [initialPartnerData removeAllObjects];
         [lastUpdated removeAllObjects];
+        
     }];
+
 }
 
 /*******************************************************************
@@ -766,6 +775,7 @@
     
     initialSetOfPaper = [[initialSetOfPaper sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
     
+
     completeFlag(YES);
 }
 
@@ -821,9 +831,6 @@
             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
             NSString *documentsDirectory = [paths objectAtIndex:0];
             NSString* path = [documentsDirectory stringByAppendingPathComponent:filename];
-            
-            //ALog("Filename %@", filename);
-            //ALog("Data length %d", [data length]);
 
             if([data writeToFile:path atomically:YES]){
                 //ALog(@"Model SAVED FILE SUCCESSFULLY %@", path);

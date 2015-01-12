@@ -251,7 +251,7 @@
     tableKey.backgroundColor = [UIColor clearColor];
     [tableBackground addSubview:tableKey];
     
-    //cell0, *cell1, *cell2, *cell3, *cell4, *cell5, *cell6, *cell7, *cell8;
+    //cell0, *cell1, *cell2, *cell3, *cell4, *cell5, *cell6, *cell7
     tableHeaderRow = [[UIView alloc] initWithFrame:CGRectMake(20, 110, 736, 50)];
     tableHeaderRow.userInteractionEnabled = YES;
     tableHeaderRow.backgroundColor = [UIColor blackColor];
@@ -343,22 +343,13 @@
     cell7.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:12.0];
     cell7.textColor = [UIColor whiteColor];
     cell7.numberOfLines = 2;
-    cell7.textAlignment = NSTextAlignmentCenter;
+    cell7.textAlignment = NSTextAlignmentLeft;
     cell7.backgroundColor = [UIColor blackColor];
     cell7.leftInset = 8;
     [tableHeaderRow addSubview:cell7];
     [headerLabelsPaper addObject:cell7];
     [headerLabelsMill addObject:cell7];
     
-    cell8 =  [[UIBorderLabel alloc] initWithFrame:CGRectMake(736, 0, 88, 50)];
-    cell8.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:12.0];
-    cell8.textColor = [UIColor whiteColor];
-    cell8.numberOfLines = 2;
-    cell8.textAlignment = NSTextAlignmentCenter;
-    cell8.backgroundColor = [UIColor blackColor];
-    cell8.leftInset = 8;
-    [tableHeaderRow addSubview:cell8];
-    [headerLabelsMill addObject:cell8];
     
     
     UILabel *notice = [[UILabel alloc] initWithFrame:CGRectMake(20, 530, 736, 50)];
@@ -615,8 +606,8 @@
     offlineVideos = [[NSMutableDictionary alloc] init];
     offlineVideoRows = [NSMutableArray array];
     paperData = [NSMutableArray array];
-    rowHeadersPaper = [NSMutableArray arrayWithObjects:[model.selectedMill.title uppercaseString], @"BASIS WEIGHT", @"BRIGHTNESS", @"COATING", @"COLOR CAPACITY", @"CATEGORY", @"DYE / PIGMENT", @"FULL INFO", nil];
-    rowHeadersMill = [NSMutableArray arrayWithObjects:@"MILL NAME", @"MEDIA NAME", @"BASIS WEIGHT", @"BRIGHTNESS", @"COATING", @"COLOR CAPACITY", @"CATEGORY", @"DYE / PIGMENT", @"FULL INFO", nil];
+    rowHeadersPaper = [NSMutableArray arrayWithObjects:[model.selectedMill.title uppercaseString], @"BASIS WEIGHT", @"BRIGHTNESS", @"COATING", @"COLOR", @"CAPABILITY", @"INKSET", nil];
+    rowHeadersMill = [NSMutableArray arrayWithObjects:@"MILL NAME", @"MEDIA NAME", @"BASIS WEIGHT", @"BRIGHTNESS", @"COATING", @"COLOR", @"CAPABILITY", @"INKSET", nil];
     
     iconArray = [NSMutableArray array];
     [iconArray addObject:[UIImage imageNamed:@"ico-blackwhite.png"]];
@@ -656,7 +647,7 @@
             [self buildAllPaperData];
         }];
         
-        NSString *bannerTitle = [NSString stringWithFormat:@"%@ : ALL MILLS MEDIA LIST", [model.selectedMill.title uppercaseString]];
+        NSString *bannerTitle = [NSString stringWithFormat:@"ALL MILLS MEDIA LIST"];
         //the name of the mill
         millNameHeader.text = bannerTitle;
         
@@ -1013,6 +1004,7 @@
                tableView = [[UMTableView alloc] initWithFrame: frm];
                tableView.tableViewDelegate = self;
                tableView.tag = 130;
+               tableView.delaysContentTouches = NO;
                tableView.borderMode = UMTableViewBordersRows;
                tableView.outlineMode = UMTableViewOutlineNone;
                [tableBackground addSubview:tableView];
@@ -1058,6 +1050,7 @@
                 tableView = [[UMTableView alloc] initWithFrame: frm];
                 tableView.tableViewDelegate = self;
                 tableView.tag = 130;
+                tableView.delaysContentTouches = NO;
                 tableView.borderMode = UMTableViewBordersRows;
                 tableView.outlineMode = UMTableViewOutlineNone;
                 
@@ -1381,7 +1374,7 @@
     }
 }
 
-// Only 3rd column has a fixed size, the other columns share the remainder
+// Only certain columns have a fixed size, the other columns share the remainder
 - (int) fixedWidthForColumn: (int) columnIndex {
     
         //if we are dealing with column 0 or 1 make sure the width is set to 120
@@ -1425,56 +1418,57 @@
         //if we are not dealing with the last column, load text
         if(paperTable){
             //just mill specific paper
-            if(column == 6){
-                //dye pigment
+            if(column == 4){
+                //color capability
+                int x = 8;
                 int dyeValue = [[rowArray objectAtIndex:column] intValue];
-                UIView *iconView = [self getColorIconSet:YES withXValue:8 andYValue:16 withColorValue:dyeValue];
+                if(dyeValue == 5) x = -4;
+                UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue];
                 [cellView addSubview:iconView];
-                
-            }else if(column == 7){
-                //info button
-                UIButton *info = [UIButton buttonWithType:UIButtonTypeCustom];
-                [info setFrame:CGRectMake(30, 15, 20, 20)];
-                [info addTarget:self action:@selector(infoButtonForPaper:)forControlEvents:UIControlEventTouchDown];
-                info.showsTouchWhenHighlighted = YES;
-                [info setBackgroundImage:[UIImage imageNamed:@"icn-info-blue.png"] forState:UIControlStateNormal];
-                info.titleLabel.text = [rowArray objectAtIndex:column];
-                info.backgroundColor = [UIColor clearColor];
-                [cellView addSubview:info];
+            }else if(column == 5){
+                cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:11.0];
+                cellView.label.text = [rowArray objectAtIndex:column];
             }else{
                 //all other text
                 cellView.label.text = [rowArray objectAtIndex:column];
             }
         }else{
             //all paper table
-            if(column == 7){
-                //dye pigment
+            if(column == 5){
+                //color capability
+                int x = 8;
                 int dyeValue = [[rowArray objectAtIndex:column] intValue];
-                UIView *iconView = [self getColorIconSet:YES withXValue:8 andYValue:16 withColorValue:dyeValue];
+                if(dyeValue == 5) x = -4;
+                UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue];
                 [cellView addSubview:iconView];
-                
-            }else if(column == 8){
-                //info button
-                UIButton *info = [UIButton buttonWithType:UIButtonTypeCustom];
-                [info setFrame:CGRectMake(30, 15, 20, 20)];
-                [info addTarget:self action:@selector(infoButtonForPaper:)forControlEvents:UIControlEventTouchDown];
-                info.showsTouchWhenHighlighted = YES;
-                [info setBackgroundImage:[UIImage imageNamed:@"icn-info-blue.png"] forState:UIControlStateNormal];
-                info.titleLabel.text = [rowArray objectAtIndex:column];
-                info.backgroundColor = [UIColor clearColor];
-                [cellView addSubview:info];
+            
+            }else if(column == 6){
+                cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:11.0];
+                cellView.label.text = [rowArray objectAtIndex:column];
             }else{
                 //all other text
                 cellView.label.text = [rowArray objectAtIndex:column];
             }
         }
         
+        
         // This will center the label horizontally
-        //cellView.label.textAlignment = NSTextAlignmentCenter;
         cellView.label.textAlignment = NSTextAlignmentLeft;
         cellView.label.numberOfLines = 3;
         cellView.label.adjustsFontSizeToFitWidth = YES;
-                
+        
+        float widthCell = cellView.frame.size.width;
+        float heightCell = cellView.frame.size.height;
+        int intCount = ([rowArray count] - 1);
+        
+        UIButton *maskButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [maskButton setFrame:CGRectMake(0, 0, widthCell, heightCell)];
+        [maskButton addTarget:self action:@selector(infoButtonForPaper:)forControlEvents:UIControlEventTouchUpInside];
+        maskButton.showsTouchWhenHighlighted = YES;
+        maskButton.titleLabel.text = [rowArray objectAtIndex:intCount];
+        maskButton.backgroundColor = [UIColor clearColor];
+        [cellView addSubview:maskButton];
+        
     }
 
 }
@@ -1514,9 +1508,9 @@
     int i = 0;
     if(paperTable){
         //setup headers for the paper table
-        tableKey.frame = CGRectMake(690, 56, 33, 33);
-        [cell8 removeFromSuperview];
-        while(i < 8){
+        tableKey.frame = CGRectMake(662, 56, 33, 33);
+        [cell7 removeFromSuperview];
+        while(i < 7){
             UILabel *l = [headerLabelsPaper objectAtIndex:i];
             l.text = [rowHeadersPaper objectAtIndex:i];
             //setup the first column based upon the first column's dynamic width
@@ -1524,30 +1518,31 @@
             if(i == 0){
                 l.frame = CGRectMake(0, 0, 120, 50);
             }else{
-                int offset = 120 + ((i -1) * 88);
-                l.frame = CGRectMake(offset, 0, 88, 50);
+                int offset = 120 + ((i -1) * 103);
+                l.frame = CGRectMake(offset, 0, 103, 50);
             }
-            
             i++;
         }
         
     }else{
         //setup heders for the mill table
-        tableKey.frame = CGRectMake(702, 56, 33, 33);
-        [tableHeaderRow addSubview:cell8];
-        while(i < 9){
+        tableKey.frame = CGRectMake(676, 56, 33, 33);
+        [tableHeaderRow addSubview:cell7];
+        while(i < 8){
             UILabel *l = [headerLabelsMill objectAtIndex:i];
             l.text = [rowHeadersMill objectAtIndex:i];
             
             //setup the first two columns based upon the second columns dynamic width
             //the rest of the columns are setup based upon the width of 77
             if(i == 0){
-                l.frame = CGRectMake(0, 0, 77, 50);
+                l.frame = CGRectMake(0, 0, 90, 50);
             }else if(i == 1){
-                l.frame = CGRectMake(77, 0, 120, 50);
+                l.frame = CGRectMake(90, 0, 120, 50);
+            }else if(i == 2){
+                l.frame = CGRectMake(205, 0, 87.6, 50);
             }else{
-                int offset = 197 + ((i -2) * 77);
-                l.frame = CGRectMake(offset, 0, 77, 50);
+                int offset = 210 + ((i -2) * 87.6);
+                l.frame = CGRectMake(offset, 0, 87.6, 50);
             }
             i++;
         }
@@ -2296,7 +2291,7 @@
     
     //resets the table row count
     tableRows = 0;
-    tableColumns = 8;
+    tableColumns = 7;
     //loop through the papers in the initial dataset
     for(Paper *p in model.initialSetOfPaper){
         //check to see if the paper is equal to present mills key
@@ -2314,7 +2309,7 @@
                     [rowArray addObject:p.brightness];
                     [rowArray addObject:p.coating];
                 
-                    [rowArray addObject:@""];
+                    [rowArray addObject:p.color_capability];
                     [rowArray addObject:p.category];
                     [rowArray addObject:p.dye_pigment];
                     [rowArray addObject:p.key];
@@ -2343,7 +2338,7 @@
 {
     
     tableRows = 0;
-    tableColumns = 9;
+    tableColumns = 8;
     for(Paper *p in model.initialSetOfPaper){
 
         if([p.basis_weight count] > 0){
@@ -2360,7 +2355,7 @@
                 [rowArray addObject:p.brightness];
                 [rowArray addObject:p.coating];
                 
-                [rowArray addObject:@""];
+                [rowArray addObject:p.color_capability];
                 [rowArray addObject:p.category];
                 [rowArray addObject:p.dye_pigment];
                 [rowArray addObject:p.key];

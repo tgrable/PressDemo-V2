@@ -39,7 +39,7 @@
     UIScrollView *overviewContent, *documentScroll;
     UIWebView *webPage;
     UILabel *documentLabel, *bannerTitle,*partnerHeader, *solutionHeader;
-    UIButton *documentHeaderButton;
+    UIButton *documentHeaderButton, *partnerWebsite;
     UITextView *partnerDescription;
     
     //global data

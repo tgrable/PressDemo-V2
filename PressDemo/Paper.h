@@ -17,7 +17,6 @@
 @property(nonatomic, copy)NSMutableArray *basis_weight;
 @property(nonatomic, copy)NSString *brightness;
 @property(nonatomic, copy)NSString *coating;
-@property(nonatomic, copy)NSString *color_capacity;
 @property(nonatomic, copy)NSString *category;
 @property(nonatomic, copy)NSString *dye_pigment;
 @property(nonatomic, copy)NSString *region;

@@ -336,7 +336,19 @@
     line.backgroundColor = model.dullBlack;
     [overviewContent addSubview:line];
     
-    partnerDescription = [[UITextView alloc] initWithFrame:CGRectMake(134, 66, 340, 270)];
+
+    partnerWebsite = [UIButton buttonWithType:UIButtonTypeCustom];
+    [partnerWebsite setFrame:CGRectMake(140, 66, 305, 20)];
+    [partnerWebsite addTarget:self action:@selector(urlSelected:)forControlEvents:UIControlEventTouchDown];
+    partnerWebsite.showsTouchWhenHighlighted = YES;
+    partnerWebsite.titleLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0];
+    [partnerWebsite setTitleColor:model.dullBlack forState:UIControlStateNormal];
+    partnerWebsite.backgroundColor = [UIColor clearColor];
+    partnerWebsite.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    [overviewContent addSubview:partnerWebsite];
+    
+    
+    partnerDescription = [[UITextView alloc] initWithFrame:CGRectMake(134, 96, 340, 270)];
     partnerDescription.editable = NO;
     partnerDescription.clipsToBounds = YES;
     partnerDescription.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0];
@@ -805,8 +817,6 @@
         
     }else{
         //this mean there is not results
-        //UIView *rowContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 748, 179)];
-        //rowContainer.backgroundColor = [UIColor whiteColor];
         
         UILabel *desc = [[UILabel alloc] initWithFrame:CGRectMake(0, 80, 748, 80)];
         [desc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:16.0]];
@@ -907,7 +917,7 @@
             documentHeaderButton.tag = 228;
             [actualDocumentBanner setImage:[UIImage imageNamed:@"hdr-doc-whitepaper.png"]];
             //GA
-            [model logData:@"Series View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected White Paper Document: %@",d.title]];
+            //[model logData:@"Series View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected White Paper Document: %@",d.title]];
             
         }else if([d.type isEqualToString:@"case-study"]){
             //case study image assignment
@@ -918,7 +928,7 @@
             documentHeaderButton.tag = 294;
             [actualDocumentBanner setImage:[UIImage imageNamed:@"hdr-doc-casestudy.png"]];
             //GA
-            [model logData:@"Series View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Case Study Document: %@",d.title]];
+            //[model logData:@"Series View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Case Study Document: %@",d.title]];
             
         }
         //rearrange view stack
@@ -1015,6 +1025,17 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
+//button where url is selected
+-(void)urlSelected:(id)sender
+{
+    NSString *url = model.selectedPartner.website;
+    if([url rangeOfString:@"http://"].location == NSNotFound){
+        url = [NSString stringWithFormat:@"http://%@", url];
+    }
+    ALog(@"%@", url);
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+}
+
 //this function sets up the disposable views and also sets up the overview view in the main portion of the app
 -(void)setupLocalUserInterface:(completeBlock)completeFlag
 {
@@ -1071,6 +1092,16 @@
     //set the logo, or try and set the logo
     [partnerLogo setImageWithURL:[NSURL URLWithString:model.selectedPartner.logo] placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"]];
     
+    if([model.selectedPartner.website isEqualToString:@""]){
+        NSString *websiteTitle = [NSString stringWithFormat:@"%@'s Website is Not Available", model.selectedPartner.title];
+        [partnerWebsite setTitle:websiteTitle forState:UIControlStateNormal];
+        partnerWebsite.enabled = NO;
+    }else{
+        NSString *websiteTitle = [NSString stringWithFormat:@"%@'s Website", model.selectedPartner.title];
+        [partnerWebsite setTitle:websiteTitle forState:UIControlStateNormal];
+    }
+    
+    
     partnerDescription.text = model.selectedPartner.description;
     [partnerDescription sizeToFit];
     descHeight = partnerDescription.frame.size.height;
@@ -1111,7 +1142,7 @@
     //break out the scrollview height
     float hightestNumber = 0;
     if(dy > descHeight) hightestNumber = dy;
-    else hightestNumber = (descHeight + 76);
+    else hightestNumber = (descHeight + 96);
 
     if(hightestNumber < 270)
         hightestNumber = 270;

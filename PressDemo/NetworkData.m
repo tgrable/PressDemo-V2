@@ -67,7 +67,7 @@
             status = 1;
             
             NSString *url = [NSString stringWithFormat:@"%@/data/api/%@", networkURL, value];
-            ALog(@"URLs %@", url);
+
             [downloadURLs addObject:url];
             
             //initiate the downloadoperation class and set the class properties for user authentication
@@ -166,7 +166,7 @@
                     threadCount++;
                     // make sure the failure flag is notified that something went wrong
                     if(completeFlag == NO) failureFlag = YES;
-                    ALog(@"Thread count %d", threadCount);
+                    
                     if(threadCount == downloadCount){
                         //success
                         if(!failureFlag){

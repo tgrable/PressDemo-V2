@@ -19,7 +19,7 @@
 #import "Solution.h"
 
 @interface AppDataObject : NSObject{
-    BOOL layoutSync, needsUpdate;
+    BOOL layoutSync, needsUpdate, initialDownload;
     NSMutableDictionary *whatDoYouWantToPrint, *showAll;
     NSMutableDictionary *taxonomyReadableNames, *topBanners;
     NSMutableDictionary *seriesBanners, *documentBanners;
@@ -32,5 +32,5 @@
 @property (nonatomic, strong)NSMutableDictionary *lastUpdated, *documentData, *productData, *productSeriesData, *videoData;
 @property (nonatomic, strong)NSMutableDictionary *seriesBanners, *millData, *paperData, *softwareData;
 @property (nonatomic, strong)NSMutableArray *downloadedImages, *initialSetOfMills, *initialSetOfPaper, *initialSolutionData, *initialPartnerData, *initialSofware;
-@property BOOL layoutSync, needsUpdate;
+@property BOOL layoutSync, needsUpdate, initialDownload;
 @end

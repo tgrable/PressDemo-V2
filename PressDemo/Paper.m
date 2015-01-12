@@ -17,7 +17,6 @@
 @synthesize basis_weight;
 @synthesize brightness;
 @synthesize coating;
-@synthesize color_capacity;
 @synthesize category;
 @synthesize dye_pigment;
 @synthesize region;
@@ -46,7 +45,6 @@
         basis_weight = [NSMutableArray array];
         brightness = @"";
         coating = @"";
-        color_capacity = @"";
         category = @"";
         dye_pigment = @"";
         region = @"";
@@ -74,7 +72,6 @@
     [encoder encodeObject:self.basis_weight forKey:@"basis_weight"];
     [encoder encodeObject:self.brightness forKey:@"brightness"];
     [encoder encodeObject:self.coating forKey:@"coating"];
-    [encoder encodeObject:self.color_capacity forKey:@"color_capacity"];
     [encoder encodeObject:self.category forKey:@"category"];
     [encoder encodeObject:self.dye_pigment forKey:@"dye_pigment"];
     [encoder encodeObject:self.region forKey:@"region"];
@@ -102,7 +99,6 @@
         self.basis_weight = [decoder decodeObjectForKey:@"basis_weight"];
         self.brightness = [decoder decodeObjectForKey:@"brightness"];
         self.coating = [decoder decodeObjectForKey:@"coating"];
-        self.color_capacity = [decoder decodeObjectForKey:@"color_capacity"];
         self.category = [decoder decodeObjectForKey:@"category"];
         self.dye_pigment = [decoder decodeObjectForKey:@"dye_pigment"];
         self.region = [decoder decodeObjectForKey:@"region"];

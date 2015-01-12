@@ -688,18 +688,34 @@
                 partnerTitle.text = @"PARTNERS WITH THIS SOLUTION";
                 [back addSubview:partnerTitle];
                 
+                NSMutableArray *partnerFirstArray = [NSMutableArray array];
+                NSMutableArray *partnerLastArray = [NSMutableArray array];
                 NSMutableArray *partnerArray = [NSMutableArray array];
-         
+                
                 for (Partner *p in model.initialPartnerData) {
                     if([p.solutions containsObject:s.key]){
                         //add the object to the local partner array
-                        [partnerArray addObject:p];
+                        if(p.premier_partner)
+                          [partnerFirstArray addObject:p];
+                        else
+                          [partnerLastArray addObject:p];
+                        
                         //make sure the potentail partner array does not contain duplicates
                         if(![potentailPartners containsObject:p]){
                             [potentailPartners addObject:p];
                         }
                     }
                 }
+                
+                //add the first partner list to the general partner list
+                for(Partner *p in partnerFirstArray){
+                    [partnerArray addObject:p];
+                }
+                //add the last partner list to the general partner list
+                for(Partner *p in partnerLastArray){
+                    [partnerArray addObject:p];
+                }
+                
                 //print all of the partners out
                 int py = 40, pi = 0;
                 for(Partner *p in partnerArray){
@@ -722,7 +738,11 @@
                     [partner setTitle:[p.title uppercaseString] forState:UIControlStateNormal];
                     [partner setTitleColor:model.blue forState:UIControlStateNormal];
                     [partner setBackgroundColor:[UIColor clearColor]];
-                    partner.titleLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0];
+                    if(p.premier_partner){
+                        partner.titleLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Md" size:14.0];
+                    }else{
+                        partner.titleLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0];
+                    }
                     [back addSubview:partner];
                     pi++;
                     py += 35;

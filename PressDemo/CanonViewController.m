@@ -133,7 +133,11 @@
     //ALog(@"viewWillAppear HOME");
     
     if(model.needsUpdate && [model.hostReachability isReachableViaWiFi]){
-        //ALog(@"The app was flagged that it needed updates");
+        ALog(@"The app was flagged that it needed updates");
+        
+        //wipe out all data after first initial load
+        [model wipeOutAllModelData];
+        
         model.ui.splash.image = [model.ui getImageWithName:@"/sample@2x.png"];
         [self.view addSubview:model.ui.splash];
         [self.view bringSubviewToFront:model.ui.splash];

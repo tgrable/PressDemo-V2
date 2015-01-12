@@ -8,6 +8,9 @@
 
 #import "ProductScroll.h"
 
+//this is a local macro that sets up a class wide logging scheme
+#define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+
 @implementation ProductScroll
 
 /*
@@ -27,6 +30,8 @@
 }
 
 - (BOOL)touchesShouldCancelInContentView:(UIView *)view {
+
+    
     if ([view isKindOfClass:UIButton.class]) {
         return YES;
     }

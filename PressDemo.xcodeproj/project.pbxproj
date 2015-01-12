@@ -91,12 +91,18 @@
 		711FC3331A430903005BEDE7 /* ico-color@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 711FC3321A430903005BEDE7 /* ico-color@2x.png */; };
 		711FC3351A430909005BEDE7 /* ico-blackwhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 711FC3341A430909005BEDE7 /* ico-blackwhite@2x.png */; };
 		711FC33B1A4388B5005BEDE7 /* UIBorderLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 711FC33A1A4388B5005BEDE7 /* UIBorderLabel.m */; };
+		712651031A5DD14100C91AF2 /* home-nav-color@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 712651011A5DD14100C91AF2 /* home-nav-color@2x.png */; };
+		712651041A5DD14100C91AF2 /* home-nav-mono@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 712651021A5DD14100C91AF2 /* home-nav-mono@2x.png */; };
+		712651071A5DD15D00C91AF2 /* home-nav-color.png in Resources */ = {isa = PBXBuildFile; fileRef = 712651051A5DD15D00C91AF2 /* home-nav-color.png */; };
+		712651081A5DD15D00C91AF2 /* home-nav-mono.png in Resources */ = {isa = PBXBuildFile; fileRef = 712651061A5DD15D00C91AF2 /* home-nav-mono.png */; };
+		7126510D1A63F9BE00C91AF2 /* CanonDownloadAll.m in Sources */ = {isa = PBXBuildFile; fileRef = 7126510B1A63F9BE00C91AF2 /* CanonDownloadAll.m */; };
+		7126510E1A63F9BE00C91AF2 /* CanonDownloadAll.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7126510C1A63F9BE00C91AF2 /* CanonDownloadAll.xib */; };
 		712728061A3BA6FB0040F89E /* Solution.m in Sources */ = {isa = PBXBuildFile; fileRef = 712728051A3BA6FB0040F89E /* Solution.m */; };
 		712946EA19A37BD800E0548D /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 712946E919A37BD800E0548D /* NetworkManager.m */; };
 		712946ED19A37C1E00E0548D /* QNetworkAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 712946EC19A37C1E00E0548D /* QNetworkAdditions.m */; };
 		712946EF19A37EA000E0548D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 712946EE19A37EA000E0548D /* CFNetwork.framework */; };
 		7129480719A3EFDB00E0548D /* home-header-what.png in Resources */ = {isa = PBXBuildFile; fileRef = 7129480619A3EFDB00E0548D /* home-header-what.png */; };
-		7129480919A3EFE400E0548D /* home-header-all@x2.png in Resources */ = {isa = PBXBuildFile; fileRef = 7129480819A3EFE400E0548D /* home-header-all@x2.png */; };
+		7129480919A3EFE400E0548D /* home-header-all@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7129480819A3EFE400E0548D /* home-header-all@2x.png */; };
 		7129480B19A3EFEB00E0548D /* home-header-what@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7129480A19A3EFEB00E0548D /* home-header-what@2x.png */; };
 		7129480D19A3EFF200E0548D /* home-header-all.png in Resources */ = {isa = PBXBuildFile; fileRef = 7129480C19A3EFF200E0548D /* home-header-all.png */; };
 		7129481019A3FCC600E0548D /* icn-video.png in Resources */ = {isa = PBXBuildFile; fileRef = 7129480E19A3FCC600E0548D /* icn-video.png */; };
@@ -249,13 +255,11 @@
 		71DBB7FE192FB60E002D7CA9 /* home-nav-books@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB783192FB60E002D7CA9 /* home-nav-books@2x.png */; };
 		71DBB7FF192FB60E002D7CA9 /* home-nav-brochures@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB784192FB60E002D7CA9 /* home-nav-brochures@2x.png */; };
 		71DBB800192FB60E002D7CA9 /* home-nav-catalogs@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB785192FB60E002D7CA9 /* home-nav-catalogs@2x.png */; };
-		71DBB801192FB60E002D7CA9 /* home-nav-color@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB786192FB60E002D7CA9 /* home-nav-color@2x.png */; };
 		71DBB802192FB60E002D7CA9 /* home-nav-continuous@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB787192FB60E002D7CA9 /* home-nav-continuous@2x.png */; };
 		71DBB803192FB60E002D7CA9 /* home-nav-cutsheet@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB788192FB60E002D7CA9 /* home-nav-cutsheet@2x.png */; };
 		71DBB804192FB60E002D7CA9 /* home-nav-dm@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB789192FB60E002D7CA9 /* home-nav-dm@2x.png */; };
 		71DBB805192FB60E002D7CA9 /* home-nav-healthcare@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB78A192FB60E002D7CA9 /* home-nav-healthcare@2x.png */; };
 		71DBB806192FB60E002D7CA9 /* home-nav-manuals@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB78B192FB60E002D7CA9 /* home-nav-manuals@2x.png */; };
-		71DBB807192FB60E002D7CA9 /* home-nav-mono@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB78C192FB60E002D7CA9 /* home-nav-mono@2x.png */; };
 		71DBB808192FB60E002D7CA9 /* home-nav-specialty@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB78D192FB60E002D7CA9 /* home-nav-specialty@2x.png */; };
 		71DBB809192FB60E002D7CA9 /* home-nav-statements@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB78E192FB60E002D7CA9 /* home-nav-statements@2x.png */; };
 		71DBB80A192FB60E002D7CA9 /* home-nav-workflow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB78F192FB60E002D7CA9 /* home-nav-workflow@2x.png */; };
@@ -293,13 +297,11 @@
 		71DBB83A192FB60E002D7CA9 /* home-nav-book.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB7C0192FB60E002D7CA9 /* home-nav-book.png */; };
 		71DBB83B192FB60E002D7CA9 /* home-nav-broch.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB7C1192FB60E002D7CA9 /* home-nav-broch.png */; };
 		71DBB83C192FB60E002D7CA9 /* home-nav-cat.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB7C2192FB60E002D7CA9 /* home-nav-cat.png */; };
-		71DBB83D192FB60E002D7CA9 /* home-nav-color.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB7C3192FB60E002D7CA9 /* home-nav-color.png */; };
 		71DBB83E192FB60E002D7CA9 /* home-nav-continuous.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB7C4192FB60E002D7CA9 /* home-nav-continuous.png */; };
 		71DBB83F192FB60E002D7CA9 /* home-nav-cutsheet.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB7C5192FB60E002D7CA9 /* home-nav-cutsheet.png */; };
 		71DBB840192FB60E002D7CA9 /* home-nav-dm.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB7C6192FB60E002D7CA9 /* home-nav-dm.png */; };
 		71DBB841192FB60E002D7CA9 /* home-nav-health.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB7C7192FB60E002D7CA9 /* home-nav-health.png */; };
 		71DBB842192FB60E002D7CA9 /* home-nav-manuals.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB7C8192FB60E002D7CA9 /* home-nav-manuals.png */; };
-		71DBB843192FB60E002D7CA9 /* home-nav-mono.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB7C9192FB60E002D7CA9 /* home-nav-mono.png */; };
 		71DBB844192FB60E002D7CA9 /* home-nav-specialty.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB7CA192FB60E002D7CA9 /* home-nav-specialty.png */; };
 		71DBB845192FB60E002D7CA9 /* home-nav-state.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB7CB192FB60E002D7CA9 /* home-nav-state.png */; };
 		71DBB846192FB60E002D7CA9 /* home-nav-workflow.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB7CC192FB60E002D7CA9 /* home-nav-workflow.png */; };
@@ -459,6 +461,13 @@
 		711FC3341A430909005BEDE7 /* ico-blackwhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ico-blackwhite@2x.png"; sourceTree = "<group>"; };
 		711FC3391A4388B5005BEDE7 /* UIBorderLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIBorderLabel.h; sourceTree = "<group>"; };
 		711FC33A1A4388B5005BEDE7 /* UIBorderLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIBorderLabel.m; sourceTree = "<group>"; };
+		712651011A5DD14100C91AF2 /* home-nav-color@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-color@2x.png"; sourceTree = "<group>"; };
+		712651021A5DD14100C91AF2 /* home-nav-mono@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-mono@2x.png"; sourceTree = "<group>"; };
+		712651051A5DD15D00C91AF2 /* home-nav-color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-color.png"; sourceTree = "<group>"; };
+		712651061A5DD15D00C91AF2 /* home-nav-mono.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-mono.png"; sourceTree = "<group>"; };
+		7126510A1A63F9BE00C91AF2 /* CanonDownloadAll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CanonDownloadAll.h; sourceTree = "<group>"; };
+		7126510B1A63F9BE00C91AF2 /* CanonDownloadAll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CanonDownloadAll.m; sourceTree = "<group>"; };
+		7126510C1A63F9BE00C91AF2 /* CanonDownloadAll.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CanonDownloadAll.xib; sourceTree = "<group>"; };
 		712728041A3BA6FB0040F89E /* Solution.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Solution.h; sourceTree = "<group>"; };
 		712728051A3BA6FB0040F89E /* Solution.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Solution.m; sourceTree = "<group>"; };
 		712946E819A37BD800E0548D /* NetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkManager.h; sourceTree = "<group>"; };
@@ -467,7 +476,7 @@
 		712946EC19A37C1E00E0548D /* QNetworkAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNetworkAdditions.m; sourceTree = "<group>"; };
 		712946EE19A37EA000E0548D /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		7129480619A3EFDB00E0548D /* home-header-what.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-header-what.png"; sourceTree = "<group>"; };
-		7129480819A3EFE400E0548D /* home-header-all@x2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-header-all@x2.png"; sourceTree = "<group>"; };
+		7129480819A3EFE400E0548D /* home-header-all@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-header-all@2x.png"; sourceTree = "<group>"; };
 		7129480A19A3EFEB00E0548D /* home-header-what@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-header-what@2x.png"; sourceTree = "<group>"; };
 		7129480C19A3EFF200E0548D /* home-header-all.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-header-all.png"; sourceTree = "<group>"; };
 		7129480E19A3FCC600E0548D /* icn-video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icn-video.png"; sourceTree = "<group>"; };
@@ -647,13 +656,11 @@
 		71DBB783192FB60E002D7CA9 /* home-nav-books@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-books@2x.png"; sourceTree = "<group>"; };
 		71DBB784192FB60E002D7CA9 /* home-nav-brochures@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-brochures@2x.png"; sourceTree = "<group>"; };
 		71DBB785192FB60E002D7CA9 /* home-nav-catalogs@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-catalogs@2x.png"; sourceTree = "<group>"; };
-		71DBB786192FB60E002D7CA9 /* home-nav-color@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-color@2x.png"; sourceTree = "<group>"; };
 		71DBB787192FB60E002D7CA9 /* home-nav-continuous@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-continuous@2x.png"; sourceTree = "<group>"; };
 		71DBB788192FB60E002D7CA9 /* home-nav-cutsheet@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-cutsheet@2x.png"; sourceTree = "<group>"; };
 		71DBB789192FB60E002D7CA9 /* home-nav-dm@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-dm@2x.png"; sourceTree = "<group>"; };
 		71DBB78A192FB60E002D7CA9 /* home-nav-healthcare@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-healthcare@2x.png"; sourceTree = "<group>"; };
 		71DBB78B192FB60E002D7CA9 /* home-nav-manuals@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-manuals@2x.png"; sourceTree = "<group>"; };
-		71DBB78C192FB60E002D7CA9 /* home-nav-mono@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-mono@2x.png"; sourceTree = "<group>"; };
 		71DBB78D192FB60E002D7CA9 /* home-nav-specialty@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-specialty@2x.png"; sourceTree = "<group>"; };
 		71DBB78E192FB60E002D7CA9 /* home-nav-statements@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-statements@2x.png"; sourceTree = "<group>"; };
 		71DBB78F192FB60E002D7CA9 /* home-nav-workflow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-workflow@2x.png"; sourceTree = "<group>"; };
@@ -691,13 +698,11 @@
 		71DBB7C0192FB60E002D7CA9 /* home-nav-book.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-book.png"; sourceTree = "<group>"; };
 		71DBB7C1192FB60E002D7CA9 /* home-nav-broch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-broch.png"; sourceTree = "<group>"; };
 		71DBB7C2192FB60E002D7CA9 /* home-nav-cat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-cat.png"; sourceTree = "<group>"; };
-		71DBB7C3192FB60E002D7CA9 /* home-nav-color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-color.png"; sourceTree = "<group>"; };
 		71DBB7C4192FB60E002D7CA9 /* home-nav-continuous.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-continuous.png"; sourceTree = "<group>"; };
 		71DBB7C5192FB60E002D7CA9 /* home-nav-cutsheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-cutsheet.png"; sourceTree = "<group>"; };
 		71DBB7C6192FB60E002D7CA9 /* home-nav-dm.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-dm.png"; sourceTree = "<group>"; };
 		71DBB7C7192FB60E002D7CA9 /* home-nav-health.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-health.png"; sourceTree = "<group>"; };
 		71DBB7C8192FB60E002D7CA9 /* home-nav-manuals.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-manuals.png"; sourceTree = "<group>"; };
-		71DBB7C9192FB60E002D7CA9 /* home-nav-mono.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-mono.png"; sourceTree = "<group>"; };
 		71DBB7CA192FB60E002D7CA9 /* home-nav-specialty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-specialty.png"; sourceTree = "<group>"; };
 		71DBB7CB192FB60E002D7CA9 /* home-nav-state.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-state.png"; sourceTree = "<group>"; };
 		71DBB7CC192FB60E002D7CA9 /* home-nav-workflow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-workflow.png"; sourceTree = "<group>"; };
@@ -797,6 +802,8 @@
 				30AC118A192D926100BE1072 /* AppDelegateProtocol.h */,
 				30AC1145192D90D300BE1072 /* CanonAppDelegate.h */,
 				30AC1146192D90D300BE1072 /* CanonAppDelegate.m */,
+				7126510A1A63F9BE00C91AF2 /* CanonDownloadAll.h */,
+				7126510B1A63F9BE00C91AF2 /* CanonDownloadAll.m */,
 				30AC114B192D90D300BE1072 /* CanonViewController.h */,
 				30AC114C192D90D300BE1072 /* CanonViewController.m */,
 				718E3130199957ED0000A5EB /* FilterViewController.h */,
@@ -805,6 +812,7 @@
 				718E314A199AC1B70000A5EB /* SeriesViewController.m */,
 				711FC2FC1A3F6373005BEDE7 /* PartnerViewController.h */,
 				711FC2FD1A3F6373005BEDE7 /* PartnerViewController.m */,
+				7126510C1A63F9BE00C91AF2 /* CanonDownloadAll.xib */,
 				711FC2FE1A3F6373005BEDE7 /* PartnerViewController.xib */,
 				718E314B199AC1B70000A5EB /* SeriesViewController.xib */,
 				718E3132199957ED0000A5EB /* FilterViewController.xib */,
@@ -1276,13 +1284,13 @@
 				71DBB783192FB60E002D7CA9 /* home-nav-books@2x.png */,
 				71DBB784192FB60E002D7CA9 /* home-nav-brochures@2x.png */,
 				71DBB785192FB60E002D7CA9 /* home-nav-catalogs@2x.png */,
-				71DBB786192FB60E002D7CA9 /* home-nav-color@2x.png */,
+				712651011A5DD14100C91AF2 /* home-nav-color@2x.png */,
+				712651021A5DD14100C91AF2 /* home-nav-mono@2x.png */,
 				71DBB787192FB60E002D7CA9 /* home-nav-continuous@2x.png */,
 				71DBB788192FB60E002D7CA9 /* home-nav-cutsheet@2x.png */,
 				71DBB789192FB60E002D7CA9 /* home-nav-dm@2x.png */,
 				71DBB78A192FB60E002D7CA9 /* home-nav-healthcare@2x.png */,
 				71DBB78B192FB60E002D7CA9 /* home-nav-manuals@2x.png */,
-				71DBB78C192FB60E002D7CA9 /* home-nav-mono@2x.png */,
 				71DBB78D192FB60E002D7CA9 /* home-nav-specialty@2x.png */,
 				71DBB78E192FB60E002D7CA9 /* home-nav-statements@2x.png */,
 				71DBB78F192FB60E002D7CA9 /* home-nav-workflow@2x.png */,
@@ -1295,7 +1303,7 @@
 				71DBB7A1192FB60E002D7CA9 /* tmb-FPO-whitepaper@2x.png */,
 				71DBB7A2192FB60E002D7CA9 /* white-pane@2x.png */,
 				7129480A19A3EFEB00E0548D /* home-header-what@2x.png */,
-				7129480819A3EFE400E0548D /* home-header-all@x2.png */,
+				7129480819A3EFE400E0548D /* home-header-all@2x.png */,
 			);
 			path = Retina;
 			sourceTree = "<group>";
@@ -1337,13 +1345,13 @@
 				71DBB7C0192FB60E002D7CA9 /* home-nav-book.png */,
 				71DBB7C1192FB60E002D7CA9 /* home-nav-broch.png */,
 				71DBB7C2192FB60E002D7CA9 /* home-nav-cat.png */,
-				71DBB7C3192FB60E002D7CA9 /* home-nav-color.png */,
 				71DBB7C4192FB60E002D7CA9 /* home-nav-continuous.png */,
 				71DBB7C5192FB60E002D7CA9 /* home-nav-cutsheet.png */,
 				71DBB7C6192FB60E002D7CA9 /* home-nav-dm.png */,
 				71DBB7C7192FB60E002D7CA9 /* home-nav-health.png */,
 				71DBB7C8192FB60E002D7CA9 /* home-nav-manuals.png */,
-				71DBB7C9192FB60E002D7CA9 /* home-nav-mono.png */,
+				712651051A5DD15D00C91AF2 /* home-nav-color.png */,
+				712651061A5DD15D00C91AF2 /* home-nav-mono.png */,
 				71DBB7CA192FB60E002D7CA9 /* home-nav-specialty.png */,
 				71DBB7CB192FB60E002D7CA9 /* home-nav-state.png */,
 				71DBB7CC192FB60E002D7CA9 /* home-nav-workflow.png */,
@@ -1452,6 +1460,7 @@
 				71DBB804192FB60E002D7CA9 /* home-nav-dm@2x.png in Resources */,
 				714523D719DDB5D60024CCF6 /* hdr-doc-whitepaper@2x.png in Resources */,
 				71DBB7F7192FB60E002D7CA9 /* header-specialty@2x.png in Resources */,
+				712651041A5DD14100C91AF2 /* home-nav-mono@2x.png in Resources */,
 				71DBB7E7192FB60E002D7CA9 /* hdr-short-imagepress@2x.png in Resources */,
 				718E3170199D39620000A5EB /* icn-trash.png in Resources */,
 				71708CEB1A38F9450041F8D5 /* header-gray@2x.png in Resources */,
@@ -1477,7 +1486,6 @@
 				718E316D199D39620000A5EB /* icn-selected@2x.png in Resources */,
 				711FC30D1A40C61B005BEDE7 /* CanonSoftwareViewController.xib in Resources */,
 				71DBB840192FB60E002D7CA9 /* home-nav-dm.png in Resources */,
-				71DBB83D192FB60E002D7CA9 /* home-nav-color.png in Resources */,
 				71DBB7E8192FB60E002D7CA9 /* hdr-short-jetstreamcompact@2x.png in Resources */,
 				71DBB854192FB60E002D7CA9 /* leftpane-top.png in Resources */,
 				718E3166199D39620000A5EB /* icn-home.png in Resources */,
@@ -1510,6 +1518,7 @@
 				718E3164199D39620000A5EB /* icn-download.png in Resources */,
 				718E316E199D39620000A5EB /* icn-specs.png in Resources */,
 				718E3172199D39620000A5EB /* icn-video.png in Resources */,
+				712651081A5DD15D00C91AF2 /* home-nav-mono.png in Resources */,
 				30AC11D8192D931900BE1072 /* icon_40_40@2x.png in Resources */,
 				718E316F199D39620000A5EB /* icn-specs@2x.png in Resources */,
 				71DBB800192FB60E002D7CA9 /* home-nav-catalogs@2x.png in Resources */,
@@ -1532,7 +1541,6 @@
 				7129483219A3FFCF00E0548D /* launch-iPhone@2x.png in Resources */,
 				71708CD21A38F92C0041F8D5 /* header-pink.png in Resources */,
 				718D21271A379B9800980FDF /* home-nav-media.png in Resources */,
-				71DBB801192FB60E002D7CA9 /* home-nav-color@2x.png in Resources */,
 				71708CCA1A38F92C0041F8D5 /* hdr-short-orange.png in Resources */,
 				71708CD41A38F92C0041F8D5 /* header-yellow.png in Resources */,
 				71DBB84E192FB60E002D7CA9 /* icn-trash.png in Resources */,
@@ -1558,6 +1566,8 @@
 				714523D319DDB32D0024CCF6 /* hdr-doc-whitepaper.png in Resources */,
 				30AC11D5192D931900BE1072 /* icon_120_120@2x.png in Resources */,
 				71DBB82D192FB60E002D7CA9 /* header-workflow.png in Resources */,
+				712651031A5DD14100C91AF2 /* home-nav-color@2x.png in Resources */,
+				7126510E1A63F9BE00C91AF2 /* CanonDownloadAll.xib in Resources */,
 				71DBB82E192FB60E002D7CA9 /* header-dm.png in Resources */,
 				71DBB834192FB60E002D7CA9 /* header-specialty.png in Resources */,
 				71DBB7E2192FB60E002D7CA9 /* btn-backgrid@2x.png in Resources */,
@@ -1570,6 +1580,7 @@
 				71DBB83B192FB60E002D7CA9 /* home-nav-broch.png in Resources */,
 				30AC11DE192D931900BE1072 /* icon_80_80@2x.png in Resources */,
 				71DBB7E6192FB60E002D7CA9 /* hdr-short-CS3000@2x.png in Resources */,
+				712651071A5DD15D00C91AF2 /* home-nav-color.png in Resources */,
 				7129482919A3FFCF00E0548D /* ico-29.png in Resources */,
 				718D21301A379BFB00980FDF /* icn-mill-all@2x-2.png in Resources */,
 				71DBB7EF192FB60E002D7CA9 /* header-catalogs@2x.png in Resources */,
@@ -1610,7 +1621,6 @@
 				30E9460D19A00D49002A996C /* placeholder@2x.png in Resources */,
 				71DBB841192FB60E002D7CA9 /* home-nav-health.png in Resources */,
 				71708CB61A38E35E0041F8D5 /* CanonMediaGridViewController.xib in Resources */,
-				71DBB807192FB60E002D7CA9 /* home-nav-mono@2x.png in Resources */,
 				71DBB851192FB60E002D7CA9 /* img-div-shdw.png in Resources */,
 				718E3168199D39620000A5EB /* icn-load.png in Resources */,
 				71DBB82C192FB60E002D7CA9 /* header-color.png in Resources */,
@@ -1650,7 +1660,7 @@
 				71DBB816192FB60E002D7CA9 /* img-FPO-grid@2x.png in Resources */,
 				718D21171A379A6C00980FDF /* icn-brochure@2x.png in Resources */,
 				71DBB7F1192FB60E002D7CA9 /* header-continuousfeed@2x.png in Resources */,
-				7129480919A3EFE400E0548D /* home-header-all@x2.png in Resources */,
+				7129480919A3EFE400E0548D /* home-header-all@2x.png in Resources */,
 				7129481019A3FCC600E0548D /* icn-video.png in Resources */,
 				711FC32F1A4308F1005BEDE7 /* ico-blackwhite.png in Resources */,
 				7129481119A3FCC600E0548D /* icn-whitepaper.png in Resources */,
@@ -1667,7 +1677,6 @@
 				71DBB7E9192FB60E002D7CA9 /* hdr-short-jetstreamdual@2x.png in Resources */,
 				711FC3001A3F6373005BEDE7 /* PartnerViewController.xib in Resources */,
 				7129482819A3FFCF00E0548D /* ico-25.png in Resources */,
-				71DBB843192FB60E002D7CA9 /* home-nav-mono.png in Resources */,
 				71DBB848192FB60E002D7CA9 /* icn-download.png in Resources */,
 				7129482719A3FFCF00E0548D /* ico-22.png in Resources */,
 				7129482419A3FFCF00E0548D /* ico-1024.png in Resources */,
@@ -1736,6 +1745,7 @@
 				711FC30C1A40C61B005BEDE7 /* CanonSoftwareViewController.m in Sources */,
 				718D21081A3793F600980FDF /* Software.m in Sources */,
 				712946ED19A37C1E00E0548D /* QNetworkAdditions.m in Sources */,
+				7126510D1A63F9BE00C91AF2 /* CanonDownloadAll.m in Sources */,
 				30AC1177192D91CF00BE1072 /* DownloadUrlOperation.m in Sources */,
 				718E3133199957ED0000A5EB /* FilterViewController.m in Sources */,
 				711FC3281A41FAB4005BEDE7 /* AFNetworkReachabilityManager.m in Sources */,
@@ -1872,8 +1882,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Trekk Design Inc.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Trekk Design Inc.";
+				CODE_SIGN_IDENTITY = "iPhone Developer: matt eaton (D3948RZD37)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: matt eaton (D3948RZD37)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/trekkmini-1/Desktop",
@@ -1888,7 +1898,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "17f344b2-a2fa-4ed0-9737-b8ddca4bf655";
+				PROVISIONING_PROFILE = "5468975c-2370-4c7f-b82b-ba3e2fe31663";
 				VALID_ARCHS = "armv7s armv7";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1899,8 +1909,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Trekk Design Inc.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Trekk Design Inc.";
+				CODE_SIGN_IDENTITY = "iPhone Developer: matt eaton (D3948RZD37)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: matt eaton (D3948RZD37)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/trekkmini-1/Desktop",
@@ -1915,7 +1925,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "17f344b2-a2fa-4ed0-9737-b8ddca4bf655";
+				PROVISIONING_PROFILE = "5468975c-2370-4c7f-b82b-ba3e2fe31663";
 				VALID_ARCHS = "armv7s armv7";
 				WRAPPER_EXTENSION = app;
 			};

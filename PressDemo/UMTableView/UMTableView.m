@@ -35,9 +35,8 @@
     
     self = [super initWithFrame:frame];
 
-    
     if (self) {
-        
+        self.delaysContentTouches = NO;
         contentHeight = 0;
         
         borderMode = UMTableViewBordersRows | UMTableViewBordersColumns;
@@ -273,6 +272,17 @@
         // NSLog(@"Removed row at: %d", index);
     }        
 }
+
+- (BOOL)touchesShouldCancelInContentView:(UIView *)view {
+    ALog(@"View %@", view);
+    if ([view isKindOfClass:UIButton.class]) {
+        ALog(@"Cancel");
+        return YES;
+    }
+    
+    return [super touchesShouldCancelInContentView:view];
+}
+
 
 /*
  * Internally removes rows that are no longer visible due to scrolling

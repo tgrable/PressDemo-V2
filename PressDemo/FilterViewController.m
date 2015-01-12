@@ -272,9 +272,21 @@
             desc.textColor = [UIColor blackColor];
             desc.contentSize = CGSizeMake(224, 100);
             desc.editable = NO;
+            desc.scrollEnabled = NO;
             desc.backgroundColor = [UIColor whiteColor];
             desc.text = p.description;
             [back addSubview:desc];
+            
+            UIButton *clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [clearButton setFrame:CGRectMake(0, 0, width, 300)];
+            [clearButton addTarget:self action:@selector(productTouched:)forControlEvents:UIControlEventTouchUpInside];
+            clearButton.showsTouchWhenHighlighted = YES;
+            [clearButton setUserInteractionEnabled:YES];
+            [clearButton setTitle:p.series forState:UIControlStateNormal];
+            [clearButton setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+            clearButton.tag = e;
+            [clearButton setBackgroundColor:[UIColor clearColor]];
+            [back addSubview:clearButton];
             
             [productScroll addSubview:v];
             
