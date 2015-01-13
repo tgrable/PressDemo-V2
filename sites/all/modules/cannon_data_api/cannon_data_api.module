@@ -82,6 +82,8 @@
         //*****************products****************
         }else if($type == 'product'){
 
+           //get the product series information
+           $product_series_array = _cannon_data_api_get_series($node->nid);
            //product objects
            $value = array(
               'title' => $node->title,
@@ -90,7 +92,9 @@
               'product-description' => isset($node->field_short_product_description[LANGUAGE_NONE][0]['value']) ? _cannon_data_api_cleanse_string($node->field_short_product_description[LANGUAGE_NONE][0]['value']) : '',
               'what-do-you-want-to-print' =>  isset($node->field_what_do_you_want_to_print[LANGUAGE_NONE]) ? _cannon_get_taxonomy_key($node->field_what_do_you_want_to_print[LANGUAGE_NONE]) : array(),
               'show-all' =>  isset($node->field_show_all_products[LANGUAGE_NONE]) ? _cannon_get_taxonomy_key($node->field_show_all_products[LANGUAGE_NONE]) : array(),
-              'series' => _cannon_data_api_get_series($node->nid),
+              'series' => $product_series_array[0],
+              'series_title' => $product_series_array[1],
+
            );
 
         //******************product specs***********
@@ -284,11 +288,14 @@
       $series_nid = $data_query->execute()->fetchfield();
       //make sure we are actually getting a nid before we try and load a node
       $d = array();
+      $return_array = array('', '');
       if(!empty($series_nid)){
         $node = node_load($series_nid);
-        return strtolower(_cannon_data_api_normalize_string($node->title)) . '--series';
+        $return_array[0] = strtolower(_cannon_data_api_normalize_string($node->title)) . '--series';
+        $return_array[1] = $node->title;
+        return $return_array;
       }else{
-        return '';
+        return $return_array;
       }
 
   }
