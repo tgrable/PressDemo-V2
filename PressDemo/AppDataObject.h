@@ -19,18 +19,18 @@
 #import "Solution.h"
 
 @interface AppDataObject : NSObject{
-    BOOL layoutSync, needsUpdate, initialDownload;
+    BOOL layoutSync, needsUpdate;
     NSMutableDictionary *whatDoYouWantToPrint, *showAll;
     NSMutableDictionary *taxonomyReadableNames, *topBanners;
     NSMutableDictionary *seriesBanners, *documentBanners;
     NSMutableDictionary *lastUpdated, *documentData, *productData, *productSeriesData, *videoData;
     NSMutableDictionary *millData, *paperData, *softwareData;
-    NSMutableArray *downloadedImages, *initialSetOfMills, *initialSetOfPaper, *initialSolutionData, *initialPartnerData, *initialSofware;
+    NSMutableArray *downloadedImages, *initialSetOfMills, *initialSetOfPaper, *initialSolutionData, *initialPartnerData, *initialSofware, *initialFilesToDownload;
 }
 
 @property (nonatomic, strong)NSMutableDictionary *whatDoYouWantToPrint, *showAll, *taxonomyReadableNames, *topBanners;
 @property (nonatomic, strong)NSMutableDictionary *lastUpdated, *documentData, *productData, *productSeriesData, *videoData;
 @property (nonatomic, strong)NSMutableDictionary *seriesBanners, *millData, *paperData, *softwareData;
-@property (nonatomic, strong)NSMutableArray *downloadedImages, *initialSetOfMills, *initialSetOfPaper, *initialSolutionData, *initialPartnerData, *initialSofware;
-@property BOOL layoutSync, needsUpdate, initialDownload;
+@property (nonatomic, strong)NSMutableArray *downloadedImages, *initialSetOfMills, *initialSetOfPaper, *initialSolutionData, *initialPartnerData, *initialSofware, *initialFilesToDownload;
+@property BOOL layoutSync, needsUpdate;
 @end

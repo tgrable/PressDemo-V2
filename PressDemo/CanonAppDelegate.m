@@ -31,21 +31,24 @@
     
     //Register the Google Analytics Library
     // Optional: automatically send uncaught exceptions to Google Analytics.
-    [GAI sharedInstance].trackUncaughtExceptions = YES;
+    //[GAI sharedInstance].trackUncaughtExceptions = YES;
     
     // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
-    [GAI sharedInstance].dispatchInterval = 120;
+    //[GAI sharedInstance].dispatchInterval = 120;
     
     // Optional: set Logger to VERBOSE for debug information.
     //[[[GAI sharedInstance] logger] setLogLevel:kGAILogLevelVerbose];
     
     // Initialize tracker.
-    [[GAI sharedInstance] trackerWithTrackingId:@"UA-49102313-4"];
+    //[[GAI sharedInstance] trackerWithTrackingId:@"UA-49102313-4"];
     
-    [GAI sharedInstance].dryRun = YES;
+    //[GAI sharedInstance].dryRun = YES;
     
     //setup NSUserDefaults for LastUpdated
     [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"LastUpdated" ofType:@"plist"]]];
+    
+    //setup NSUserDefaults for InitialDownload
+    [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"InitialDownload" ofType:@"plist"]]];
     
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -55,8 +58,8 @@
     
     
     //load the root view controller
-    self.viewController = [[CanonViewController alloc] initWithNibName:@"CanonViewController" bundle:nil];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
+    self.downloadViewController = [[CanonDownloadAll alloc] initWithNibName:@"CanonDownloadAll" bundle:nil];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.downloadViewController];
     [navController.navigationBar setBounds:CGRectMake(0, 0, 1024, 64)];
     
     [navController setNavigationBarHidden:YES animated:NO];
@@ -66,6 +69,29 @@
  
     return YES;
     
+}
+
+# pragma mark - Rotation
+
+- (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
+{
+    if ([[self.window.rootViewController.childViewControllers lastObject] isKindOfClass:[ReaderViewController class]]) {
+        // Get topmost/visible view controller
+        UIViewController *currentViewController = [self.window.rootViewController.childViewControllers lastObject];
+        // Check whether it implements a dummy methods called canRotate
+        if ([currentViewController respondsToSelector:@selector(canRotate)]) {
+            // Unlock landscape view orientations for this view controller
+            return UIInterfaceOrientationMaskAll;
+        }
+    }
+    
+    // Only allow portrait (standard behaviour)
+    return UIInterfaceOrientationMaskLandscape;
+}
+
+-(void)canRotate
+{
+   
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

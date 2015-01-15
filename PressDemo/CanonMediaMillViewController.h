@@ -10,18 +10,19 @@
 #import "Reachability.h"
 #import "NetworkData.h"
 #import "CanonModel.h"
-#import "DownloadVideo.h"
 #import "AppDelegateProtocol.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "GAITrackedViewController.h"
 #import "UMTableView.h"
+#import "DownloadFile.h"
 #import "CanonTableKeyViewController.h"
 #import "UIBorderLabel.h"
+#import "CanonViewController.h"
 
-@interface CanonMediaMillViewController : GAITrackedViewController<NetworkDelegate, UMTableViewDelegate, VideoDelegate, UIPopoverControllerDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate>{
+@interface CanonMediaMillViewController : GAITrackedViewController<NetworkDelegate, FileDelegate, UMTableViewDelegate, UIPopoverControllerDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate>{
     //objects
     NetworkData *network;
-    DownloadVideo *downloadVideo;
+    DownloadFile *downloadFile;
     
     //global views
     UIImageView *topBanner, *logo;
@@ -66,13 +67,5 @@
 @property(nonatomic, strong)UIPopoverController *pop;
 @property float contentHeight;
 
--(void)displayMessage:(NSString *)message withTitle:(NSString *)title;
--(void)setupLocalUserInterface:(completeBlock)completeFlag;
--(void)animateSidebarIndicator:(int)yValue;
--(void)tearDownAndLoadUpDocuments:(NSString *)flag withComplete:(completeBlock)completeFlag;
--(void)rearrangeDocumentStack;
--(void)buildPaperTableData;
--(void)setupTableHeaders;
--(void)hideOverlay;
--(UIView *)assembleModalView:(Paper *)obj;
+
 @end

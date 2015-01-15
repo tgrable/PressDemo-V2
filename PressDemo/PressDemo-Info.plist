@@ -26,6 +26,7 @@
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
+		<string>ITC - ITCAvantGardeStd-Bold.ttf</string>
 		<string>ITC - ITCAvantGardeStd-Md.ttf</string>
 		<string>ITC - ITCAvantGardeStd-Bk.ttf</string>
 	</array>

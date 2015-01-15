@@ -28,9 +28,5 @@
 @property(nonatomic, strong)UIView *customNavBar;
 @property(nonatomic, strong)NSMutableDictionary *offlineImages;
 
-//function prototypes
--(void)setupLocalUserInterface:(completeBlock)completeFlag;
--(void)displayMessage:(NSString *)message withTitle:(NSString *)title;
--(void)loadupProducts;
 
 @end

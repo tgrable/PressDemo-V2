@@ -156,7 +156,11 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+   
+    if (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)){
+        NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeLeft];
+        [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -169,7 +173,8 @@
     //set observation notification on completion
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appCameBackIntoFocus) name:UIApplicationDidBecomeActiveNotification object:nil];
-
+    
+   
 
 }
 
@@ -188,6 +193,10 @@
 {
     [super viewDidLoad];
     
+    
+    
+    
+    
     self.screenName = @"Series View";
     
     network = [[NetworkData alloc] init];
@@ -195,8 +204,8 @@
     
     model = [self AppDataObj];
     
-    downloadVideo = [[DownloadVideo alloc] init];
-    downloadVideo.delegate = self;
+    downloadFile = [[DownloadFile alloc] init];
+    downloadFile.delegate = self;
     
     //***** Load up views to the local view controller ************//
     //the nav bar
@@ -478,7 +487,7 @@
     
     [self setupLocalUserInterface:^(BOOL completeFlag){
         //GA
-        [model logData:@"Series View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Landed on series view: %@", model.selectedSeries.title]];
+        //[model logData:@"Series View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Landed on series view: %@", model.selectedSeries.title]];
     }];
     
     downloadingURL = @"";
@@ -739,7 +748,7 @@
                     [partner setTitleColor:model.blue forState:UIControlStateNormal];
                     [partner setBackgroundColor:[UIColor clearColor]];
                     if(p.premier_partner){
-                        partner.titleLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Md" size:14.0];
+                        partner.titleLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bold" size:14.0];
                     }else{
                         partner.titleLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0];
                     }
@@ -846,35 +855,8 @@
                       
                     }
                     
-                    //add the download video image to the video top right corner
-                    UIButton *download = [UIButton buttonWithType:UIButtonTypeCustom];
-                    [download setFrame:CGRectMake(717, 7, 24, 24)];
-                    [download addTarget:self action:@selector(downloadVideo:)forControlEvents:UIControlEventTouchUpInside];
-                    download.showsTouchWhenHighlighted = YES;
-                    [download setUserInteractionEnabled:YES];
-                    [download setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
-                    
-                    
                     NSString *rawVideo = [v.rawVideo stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-
                     NSString *name = [model getVideoFileName:rawVideo];
-                    NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
-                    
-                    if([model fileExists:lookupName]){
-                      [download setImage:[UIImage imageNamed:@"icn-load.png"] forState:UIControlStateNormal];
-                      [download setTitle:[model returnFilePath:lookupName] forState:UIControlStateNormal];
-                      download.tag = 777;
-                    }else{
-                      [download setImage:[UIImage imageNamed:@"icn-download.png"] forState:UIControlStateNormal];
-                      [download setTitle:rawVideo forState:UIControlStateNormal];
-                      download.tag = 555;
-                    }
-
-                    [download setBackgroundColor:[UIColor whiteColor]];
-                    [download setHitTestEdgeInsets:UIEdgeInsetsMake(-15, -15, -15, -15)];
-                    [rowContainer addSubview:download];
-                    [rowContainer bringSubviewToFront:download];
-                    
                     
                     //set the data for the rest of the row
                     title.text = v.title;
@@ -1009,67 +991,6 @@
     
 }
 
-//this function tells the application to either download the video or load the video from disk
--(void)downloadVideo:(id)sender
-{
-    UIButton *b = (UIButton *)sender;
-    NSString *videoURLString = [b.titleLabel.text stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-    
-    /************ Download the video to disk ************************/
-    if(b.tag == 555){
-     
-        if(downloadVideo.videoDownloading){
-            [self displayMessage:@"Another video is currently downloading." withTitle:@"Alret"];
-        }else{
-            //make sure we can access the internet first
-            if([model.hostReachability isReachableViaWiFi]){
-                videoButton = b;
-                [b setImage:nil forState:UIControlStateNormal];
-                UIActivityIndicatorView *gear = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-                gear.frame = CGRectMake(0, 0, 16, 16);
-                gear.alpha = 1.0;
-                gear.tag = 110;
-                [b addSubview:gear];
-                [gear startAnimating];
-                
-                
-                
-                downloadingURL = [model getVideoFileName:videoURLString];
-                downloadingURL = [downloadingURL stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    ALog(@"Download %@", downloadingURL);
-                    [downloadVideo downloadVideo:videoURLString];
-                });
-                //GA
-                //[model logData:@"Series View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Video to download: %@",videoURLString]];
-            }else{
-                [self displayMessage:@"Please connect to the internet to download this video" withTitle:@"Alret"];
-            }
-        }
-    /************ Play the video from disk ************************/
-    }else if(b.tag == 777){
-
-        NSString *path = [videoURLString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-     
-        if([model fileExists:[path lastPathComponent]]){
-        
-            //NSString *p  = @"file:///var/mobile/Applications/B751E322-DE11-4813-8D8B-0F7589B9FDEF/Documents/CS3000_Flexibility_1.mp4";
-            //apply the file transfer protocol on to this path to make it a url
-            NSString *urlPath = [NSString stringWithFormat:@"file://%@", path];
-            NSURL *videoURL = [NSURL URLWithString:urlPath];
-            
-            MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-            [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
-            //GA
-            //[model logData:@"Series View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Video to play from disk: %@",videoURLString]];
-        }else{
-            [self displayMessage:@"There was an error referencing your file" withTitle:@"Alert"];
-        }
-    }
-    
-    
-}
-
 //this function gets the partner that was tapped and send the user to the partner page
 -(void)partnerTapped:(id)sender
 {
@@ -1101,98 +1022,63 @@
        
         Document *d = [currentDocumentData objectForKey: b.titleLabel.text];
         
-        if([d.type isEqualToString:@"white-paper"]){
-            actualDocumentBanner.frame = CGRectMake(0, 0, 776, 173);
-            webPage.frame = CGRectMake(36, 164, 704, 445);
-            //white paper image assignement
-            documentLabel.text = d.title;
-            documentHeaderButton.titleLabel.text = @"white_papers";
-            documentHeaderButton.tag = 228;
-            [actualDocumentBanner setImage:[UIImage imageNamed:@"hdr-doc-whitepaper.png"]];
-            //GA
-            [model logData:@"Series View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected White Paper Document: %@",d.title]];
+        NSString *filename = [d.data lastPathComponent];
+        NSString *cleansedFilename = [filename stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
+        
+        if([model fileExists:cleansedFilename] && ![cleansedFilename isEqualToString:@""]){
+            ALog(@"The file exists %@", cleansedFilename);
+            //get the local path of the document
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *documentsDirectory = [paths objectAtIndex:0];
+            NSString* path = [documentsDirectory stringByAppendingPathComponent:cleansedFilename];
+            NSString *phrase = nil;
+            //create the object
+            ReaderDocument *document = [ReaderDocument withDocumentFilePath:path password:phrase];
             
-        }else if([d.type isEqualToString:@"case-study"]){
-            //case study image assignment
-            actualDocumentBanner.frame = CGRectMake(0, 0, 776, 173);
-            webPage.frame = CGRectMake(36, 164, 704, 445);
-            documentLabel.text = d.title;
-            documentHeaderButton.titleLabel.text = @"case_studies";
-            documentHeaderButton.tag = 294;
-            [actualDocumentBanner setImage:[UIImage imageNamed:@"hdr-doc-casestudy.png"]];
-            //GA
-            [model logData:@"Series View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Case Study Document: %@",d.title]];
-            
-        }else if([d.type isEqualToString:@"product-spec"]){
-            //product spec image assignment
-            actualDocumentBanner.frame = CGRectMake(0, 0, 0, 0);
-            actualDocumentBanner.image = nil;
-            webPage.frame = CGRectMake(36, 45, 704, 555);
-            //GA
-            [model logData:@"Series View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Product Spec Document: %@",d.title]];
+            if (document != nil) // Must have a valid ReaderDocument object in order to proceed with things
+            {
+                //pass view controller onto the stack
+                ReaderViewController *readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
+                readerViewController.delegate = self; // Set the ReaderViewController delegate to self
+                [self.navigationController pushViewController:readerViewController animated:YES];
+                [self.navigationController setToolbarHidden:YES];
+                
+            }
+        }else{
+            [self displayMessage:@"The file you are looking for was not found on the device" withTitle:@"Alert"];
         }
-        
-        //rearrange view stack
-        [mainView bringSubviewToFront:actualDocumentView];
-        [actualDocumentView bringSubviewToFront:webPage];
-        [mainView bringSubviewToFront:mainShortBanner];
-        
-        NSData *html = [model getHTMLFile:d.data complete:^(BOOL completeFlag){}];
-        [self loadUPWebpage:html complete:^(BOOL completeFlag){
-            [UIView animateWithDuration:0.6f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
-                documentScroll.frame = CGRectMake(1040, 44, 748, 628);
-                documentScroll.alpha = 0.0;
-            }completion:^(BOOL finished) {
-                documentScroll.frame = CGRectMake(14, 44, 748, 628);
-                actualDocumentView.alpha = 1.0;
-
-                [UIView animateWithDuration:0.5f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
-                    actualDocumentView.frame = CGRectMake(0, 44, 776, 684);
-                }completion:^(BOOL finished) {
-                    
-                }];
-            }];
-        }];
 
     //**************type of video***********************
     }else{
         
         Video *v = [currentDocumentData objectForKey: b.titleLabel.text];
-        NSString *name = [model getVideoFileName:v.rawVideo];
-        NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
+        NSString *filename = [model getVideoFileName:v.rawVideo];
+        NSString *lookupName = [filename stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
         
-
-        if([model.hostReachability isReachableViaWiFi]){
-            //stream if reachable
-            NSString *videoURLString = [v.streamingURL stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-            NSURL *videoURL = [NSURL URLWithString:videoURLString];
+        //try and play the moview from the device first
+        if([model fileExists:[lookupName lastPathComponent]]){
+            
+            NSString *fullPath = [model returnFilePath:lookupName];
+            NSString *urlPath = [NSString stringWithFormat:@"file://%@", fullPath];
+            NSURL *videoURL = [NSURL URLWithString:urlPath];
             MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
             [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
-             ALog(@"STREAM VIDEO %@", videoURLString);
+            ALog(@"LOAD VIDEO FROM DEVICE %@", videoURL);
+        
+            //if not on the device, try  and stream it
         }else{
-            NSString *lookupNameAdvanced = [lookupName stringByReplacingOccurrencesOfString:@" " withString:@"_"];
             
-            if([model fileExists:[lookupNameAdvanced lastPathComponent]]){
-                
-                NSString *fullPath = [model returnFilePath:lookupNameAdvanced];
-                NSString *urlPath = [NSString stringWithFormat:@"file://%@", fullPath];
-                NSURL *videoURL = [NSURL URLWithString:urlPath];
+            if([model.hostReachability isReachableViaWiFi]){
+                NSString *videoURLString = [v.streamingURL stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+                NSURL *videoURL = [NSURL URLWithString:videoURLString];
                 MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
                 [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
-                 ALog(@"LOAD VIDEO FROM DEVICE %@", videoURL);
-            }else{
-                [self displayMessage:@"This video has not been downloaded to the device.  Please connect to the internet and stream the video, or download the video for offline usage." withTitle:@"Alert!"];
+                ALog(@"Streaming");
             }
         }
         
     }
     
-}
-//this function loads up the UIWebView with data and sends back a completed flag when done
--(void)loadUPWebpage:(NSData *)data complete:(completeBlock)completeFlag
-{
-    [webPage loadData:data MIMEType: @"text/html" textEncodingName: @"UTF-8" baseURL:nil];
-    completeFlag(YES);
 }
 
 //this function performs the animation to run the sidebar indicator up and down
@@ -1224,7 +1110,13 @@
 //this function sends the user back home
 -(void)triggerHome:(id)sender
 {
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    for (UIViewController *vc in [self.navigationController viewControllers]) {
+        if ([vc isMemberOfClass:[CanonViewController class]]) {
+            [self.navigationController popToViewController:vc animated:YES];
+            return;
+        }
+        
+    }
 }
 
 //this function sets up the disposable views and also sets up the overview view in the main portion of the app
@@ -1410,10 +1302,6 @@
     }
     //download
     if (buttonIndex == 1){
-        //remove nsuserdefaults
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            [model wipeOutAllModelDataForUpdate];
-        });
         
         if([model.hostReachability isReachableViaWiFi]){
             //we have now loaded
@@ -1422,25 +1310,6 @@
         }else{
             [self displayMessage:@"Please connect to the internet to update the application" withTitle:@"Alert"];
         }
-    }
-}
-
-//function that is called when the video is done downloading
-//this function adds the video URL to the button as the title for download
--(void)videoDownloadResponse:(BOOL)flag
-{
- 
-    UIView *v = [videoButton viewWithTag:110];
-    [v removeFromSuperview];
-    
-    
-    if(flag){
-        [videoButton setImage:[UIImage imageNamed:@"icn-load.png"] forState:UIControlStateNormal];
-        videoButton.tag = 777;
-
-        [videoButton setTitle:[self.model returnFilePath:downloadingURL] forState:UIControlStateNormal];
-    }else{
-        [self displayMessage:@"OOPS! Something went wrong downloading your video.  Please make sure you are connected to the internet and try again." withTitle:@"Alert"];
     }
 }
 
@@ -1513,7 +1382,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
 
 
 @end

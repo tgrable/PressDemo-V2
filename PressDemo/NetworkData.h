@@ -17,7 +17,7 @@
 @protocol NetworkDelegate <NSObject>
 @optional
 //functions to be executed when the network calls are finished
--(void)downloadResponse:(CanonModel *)obj withFlag:(BOOL)flag;
+-(void)initialDownloadResponse:(CanonModel *)obj withFlag:(BOOL)flag;
 -(void)updateResponse:(CanonModel *)obj withFlag:(BOOL)flag;
 
 @end

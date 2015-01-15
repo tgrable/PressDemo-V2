@@ -12,18 +12,17 @@
 *******************************/
 
 #import "AppDataObject.h"
-#import "UIModel.h"
 #import <AVFoundation/AVFoundation.h>
 #import "Reachability.h"
-//#import <SDWebImage/SDImageCache.h>
+
 
 @interface CanonModel : AppDataObject{
     UIColor *orange, *pink, *red, *blue, *dullBlack, *green, *purple, *gray, *yellow, *lightGray;
-    //SDWebImageManager *manager;
+    int imageCount;
+    
 }
 //Model Properties
 @property(nonatomic, assign) id tracker;
-@property(nonatomic, strong)UIModel *ui;
 @property(nonatomic, strong)ProductSeries *selectedSeries;
 @property(nonatomic, strong)Mill *selectedMill;
 @property(nonatomic, strong)Partner *selectedPartner;
@@ -56,14 +55,14 @@ typedef void(^completeBlock)(BOOL);
 -(void)saveAllDataToDisk:(completeBlock)completeFlagArgument;
 -(NSString *)cleanseStringName:(NSString *)filename;
 -(CGFloat)widthOfString:(NSString *)string withStringSize:(float)size andFontKey:(NSString *)key;
-//SDWebImage Functions
-//-(void)saveAllImagesToDisk:(NSMutableDictionary *)images complete:(completeBlock)completeFlagParent;
-//-(void)downloadAllImagesAndSaveThem:(completeBlock)completeFlagFirstParent;
+
+-(UIImage *)getImageWithName:(NSString *)filename;
 -(void)wipeOutAllModelData;
 -(NSString *)getVideoFileName:(NSString *)url;
 -(NSMutableArray *)getInitialSetofPorducts;
 -(BOOL)videoExists:(NSString *)videoURL;
 -(NSString *)returnFilePath:(NSString *)name;
+-(BOOL)deleteFile:(NSString *)filename;
 -(NSMutableArray *)cleanArray:(NSMutableArray *)array;
 //google analytics
 -(void)logData:(NSString *)category withAction:(NSString *)action withLabel:(NSString *)label;

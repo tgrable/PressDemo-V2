@@ -153,7 +153,7 @@
                 ALog(@"Error %@", error);
                 //let user know we have an error
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [_delegate downloadResponse:model withFlag:NO];
+                    [_delegate initialDownloadResponse:model withFlag:NO];
                 });
             }
         }else {
@@ -172,18 +172,25 @@
                         if(!failureFlag){
                             //sync data and wipe out model
                             ALog(@"Saving data to disk");
-                            [model saveAllDataToDisk:^(BOOL completeFlagArgument){
-                                //Just as an option to have
-                                dispatch_async(dispatch_get_main_queue(), ^{
-                                    [_delegate downloadResponse:model withFlag:YES];
-                                });
-                            }];
+                            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                                [model saveAllDataToDisk:^(BOOL completeFlagArgument){
+                                    if(completeFlagArgument){
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            [_delegate initialDownloadResponse:model withFlag:YES];
+                                        });
+                                    }else{
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            [_delegate initialDownloadResponse:model withFlag:NO];
+                                        });
+                                    }
+                                }];
+                            });
                             
                         }else{
                             //failure
                             ALog(@"Failure!");
                             dispatch_async(dispatch_get_main_queue(), ^{
-                                [_delegate downloadResponse:model withFlag:NO];
+                                [_delegate initialDownloadResponse:model withFlag:NO];
                             });
                         }
                         threadCount = 0;

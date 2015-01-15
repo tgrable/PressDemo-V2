@@ -11,14 +11,16 @@
 #import "NetworkData.h"
 #import "CanonModel.h"
 #import "AppDelegateProtocol.h"
-#import "DownloadVideo.h"
+#import "DownloadFile.h"
+#import "CanonViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "GAITrackedViewController.h"
+#import "ReaderViewController.h"
 
-@interface CanonSoftwareViewController :GAITrackedViewController<NetworkDelegate, VideoDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate>{
+@interface CanonSoftwareViewController :GAITrackedViewController<NetworkDelegate, FileDelegate, ReaderViewControllerDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate>{
     //objects
     NetworkData *network;
-    DownloadVideo *downloadVideo;
+    DownloadFile *downloadFile;
     //global views
     UIImageView *topBanner, *logo;
     UIView *customNavBar, *mainView, *sideBar;
@@ -55,11 +57,6 @@
 @property(nonatomic, strong)UIView *customNavBar, *mainView, *sideBar;
 @property(nonatomic, strong)NSMutableDictionary *offlineImages;
 
--(void)displayMessage:(NSString *)message withTitle:(NSString *)title;
--(void)setupLocalUserInterface:(completeBlock)completeFlag;
--(void)animateSidebarIndicator:(int)yValue;
--(void)tearDownAndLoadUpDocuments:(NSString *)flag withComplete:(completeBlock)completeFlag;
--(void)loadUPWebpage:(NSData *)data complete:(completeBlock)completeFlag;
--(void)rearrangeDocumentStack;
+
 
 @end

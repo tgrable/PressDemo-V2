@@ -264,8 +264,11 @@
             title.numberOfLines = 2;
             title.adjustsFontSizeToFitWidth = YES;
             title.backgroundColor = [UIColor whiteColor];
-            title.text = [p.title uppercaseString];
+            //title.text = [p.series_title uppercaseString];
+            title.text = p.series_title;
             [back addSubview:title];
+            
+            ALog(@"title %@", p.series_title);
             
             UITextView *desc = [[UITextView alloc] initWithFrame:CGRectMake(imgX, 200, 224, 100)];
             [desc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:13.0]];
@@ -274,7 +277,7 @@
             desc.editable = NO;
             desc.scrollEnabled = NO;
             desc.backgroundColor = [UIColor whiteColor];
-            desc.text = p.description;
+            desc.text = p.short_series_description;
             [back addSubview:desc];
             
             UIButton *clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -351,7 +354,8 @@
 //function that pops the view controller off the stack and sends the user back home
 -(void)triggerHome:(id)sender
 {
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    [[self navigationController] popViewControllerAnimated:YES];
+    
 }
 
 //function that sets up the disposable views for the view controller
@@ -396,10 +400,6 @@
     }
     //download
     if (buttonIndex == 1){
-        //remove nsuserdefaults
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            [model wipeOutAllModelDataForUpdate];
-        });
         
         if([model.hostReachability isReachableViaWiFi]){
             //we have now loaded
@@ -408,7 +408,6 @@
         }else{
             [self displayMessage:@"Please connect to the internet to update the application" withTitle:@"Alert"];
         }
-        
     }
 }
 
@@ -426,6 +425,5 @@
         [alert show];
     }
 }
-
 
 @end

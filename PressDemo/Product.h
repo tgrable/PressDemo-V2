@@ -17,6 +17,7 @@
 @property(nonatomic, copy)NSString *description;
 @property(nonatomic, copy)NSMutableArray *whatDoYouWantToPrint;
 @property(nonatomic, copy)NSMutableArray *showAll;
-
+@property(nonatomic, copy)NSString *series_title;
+@property(nonatomic, copy)NSString *short_series_description;
 @end
 

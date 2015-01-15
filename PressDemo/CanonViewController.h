@@ -31,9 +31,6 @@
 @property(nonatomic, strong)ShowAll *showAllProducts;
 @property(nonatomic, strong)UIView *customNavBar;
 
-//regular views
--(void)displayMessage:(NSString *)message withTitle:(NSString *)title;
--(void)runLoadingSequence;
--(void)setupLocalUserInterface:(completeBlock)completeFlag;
+
 @end
 

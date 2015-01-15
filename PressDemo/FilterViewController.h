@@ -13,6 +13,7 @@
 #import "AppDelegateProtocol.h"
 #import "GAITrackedViewController.h"
 #import "ProductScroll.h"
+#import "CanonViewController.h"
 
 @interface FilterViewController : GAITrackedViewController<NetworkDelegate, UIScrollViewDelegate, UIAlertViewDelegate>{
  
@@ -28,8 +29,5 @@
 @property(nonatomic, strong)UIView *customNavBar;
 @property(nonatomic, strong)NSMutableDictionary *offlineImages;
 
-//function prototypes
--(void)setupLocalUserInterface:(completeBlock)completeFlag;
--(void)displayMessage:(NSString *)message withTitle:(NSString *)title;
--(void)loadupProducts;
+
 @end

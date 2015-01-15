@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "AppDelegateProtocol.h"
-#import "CanonViewController.h"
+#import "CanonDownloadAll.h"
+#import "ReaderViewController.h"
 
 @class CanonModel;
 
@@ -16,7 +17,7 @@
     CanonModel * AppDataObj;
 }
 @property (nonatomic, retain)CanonModel * AppDataObj;
-@property (strong, nonatomic)CanonViewController *viewController;
+@property (strong, nonatomic)CanonDownloadAll *downloadViewController;
 @property (strong, nonatomic) UIWindow *window;
 
 @end

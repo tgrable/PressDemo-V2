@@ -208,7 +208,7 @@
     [self loadupProducts];
     
     //GA
-    [model logData:@"Media Grid View" withAction:@"View Tracker" withLabel:@"Landed on product filter view"];
+    //[model logData:@"Media Grid View" withAction:@"View Tracker" withLabel:@"Landed on product filter view"];
 }
 
 
@@ -362,14 +362,14 @@
 //function that pops the view controller off the stack and sends the user back home
 -(void)triggerHome:(id)sender
 {
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    [[self navigationController] popViewControllerAnimated:YES];
 }
 
 //function that sets up the disposable views for the view controller
 -(void)setupLocalUserInterface:(completeBlock)completeFlag
 {
     //setup top banner
-    topBanner.image = [model.ui getImageWithName:@"/header-pink@2x.png"];
+    topBanner.image = [model getImageWithName:@"/header-pink@2x.png"];
     
     //home icon;
     [navBarHomeButton setBackgroundImage:[UIImage imageNamed:@"icn-home.png"] forState:UIControlStateNormal];
@@ -407,10 +407,6 @@
     }
     //download
     if (buttonIndex == 1){
-        //remove nsuserdefaults
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            [model wipeOutAllModelDataForUpdate];
-        });
         
         if([model.hostReachability isReachableViaWiFi]){
             //we have now loaded
@@ -419,7 +415,6 @@
         }else{
             [self displayMessage:@"Please connect to the internet to update the application" withTitle:@"Alert"];
         }
-        
     }
 }
 
@@ -437,5 +432,6 @@
         [alert show];
     }
 }
+
 
 @end

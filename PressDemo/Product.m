@@ -17,6 +17,8 @@
 @synthesize whatDoYouWantToPrint;
 @synthesize showAll;
 @synthesize series;
+@synthesize series_title;
+@synthesize short_series_description;
 
 -(id)init
 {
@@ -31,6 +33,8 @@
         images = [[NSMutableDictionary alloc] init];
         whatDoYouWantToPrint = [NSMutableArray array];
         showAll = [NSMutableArray array];
+        series_title = @"";
+        short_series_description = @"";
     }
     return self;
 }
@@ -44,6 +48,8 @@
     [encoder encodeObject:self.images forKey:@"images"];
     [encoder encodeObject:self.whatDoYouWantToPrint forKey:@"whatDoYouWantToPrint"];
     [encoder encodeObject:self.showAll forKey:@"showAll"];
+    [encoder encodeObject:self.series_title forKey:@"series_title"];
+    [encoder encodeObject:self.short_series_description forKey:@"short_series_description"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
@@ -56,7 +62,8 @@
         self.images = [decoder decodeObjectForKey:@"images"];
         self.whatDoYouWantToPrint = [decoder decodeObjectForKey:@"whatDoYouWantToPrint"];
         self.showAll = [decoder decodeObjectForKey:@"showAll"];
-        
+        self.series_title = [decoder decodeObjectForKey:@"series_title"];
+        self.short_series_description = [decoder decodeObjectForKey:@"short_series_description"];
     }
     return self;
 }

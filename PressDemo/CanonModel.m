@@ -7,27 +7,25 @@
 //
 
 #import "CanonModel.h"
-#import "UIModel.h"
 #import "SBJson.h"
 #import <SDWebImage/SDWebImageManager.h>
 #import "GAI.h"
 #import "GAIFields.h"
 #import "GAIDictionaryBuilder.h"
 
+
 //this is a local macro that sets up a class wide logging scheme
 #define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 
 @implementation CanonModel
-@synthesize orange, blue, green, dullBlack, lightGray, red, yellow, pink, purple, gray, testingString, ui;
+@synthesize orange, blue, green, dullBlack, lightGray, red, yellow, pink, purple, gray, testingString;
 @synthesize localProds, currentFilter, filteredProducts, selectedSeries, tracker, selectedMill, selectedPartner, selectedSoftware;
 - (id)init
 {
     self = [super init];
     
     if (self != nil){
-        ui = [[UIModel alloc] init];
-        
-        //manager = [SDWebImageManager sharedManager];
+
         selectedSeries = [[ProductSeries alloc] init];
         selectedMill = [[Mill alloc] init];
         selectedPartner = [[Partner alloc] init];
@@ -45,6 +43,7 @@
         millData = [[NSMutableDictionary alloc] init];
         paperData = [[NSMutableDictionary alloc] init];
         softwareData = [[NSMutableDictionary alloc] init];
+        initialFilesToDownload = [NSMutableArray array];
         initialPartnerData = [NSMutableArray array];
         initialSetOfMills = [NSMutableArray array];
         initialSetOfPaper = [NSMutableArray array];
@@ -132,7 +131,7 @@
 
         layoutSync = YES;
         needsUpdate = NO;
-        initialDownload = NO;
+        imageCount = 0;
     }
     return self;
 }
@@ -322,7 +321,10 @@
         p.showAll = [dict objectForKey:@"show-all"];
             
         p.whatDoYouWantToPrint = [dict objectForKey:@"what-do-you-want-to-print"];
-       
+        
+        p.series_title = [dict objectForKey:@"series_title"];
+        p.short_series_description = [dict objectForKey:@"product-series-description"];
+        
         NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:p];
         [productData setObject:encodedObject  forKey:keyProduct];
     }
@@ -366,6 +368,7 @@
         ps.solutions = [dict objectForKey:@"solutions"];
         
         
+        
         NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:ps];
         [productSeriesData setObject:encodedObject forKey:keyProduct];
     }
@@ -381,6 +384,8 @@
         v.title = [dict objectForKey:@"title"];
         NSString *keyProduct = [dict objectForKey:@"key"];
         v.key = keyProduct;
+        
+        //add the video image overylay to the array to cache the images upfront
         if([dict objectForKey:@"image"] != nil){
           v.image = [dict objectForKey:@"image"];
          [downloadedImages addObject:v.image];
@@ -397,6 +402,15 @@
         }
         v.streamingURL = [dict objectForKey:@"streaming-url"];
         
+        //make sure we have a url value before we create a video out of it
+        if(![v.rawVideo isEqualToString:@""]){
+
+            NSMutableDictionary *thread = [[NSMutableDictionary alloc] init];
+            [thread setValue:v.rawVideo forKey:@"URL"];
+            [thread setValue:[v.rawVideo lastPathComponent] forKey:@"name"];
+            [initialFilesToDownload addObject:thread];
+        }
+        
         NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:v];
         [videoData setObject:encodedObject forKey:keyProduct];
     }
@@ -411,11 +425,11 @@
         Document *d = [[Document alloc] init];
         
         NSString *key = [dict objectForKey:@"key"];
-        NSString *filename = [NSString stringWithFormat:@"%@.html", key];
+        //NSString *filename = [NSString stringWithFormat:@"%@.html", key];
         d.key = key;
         d.title = [dict objectForKey:@"title"];
         d.type = type;
-        d.data = filename;
+        d.data = [dict objectForKey:@"document-data"];
         
         //make sure there is something here to load into the image
         if([dict objectForKey:@"image"] != nil){
@@ -432,13 +446,26 @@
             d.description = @"";
         }
         
-        NSData *data = [[dict objectForKey:@"document-data"] dataUsingEncoding:NSUTF8StringEncoding];
+        //make sure we have a url value before we create a video out of it
+        if(![d.data isEqualToString:@""]){
+            NSMutableDictionary *thread = [[NSMutableDictionary alloc] init];
+            [thread setValue:d.data forKey:@"URL"];
+            [thread setValue:[d.data lastPathComponent] forKey:@"name"];
+            [initialFilesToDownload addObject:thread];
+        }
+        
+        //encoded object
         NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:d];
+        [documentData setObject:encodedObject forKey:key];
+        
+        //deprecated function
+        //NSData *data = [[dict objectForKey:@"document-data"] dataUsingEncoding:NSUTF8StringEncoding];
+        //NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:d];
         //save the html file and save the object
-        [self saveHTMLFile:data andFileName:filename complete:^(BOOL completeFlag){
+        //[self saveHTMLFile:data andFileName:filename complete:^(BOOL completeFlag){
 
-            [documentData setObject:encodedObject forKey:key];
-        }];
+             //[documentData setObject:encodedObject forKey:key];
+        //}];
     }
 }
 
@@ -500,7 +527,18 @@
         m.key = key;
         m.title = [dict objectForKey:@"title"];
         m.logo = [dict objectForKey:@"logo"];
+        
+        //add the logo to cache it during the initial downloading sequence
+        if(![m.logo isEqualToString:@""]){
+            [downloadedImages addObject:m.logo];
+        }
+        
         m.banners = [dict objectForKey:@"banners"];
+        //make sure and add the banners to the downloadImages array
+        for(NSString *urlString in m.banners){
+            [downloadedImages addObject:urlString];
+        }
+        
         m.description = [dict objectForKey:@"description"];
         m.website = [dict objectForKey:@"website"];
         m.phone = [dict objectForKey:@"phone"];
@@ -528,8 +566,18 @@
         s.key = key;
         s.title = [dict objectForKey:@"title"];
         s.logo = [dict objectForKey:@"logo"];
+        
+        //add the logo to cache it during the initial downloading sequence
+        if(![s.logo isEqualToString:@""]){
+            [downloadedImages addObject:s.logo];
+        }
         s.short_desc = [dict objectForKey:@"short_desc"];
         s.banners = [dict objectForKey:@"banners"];
+        //make sure and add the banners to the downloadImages array
+        for(NSString *urlString in s.banners){
+            [downloadedImages addObject:urlString];
+        }
+        
         s.description = [dict objectForKey:@"description"];
         NSArray *overviewObjects = [dict objectForKey:@"overview"];
         int i = 0;
@@ -557,8 +605,19 @@
         NSString *key = [dict objectForKey:@"key"];
         p.key = key;
         p.logo = [dict objectForKey:@"logo"];
+        
+        //add the logo to cache it during the initial downloading sequence
+        if(![p.logo isEqualToString:@""]){
+            [downloadedImages addObject:p.logo];
+        }
+        
         p.title = [dict objectForKey:@"title"];
         p.banners = [dict objectForKey:@"banners"];
+        //make sure and add the banners to the downloadImages array
+        for(NSString *urlString in p.banners){
+            [downloadedImages addObject:urlString];
+        }
+        
         p.description = [dict objectForKey:@"description"];
         p.website = [dict objectForKey:@"website"];
         p.white_papers = [dict objectForKey:@"white_paper"];
@@ -585,6 +644,35 @@
     }
     [defs synchronize];
     
+    [productData removeAllObjects];
+    [productSeriesData removeAllObjects];
+    [videoData removeAllObjects];
+    [documentData removeAllObjects];
+    [softwareData removeAllObjects];
+    [paperData removeAllObjects];
+    [millData removeAllObjects];
+    [initialSetOfMills removeAllObjects];
+    [initialSetOfPaper removeAllObjects];
+    [initialSofware removeAllObjects];
+    [initialSolutionData removeAllObjects];
+    [initialPartnerData removeAllObjects];
+    
+    if([self deleteFile:@"initialPapers"]){
+        ALog(@"Deleted Papers");
+        if([self deleteFile:@"initialSolutions"]){
+            ALog(@"Deleted Solutions");
+            if([self deleteFile:@"initialPartners"]){
+                ALog(@"Deleted Partners");
+                if([self deleteFile:@"initialSoftwareData"]){
+                    ALog(@"Deleted Software");
+                    if([self deleteFile:@"initialMills"]){
+                        ALog(@"Deleted Mills");
+                    }
+                }
+            }
+        }
+    }
+    
 }
 
 //this function is run after the network routine finishes running the initial download or after an update
@@ -592,6 +680,7 @@
 -(void)wipeOutAllModelData
 {
     //this routine adds the last updated dictionary to a NSUserDefault dictionary for the data to be persistant
+    
     for(id key in lastUpdated){
         NSString *date = [lastUpdated objectForKey:key];
         [[NSUserDefaults standardUserDefaults] setObject:date forKey:key];
@@ -627,62 +716,6 @@
     }];
 
 }
-
-/*******************************************************************
- 
- SDWebImage Persistant Image Functions
- The two functions below download and save UIImages to disk for offline usage
- 
-*******************************************************************/
-
-/*
--(void)downloadAllImagesAndSaveThem:(completeBlock)completeFlagFirstParent
-{
-    __block NSMutableDictionary *images = [[NSMutableDictionary alloc] init];
-    __block int count = [downloadedImages count], i = 0;
-    for(NSString *url in downloadedImages){
-        __block NSString *u = [url stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-        NSLog(@"URL %@", u);
-        [manager downloadWithURL:[NSURL URLWithString:u] options:0
-         progress:^(NSUInteger receivedSize, long long expectedSize){
-            // progression tracking code
-             
-         }completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished){
-             NSLog(@"Images %@", image);
-            [images setObject:image forKey:u];
-             i++;
-             if(i == count){
-                 NSLog(@"Sending images to save");
-                [self saveAllImagesToDisk:images complete:^(BOOL completeFlagParent){
-                    NSLog(@"Complete, returning!!");
-                     completeFlagFirstParent(YES);
-                }];
-             }
-        }];
-    }
-    
-
-}
-
--(void)saveAllImagesToDisk:(NSMutableDictionary *)images complete:(completeBlock)completeFlagParent
-{
-    NSLog(@"Images %@", images);
-    
-    __block int count = (int)[images count], i =0;
-    for(id key in images){
-        NSLog(@"Image be saved %@",[images objectForKey:key] );
-        [self saveFile:UIImagePNGRepresentation([images objectForKey:key]) andFileName:key complete:^(BOOL completeFlag){
-            i++;
-            if(count == i){
-                [images removeAllObjects];
-                manager = nil;
-                [downloadedImages removeAllObjects];
-                completeFlagParent(YES);
-            }
-        }];
-    }
-}*/
-
 
 
 //This function saves all the objects saved temporarily in the model to disk
@@ -737,8 +770,11 @@
                                                                 [self saveFile:encodedSolutions andFileName:@"initialSolutions" complete:^(BOOL completeFlag){
                                                                     [self saveFile:encodedPartners andFileName:@"initialPartners" complete:^(BOOL completeFlag){
                                                                         [self saveFile:encodedSoftware andFileName:@"initialSoftwareData" complete:^(BOOL completeFlag){
-                                                                            ALog(@"COMPLETE SAVING!");
-                                                                            completeFlagArgument(YES);
+                                                                            if(completeFlag){
+                                                                                completeFlagArgument(YES);
+                                                                            }else{
+                                                                                completeFlagArgument(NO);
+                                                                            }
                                                                         }];
                                                                     }];
                                                                 }];
@@ -762,6 +798,8 @@
         }
     });
 }
+
+
 
 //this sorts the data that is going into the table
 -(void)sortInitialPaperDataAlpha:(NSString *)key complete:(completeBlock)completeFlag
@@ -810,6 +848,12 @@
     UIFont *font = [UIFont fontWithName:key size:size];
     NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
     return [[[NSAttributedString alloc] initWithString:string attributes:attributes] size].width;
+}
+
+-(UIImage *)getImageWithName:(NSString *)filename
+{
+    NSString *path = [[NSBundle mainBundle] pathForResource:filename ofType:nil];
+    return [UIImage imageWithContentsOfFile:path];
 }
 
 /*----------------------------------------------*
@@ -965,13 +1009,27 @@
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString* path = [documentsDirectory stringByAppendingPathComponent:filename];
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    ALog(@"File %@", path);
+    
     if([fileManager fileExistsAtPath:path]){
         return YES;
     }else{
         return NO;
     }
+}
+
+//function that checks if a file exists
+-(BOOL)deleteFile:(NSString *)filename
+{
+    filename = [self cleanseStringName:filename];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString* path = [documentsDirectory stringByAppendingPathComponent:filename];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
     
+    NSError *error;
+    
+    return [fileManager removeItemAtPath:path error:&error];
+
 }
 
 //function that returns the file path based upon a filename

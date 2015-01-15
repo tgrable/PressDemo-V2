@@ -27,7 +27,6 @@
 		30AC1180192D921A00BE1072 /* Video.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AC117F192D921A00BE1072 /* Video.m */; };
 		30AC1183192D922900BE1072 /* Document.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AC1182192D922900BE1072 /* Document.m */; };
 		30AC1186192D923700BE1072 /* Product.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AC1185192D923700BE1072 /* Product.m */; };
-		30AC1189192D924400BE1072 /* UIModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AC1188192D924400BE1072 /* UIModel.m */; };
 		30AC11A2192D92B900BE1072 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AC118D192D92B900BE1072 /* SBJsonParser.m */; };
 		30AC11A3192D92B900BE1072 /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AC118F192D92B900BE1072 /* SBJsonStreamParser.m */; };
 		30AC11A4192D92B900BE1072 /* SBJsonStreamParserAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AC1191192D92B900BE1072 /* SBJsonStreamParserAccumulator.m */; };
@@ -76,7 +75,7 @@
 		711FC3081A40C574005BEDE7 /* CanonSoftwareGridViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 711FC3061A40C574005BEDE7 /* CanonSoftwareGridViewController.xib */; };
 		711FC30C1A40C61B005BEDE7 /* CanonSoftwareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 711FC30A1A40C61B005BEDE7 /* CanonSoftwareViewController.m */; };
 		711FC30D1A40C61B005BEDE7 /* CanonSoftwareViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 711FC30B1A40C61B005BEDE7 /* CanonSoftwareViewController.xib */; };
-		711FC3101A41E7A7005BEDE7 /* DownloadVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 711FC30F1A41E7A7005BEDE7 /* DownloadVideo.m */; };
+		711FC3101A41E7A7005BEDE7 /* DownloadFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 711FC30F1A41E7A7005BEDE7 /* DownloadFile.m */; };
 		711FC3251A41FAB4005BEDE7 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 711FC3131A41FAB4005BEDE7 /* AFHTTPRequestOperation.m */; };
 		711FC3261A41FAB4005BEDE7 /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 711FC3151A41FAB4005BEDE7 /* AFHTTPRequestOperationManager.m */; };
 		711FC3271A41FAB4005BEDE7 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 711FC3171A41FAB4005BEDE7 /* AFHTTPSessionManager.m */; };
@@ -97,6 +96,44 @@
 		712651081A5DD15D00C91AF2 /* home-nav-mono.png in Resources */ = {isa = PBXBuildFile; fileRef = 712651061A5DD15D00C91AF2 /* home-nav-mono.png */; };
 		7126510D1A63F9BE00C91AF2 /* CanonDownloadAll.m in Sources */ = {isa = PBXBuildFile; fileRef = 7126510B1A63F9BE00C91AF2 /* CanonDownloadAll.m */; };
 		7126510E1A63F9BE00C91AF2 /* CanonDownloadAll.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7126510C1A63F9BE00C91AF2 /* CanonDownloadAll.xib */; };
+		712651101A64184C00C91AF2 /* InitialDownload.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7126510F1A64184C00C91AF2 /* InitialDownload.plist */; };
+		7126513B1A6560A800C91AF2 /* CGPDFDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 712651141A6560A800C91AF2 /* CGPDFDocument.m */; };
+		7126513C1A6560A800C91AF2 /* ReaderConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 712651161A6560A800C91AF2 /* ReaderConstants.m */; };
+		7126513D1A6560A800C91AF2 /* ReaderContentPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 712651181A6560A800C91AF2 /* ReaderContentPage.m */; };
+		7126513E1A6560A800C91AF2 /* ReaderContentTile.m in Sources */ = {isa = PBXBuildFile; fileRef = 7126511A1A6560A800C91AF2 /* ReaderContentTile.m */; };
+		7126513F1A6560A800C91AF2 /* ReaderContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7126511C1A6560A800C91AF2 /* ReaderContentView.m */; };
+		712651401A6560A800C91AF2 /* ReaderDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 7126511E1A6560A800C91AF2 /* ReaderDocument.m */; };
+		712651411A6560A800C91AF2 /* ReaderDocumentOutline.m in Sources */ = {isa = PBXBuildFile; fileRef = 712651201A6560A800C91AF2 /* ReaderDocumentOutline.m */; };
+		712651421A6560A800C91AF2 /* ReaderMainPagebar.m in Sources */ = {isa = PBXBuildFile; fileRef = 712651221A6560A800C91AF2 /* ReaderMainPagebar.m */; };
+		712651431A6560A800C91AF2 /* ReaderMainToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 712651241A6560A800C91AF2 /* ReaderMainToolbar.m */; };
+		712651441A6560A800C91AF2 /* ReaderThumbCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 712651261A6560A800C91AF2 /* ReaderThumbCache.m */; };
+		712651451A6560A800C91AF2 /* ReaderThumbFetch.m in Sources */ = {isa = PBXBuildFile; fileRef = 712651281A6560A800C91AF2 /* ReaderThumbFetch.m */; };
+		712651461A6560A800C91AF2 /* ReaderThumbQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7126512A1A6560A800C91AF2 /* ReaderThumbQueue.m */; };
+		712651471A6560A800C91AF2 /* ReaderThumbRender.m in Sources */ = {isa = PBXBuildFile; fileRef = 7126512C1A6560A800C91AF2 /* ReaderThumbRender.m */; };
+		712651481A6560A800C91AF2 /* ReaderThumbRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7126512E1A6560A800C91AF2 /* ReaderThumbRequest.m */; };
+		712651491A6560A800C91AF2 /* ReaderThumbsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 712651301A6560A800C91AF2 /* ReaderThumbsView.m */; };
+		7126514A1A6560A800C91AF2 /* ReaderThumbView.m in Sources */ = {isa = PBXBuildFile; fileRef = 712651321A6560A800C91AF2 /* ReaderThumbView.m */; };
+		7126514B1A6560A800C91AF2 /* ReaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 712651341A6560A800C91AF2 /* ReaderViewController.m */; };
+		7126514C1A6560A800C91AF2 /* ThumbsMainToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 712651361A6560A800C91AF2 /* ThumbsMainToolbar.m */; };
+		7126514D1A6560A800C91AF2 /* ThumbsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 712651381A6560A800C91AF2 /* ThumbsViewController.m */; };
+		7126514E1A6560A800C91AF2 /* UIXToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7126513A1A6560A800C91AF2 /* UIXToolbarView.m */; };
+		712651761A6560EE00C91AF2 /* Reader-Button-H.png in Resources */ = {isa = PBXBuildFile; fileRef = 7126515B1A6560EE00C91AF2 /* Reader-Button-H.png */; };
+		712651771A6560EE00C91AF2 /* Reader-Button-H@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7126515C1A6560EE00C91AF2 /* Reader-Button-H@2x.png */; };
+		712651781A6560EE00C91AF2 /* Reader-Button-N.png in Resources */ = {isa = PBXBuildFile; fileRef = 7126515D1A6560EE00C91AF2 /* Reader-Button-N.png */; };
+		712651791A6560EE00C91AF2 /* Reader-Button-N@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7126515E1A6560EE00C91AF2 /* Reader-Button-N@2x.png */; };
+		7126517A1A6560EE00C91AF2 /* Reader-Email.png in Resources */ = {isa = PBXBuildFile; fileRef = 7126515F1A6560EE00C91AF2 /* Reader-Email.png */; };
+		7126517B1A6560EE00C91AF2 /* Reader-Email@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 712651601A6560EE00C91AF2 /* Reader-Email@2x.png */; };
+		7126517C1A6560EE00C91AF2 /* Reader-Export.png in Resources */ = {isa = PBXBuildFile; fileRef = 712651611A6560EE00C91AF2 /* Reader-Export.png */; };
+		7126517D1A6560EE00C91AF2 /* Reader-Export@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 712651621A6560EE00C91AF2 /* Reader-Export@2x.png */; };
+		7126517E1A6560EE00C91AF2 /* Reader-Mark-N.png in Resources */ = {isa = PBXBuildFile; fileRef = 712651631A6560EE00C91AF2 /* Reader-Mark-N.png */; };
+		7126517F1A6560EE00C91AF2 /* Reader-Mark-N@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 712651641A6560EE00C91AF2 /* Reader-Mark-N@2x.png */; };
+		712651801A6560EE00C91AF2 /* Reader-Mark-Y.png in Resources */ = {isa = PBXBuildFile; fileRef = 712651651A6560EE00C91AF2 /* Reader-Mark-Y.png */; };
+		712651811A6560EE00C91AF2 /* Reader-Mark-Y@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 712651661A6560EE00C91AF2 /* Reader-Mark-Y@2x.png */; };
+		712651821A6560EE00C91AF2 /* Reader-Print.png in Resources */ = {isa = PBXBuildFile; fileRef = 712651671A6560EE00C91AF2 /* Reader-Print.png */; };
+		712651831A6560EE00C91AF2 /* Reader-Print@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 712651681A6560EE00C91AF2 /* Reader-Print@2x.png */; };
+		712651841A6560EE00C91AF2 /* Reader-Thumbs.png in Resources */ = {isa = PBXBuildFile; fileRef = 712651691A6560EE00C91AF2 /* Reader-Thumbs.png */; };
+		712651851A6560EE00C91AF2 /* Reader-Thumbs@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7126516A1A6560EE00C91AF2 /* Reader-Thumbs@2x.png */; };
+		712651871A6595AE00C91AF2 /* ITC - ITCAvantGardeStd-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 712651861A65955D00C91AF2 /* ITC - ITCAvantGardeStd-Bold.ttf */; };
 		712728061A3BA6FB0040F89E /* Solution.m in Sources */ = {isa = PBXBuildFile; fileRef = 712728051A3BA6FB0040F89E /* Solution.m */; };
 		712946EA19A37BD800E0548D /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 712946E919A37BD800E0548D /* NetworkManager.m */; };
 		712946ED19A37C1E00E0548D /* QNetworkAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 712946EC19A37C1E00E0548D /* QNetworkAdditions.m */; };
@@ -363,8 +400,6 @@
 		30AC1182192D922900BE1072 /* Document.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Document.m; sourceTree = "<group>"; };
 		30AC1184192D923700BE1072 /* Product.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Product.h; sourceTree = "<group>"; };
 		30AC1185192D923700BE1072 /* Product.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Product.m; sourceTree = "<group>"; };
-		30AC1187192D924400BE1072 /* UIModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIModel.h; sourceTree = "<group>"; };
-		30AC1188192D924400BE1072 /* UIModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIModel.m; sourceTree = "<group>"; };
 		30AC118A192D926100BE1072 /* AppDelegateProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegateProtocol.h; sourceTree = "<group>"; };
 		30AC118B192D92B900BE1072 /* SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson.h; sourceTree = "<group>"; };
 		30AC118C192D92B900BE1072 /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonParser.h; sourceTree = "<group>"; };
@@ -434,8 +469,8 @@
 		711FC3091A40C61B005BEDE7 /* CanonSoftwareViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CanonSoftwareViewController.h; sourceTree = "<group>"; };
 		711FC30A1A40C61B005BEDE7 /* CanonSoftwareViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CanonSoftwareViewController.m; sourceTree = "<group>"; };
 		711FC30B1A40C61B005BEDE7 /* CanonSoftwareViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CanonSoftwareViewController.xib; sourceTree = "<group>"; };
-		711FC30E1A41E7A7005BEDE7 /* DownloadVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadVideo.h; sourceTree = "<group>"; };
-		711FC30F1A41E7A7005BEDE7 /* DownloadVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadVideo.m; sourceTree = "<group>"; };
+		711FC30E1A41E7A7005BEDE7 /* DownloadFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadFile.h; sourceTree = "<group>"; };
+		711FC30F1A41E7A7005BEDE7 /* DownloadFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadFile.m; sourceTree = "<group>"; };
 		711FC3121A41FAB4005BEDE7 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
 		711FC3131A41FAB4005BEDE7 /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; };
 		711FC3141A41FAB4005BEDE7 /* AFHTTPRequestOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperationManager.h; sourceTree = "<group>"; };
@@ -468,6 +503,64 @@
 		7126510A1A63F9BE00C91AF2 /* CanonDownloadAll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CanonDownloadAll.h; sourceTree = "<group>"; };
 		7126510B1A63F9BE00C91AF2 /* CanonDownloadAll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CanonDownloadAll.m; sourceTree = "<group>"; };
 		7126510C1A63F9BE00C91AF2 /* CanonDownloadAll.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CanonDownloadAll.xib; sourceTree = "<group>"; };
+		7126510F1A64184C00C91AF2 /* InitialDownload.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = InitialDownload.plist; sourceTree = "<group>"; };
+		712651131A6560A800C91AF2 /* CGPDFDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPDFDocument.h; sourceTree = "<group>"; };
+		712651141A6560A800C91AF2 /* CGPDFDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPDFDocument.m; sourceTree = "<group>"; };
+		712651151A6560A800C91AF2 /* ReaderConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderConstants.h; sourceTree = "<group>"; };
+		712651161A6560A800C91AF2 /* ReaderConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderConstants.m; sourceTree = "<group>"; };
+		712651171A6560A800C91AF2 /* ReaderContentPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderContentPage.h; sourceTree = "<group>"; };
+		712651181A6560A800C91AF2 /* ReaderContentPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderContentPage.m; sourceTree = "<group>"; };
+		712651191A6560A800C91AF2 /* ReaderContentTile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderContentTile.h; sourceTree = "<group>"; };
+		7126511A1A6560A800C91AF2 /* ReaderContentTile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderContentTile.m; sourceTree = "<group>"; };
+		7126511B1A6560A800C91AF2 /* ReaderContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderContentView.h; sourceTree = "<group>"; };
+		7126511C1A6560A800C91AF2 /* ReaderContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderContentView.m; sourceTree = "<group>"; };
+		7126511D1A6560A800C91AF2 /* ReaderDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderDocument.h; sourceTree = "<group>"; };
+		7126511E1A6560A800C91AF2 /* ReaderDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderDocument.m; sourceTree = "<group>"; };
+		7126511F1A6560A800C91AF2 /* ReaderDocumentOutline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderDocumentOutline.h; sourceTree = "<group>"; };
+		712651201A6560A800C91AF2 /* ReaderDocumentOutline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderDocumentOutline.m; sourceTree = "<group>"; };
+		712651211A6560A800C91AF2 /* ReaderMainPagebar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderMainPagebar.h; sourceTree = "<group>"; };
+		712651221A6560A800C91AF2 /* ReaderMainPagebar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderMainPagebar.m; sourceTree = "<group>"; };
+		712651231A6560A800C91AF2 /* ReaderMainToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderMainToolbar.h; sourceTree = "<group>"; };
+		712651241A6560A800C91AF2 /* ReaderMainToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderMainToolbar.m; sourceTree = "<group>"; };
+		712651251A6560A800C91AF2 /* ReaderThumbCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderThumbCache.h; sourceTree = "<group>"; };
+		712651261A6560A800C91AF2 /* ReaderThumbCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderThumbCache.m; sourceTree = "<group>"; };
+		712651271A6560A800C91AF2 /* ReaderThumbFetch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderThumbFetch.h; sourceTree = "<group>"; };
+		712651281A6560A800C91AF2 /* ReaderThumbFetch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderThumbFetch.m; sourceTree = "<group>"; };
+		712651291A6560A800C91AF2 /* ReaderThumbQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderThumbQueue.h; sourceTree = "<group>"; };
+		7126512A1A6560A800C91AF2 /* ReaderThumbQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderThumbQueue.m; sourceTree = "<group>"; };
+		7126512B1A6560A800C91AF2 /* ReaderThumbRender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderThumbRender.h; sourceTree = "<group>"; };
+		7126512C1A6560A800C91AF2 /* ReaderThumbRender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderThumbRender.m; sourceTree = "<group>"; };
+		7126512D1A6560A800C91AF2 /* ReaderThumbRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderThumbRequest.h; sourceTree = "<group>"; };
+		7126512E1A6560A800C91AF2 /* ReaderThumbRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderThumbRequest.m; sourceTree = "<group>"; };
+		7126512F1A6560A800C91AF2 /* ReaderThumbsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderThumbsView.h; sourceTree = "<group>"; };
+		712651301A6560A800C91AF2 /* ReaderThumbsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderThumbsView.m; sourceTree = "<group>"; };
+		712651311A6560A800C91AF2 /* ReaderThumbView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderThumbView.h; sourceTree = "<group>"; };
+		712651321A6560A800C91AF2 /* ReaderThumbView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderThumbView.m; sourceTree = "<group>"; };
+		712651331A6560A800C91AF2 /* ReaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderViewController.h; sourceTree = "<group>"; };
+		712651341A6560A800C91AF2 /* ReaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderViewController.m; sourceTree = "<group>"; };
+		712651351A6560A800C91AF2 /* ThumbsMainToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThumbsMainToolbar.h; sourceTree = "<group>"; };
+		712651361A6560A800C91AF2 /* ThumbsMainToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThumbsMainToolbar.m; sourceTree = "<group>"; };
+		712651371A6560A800C91AF2 /* ThumbsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThumbsViewController.h; sourceTree = "<group>"; };
+		712651381A6560A800C91AF2 /* ThumbsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThumbsViewController.m; sourceTree = "<group>"; };
+		712651391A6560A800C91AF2 /* UIXToolbarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIXToolbarView.h; sourceTree = "<group>"; };
+		7126513A1A6560A800C91AF2 /* UIXToolbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIXToolbarView.m; sourceTree = "<group>"; };
+		7126515B1A6560EE00C91AF2 /* Reader-Button-H.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reader-Button-H.png"; sourceTree = "<group>"; };
+		7126515C1A6560EE00C91AF2 /* Reader-Button-H@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reader-Button-H@2x.png"; sourceTree = "<group>"; };
+		7126515D1A6560EE00C91AF2 /* Reader-Button-N.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reader-Button-N.png"; sourceTree = "<group>"; };
+		7126515E1A6560EE00C91AF2 /* Reader-Button-N@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reader-Button-N@2x.png"; sourceTree = "<group>"; };
+		7126515F1A6560EE00C91AF2 /* Reader-Email.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reader-Email.png"; sourceTree = "<group>"; };
+		712651601A6560EE00C91AF2 /* Reader-Email@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reader-Email@2x.png"; sourceTree = "<group>"; };
+		712651611A6560EE00C91AF2 /* Reader-Export.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reader-Export.png"; sourceTree = "<group>"; };
+		712651621A6560EE00C91AF2 /* Reader-Export@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reader-Export@2x.png"; sourceTree = "<group>"; };
+		712651631A6560EE00C91AF2 /* Reader-Mark-N.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reader-Mark-N.png"; sourceTree = "<group>"; };
+		712651641A6560EE00C91AF2 /* Reader-Mark-N@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reader-Mark-N@2x.png"; sourceTree = "<group>"; };
+		712651651A6560EE00C91AF2 /* Reader-Mark-Y.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reader-Mark-Y.png"; sourceTree = "<group>"; };
+		712651661A6560EE00C91AF2 /* Reader-Mark-Y@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reader-Mark-Y@2x.png"; sourceTree = "<group>"; };
+		712651671A6560EE00C91AF2 /* Reader-Print.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reader-Print.png"; sourceTree = "<group>"; };
+		712651681A6560EE00C91AF2 /* Reader-Print@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reader-Print@2x.png"; sourceTree = "<group>"; };
+		712651691A6560EE00C91AF2 /* Reader-Thumbs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reader-Thumbs.png"; sourceTree = "<group>"; };
+		7126516A1A6560EE00C91AF2 /* Reader-Thumbs@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reader-Thumbs@2x.png"; sourceTree = "<group>"; };
+		712651861A65955D00C91AF2 /* ITC - ITCAvantGardeStd-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ITC - ITCAvantGardeStd-Bold.ttf"; sourceTree = "<group>"; };
 		712728041A3BA6FB0040F89E /* Solution.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Solution.h; sourceTree = "<group>"; };
 		712728051A3BA6FB0040F89E /* Solution.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Solution.m; sourceTree = "<group>"; };
 		712946E819A37BD800E0548D /* NetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkManager.h; sourceTree = "<group>"; };
@@ -820,6 +913,7 @@
 				30AC114E192D90D300BE1072 /* Images.xcassets */,
 				718D21381A379E1500980FDF /* Media */,
 				718D21391A379E2200980FDF /* Software */,
+				712651111A65607900C91AF2 /* PDFSource */,
 				718D20F81A3215FB00980FDF /* SubClasses */,
 				30AC116D192D914600BE1072 /* NetworkStack */,
 				30AC116E192D915E00BE1072 /* Model */,
@@ -836,12 +930,14 @@
 			isa = PBXGroup;
 			children = (
 				30AC113E192D90D300BE1072 /* PressDemo-Info.plist */,
+				712651861A65955D00C91AF2 /* ITC - ITCAvantGardeStd-Bold.ttf */,
 				718E3146199AB84B0000A5EB /* ITC - ITCAvantGardeStd-Bk.ttf */,
 				718E3145199AB8450000A5EB /* ITC - ITCAvantGardeStd-Md.ttf */,
 				30AC113F192D90D300BE1072 /* InfoPlist.strings */,
 				30AC1142192D90D300BE1072 /* main.m */,
 				30AC1144192D90D300BE1072 /* PressDemo-Prefix.pch */,
 				719D39F8199538B7008E56EC /* LastUpdated.plist */,
+				7126510F1A64184C00C91AF2 /* InitialDownload.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -869,8 +965,8 @@
 			children = (
 				30AC1172192D91B100BE1072 /* NetworkData.h */,
 				30AC1173192D91B100BE1072 /* NetworkData.m */,
-				711FC30E1A41E7A7005BEDE7 /* DownloadVideo.h */,
-				711FC30F1A41E7A7005BEDE7 /* DownloadVideo.m */,
+				711FC30E1A41E7A7005BEDE7 /* DownloadFile.h */,
+				711FC30F1A41E7A7005BEDE7 /* DownloadFile.m */,
 				30AC1175192D91CF00BE1072 /* DownloadUrlOperation.h */,
 				30AC1176192D91CF00BE1072 /* DownloadUrlOperation.m */,
 				30AC11DF192D934100BE1072 /* Reachability.h */,
@@ -912,8 +1008,6 @@
 				7129485F19ABE92600E0548D /* SavedVideos.m */,
 				712728041A3BA6FB0040F89E /* Solution.h */,
 				712728051A3BA6FB0040F89E /* Solution.m */,
-				30AC1187192D924400BE1072 /* UIModel.h */,
-				30AC1188192D924400BE1072 /* UIModel.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1027,6 +1121,85 @@
 				711FC3241A41FAB4005BEDE7 /* AFURLSessionManager.m */,
 			);
 			path = AFNetworking;
+			sourceTree = "<group>";
+		};
+		712651111A65607900C91AF2 /* PDFSource */ = {
+			isa = PBXGroup;
+			children = (
+				7126514F1A6560EE00C91AF2 /* Graphics */,
+				712651121A6560A800C91AF2 /* Sources */,
+			);
+			name = PDFSource;
+			sourceTree = "<group>";
+		};
+		712651121A6560A800C91AF2 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				712651131A6560A800C91AF2 /* CGPDFDocument.h */,
+				712651141A6560A800C91AF2 /* CGPDFDocument.m */,
+				712651151A6560A800C91AF2 /* ReaderConstants.h */,
+				712651161A6560A800C91AF2 /* ReaderConstants.m */,
+				712651171A6560A800C91AF2 /* ReaderContentPage.h */,
+				712651181A6560A800C91AF2 /* ReaderContentPage.m */,
+				712651191A6560A800C91AF2 /* ReaderContentTile.h */,
+				7126511A1A6560A800C91AF2 /* ReaderContentTile.m */,
+				7126511B1A6560A800C91AF2 /* ReaderContentView.h */,
+				7126511C1A6560A800C91AF2 /* ReaderContentView.m */,
+				7126511D1A6560A800C91AF2 /* ReaderDocument.h */,
+				7126511E1A6560A800C91AF2 /* ReaderDocument.m */,
+				7126511F1A6560A800C91AF2 /* ReaderDocumentOutline.h */,
+				712651201A6560A800C91AF2 /* ReaderDocumentOutline.m */,
+				712651211A6560A800C91AF2 /* ReaderMainPagebar.h */,
+				712651221A6560A800C91AF2 /* ReaderMainPagebar.m */,
+				712651231A6560A800C91AF2 /* ReaderMainToolbar.h */,
+				712651241A6560A800C91AF2 /* ReaderMainToolbar.m */,
+				712651251A6560A800C91AF2 /* ReaderThumbCache.h */,
+				712651261A6560A800C91AF2 /* ReaderThumbCache.m */,
+				712651271A6560A800C91AF2 /* ReaderThumbFetch.h */,
+				712651281A6560A800C91AF2 /* ReaderThumbFetch.m */,
+				712651291A6560A800C91AF2 /* ReaderThumbQueue.h */,
+				7126512A1A6560A800C91AF2 /* ReaderThumbQueue.m */,
+				7126512B1A6560A800C91AF2 /* ReaderThumbRender.h */,
+				7126512C1A6560A800C91AF2 /* ReaderThumbRender.m */,
+				7126512D1A6560A800C91AF2 /* ReaderThumbRequest.h */,
+				7126512E1A6560A800C91AF2 /* ReaderThumbRequest.m */,
+				7126512F1A6560A800C91AF2 /* ReaderThumbsView.h */,
+				712651301A6560A800C91AF2 /* ReaderThumbsView.m */,
+				712651311A6560A800C91AF2 /* ReaderThumbView.h */,
+				712651321A6560A800C91AF2 /* ReaderThumbView.m */,
+				712651331A6560A800C91AF2 /* ReaderViewController.h */,
+				712651341A6560A800C91AF2 /* ReaderViewController.m */,
+				712651351A6560A800C91AF2 /* ThumbsMainToolbar.h */,
+				712651361A6560A800C91AF2 /* ThumbsMainToolbar.m */,
+				712651371A6560A800C91AF2 /* ThumbsViewController.h */,
+				712651381A6560A800C91AF2 /* ThumbsViewController.m */,
+				712651391A6560A800C91AF2 /* UIXToolbarView.h */,
+				7126513A1A6560A800C91AF2 /* UIXToolbarView.m */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		7126514F1A6560EE00C91AF2 /* Graphics */ = {
+			isa = PBXGroup;
+			children = (
+				7126515B1A6560EE00C91AF2 /* Reader-Button-H.png */,
+				7126515C1A6560EE00C91AF2 /* Reader-Button-H@2x.png */,
+				7126515D1A6560EE00C91AF2 /* Reader-Button-N.png */,
+				7126515E1A6560EE00C91AF2 /* Reader-Button-N@2x.png */,
+				7126515F1A6560EE00C91AF2 /* Reader-Email.png */,
+				712651601A6560EE00C91AF2 /* Reader-Email@2x.png */,
+				712651611A6560EE00C91AF2 /* Reader-Export.png */,
+				712651621A6560EE00C91AF2 /* Reader-Export@2x.png */,
+				712651631A6560EE00C91AF2 /* Reader-Mark-N.png */,
+				712651641A6560EE00C91AF2 /* Reader-Mark-N@2x.png */,
+				712651651A6560EE00C91AF2 /* Reader-Mark-Y.png */,
+				712651661A6560EE00C91AF2 /* Reader-Mark-Y@2x.png */,
+				712651671A6560EE00C91AF2 /* Reader-Print.png */,
+				712651681A6560EE00C91AF2 /* Reader-Print@2x.png */,
+				712651691A6560EE00C91AF2 /* Reader-Thumbs.png */,
+				7126516A1A6560EE00C91AF2 /* Reader-Thumbs@2x.png */,
+			);
+			path = Graphics;
 			sourceTree = "<group>";
 		};
 		7129481219A3FFCF00E0548D /* launch */ = {
@@ -1454,6 +1627,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				712651871A6595AE00C91AF2 /* ITC - ITCAvantGardeStd-Bold.ttf in Resources */,
 				7129483319A3FFCF00E0548D /* launch.png in Resources */,
 				718E3148199AB9F70000A5EB /* ITC - ITCAvantGardeStd-Md.ttf in Resources */,
 				718E3147199AB9EF0000A5EB /* ITC - ITCAvantGardeStd-Bk.ttf in Resources */,
@@ -1477,12 +1651,14 @@
 				71DBB80A192FB60E002D7CA9 /* home-nav-workflow@2x.png in Resources */,
 				718D212B1A379BC400980FDF /* icn-mill-all@2x.png in Resources */,
 				718E3175199D39620000A5EB /* icn-whitepaper@2x.png in Resources */,
+				7126517F1A6560EE00C91AF2 /* Reader-Mark-N@2x.png in Resources */,
 				718E3169199D39620000A5EB /* icn-load@2x.png in Resources */,
 				718E316B199D39620000A5EB /* icn-overview@2x.png in Resources */,
 				71708CEE1A38F9450041F8D5 /* header-pink@2x.png in Resources */,
 				7129483619A4061D00E0548D /* CSA-logo.png in Resources */,
 				71708CC71A38F92C0041F8D5 /* hdr-short-blue.png in Resources */,
 				30AC11D6192D931900BE1072 /* icon_144_144@2x.png in Resources */,
+				7126517C1A6560EE00C91AF2 /* Reader-Export.png in Resources */,
 				718E316D199D39620000A5EB /* icn-selected@2x.png in Resources */,
 				711FC30D1A40C61B005BEDE7 /* CanonSoftwareViewController.xib in Resources */,
 				71DBB840192FB60E002D7CA9 /* home-nav-dm.png in Resources */,
@@ -1496,7 +1672,9 @@
 				718D21291A379BB100980FDF /* icn-key@2x.png in Resources */,
 				71DBB81F192FB60E002D7CA9 /* btn-back.png in Resources */,
 				718E316A199D39620000A5EB /* icn-overview.png in Resources */,
+				712651781A6560EE00C91AF2 /* Reader-Button-N.png in Resources */,
 				71DBB83C192FB60E002D7CA9 /* home-nav-cat.png in Resources */,
+				712651771A6560EE00C91AF2 /* Reader-Button-H@2x.png in Resources */,
 				71708CCF1A38F92C0041F8D5 /* header-gray.png in Resources */,
 				71DBB831192FB60E002D7CA9 /* header-healthcare.png in Resources */,
 				718D21371A379C4400980FDF /* home-nav-software.png in Resources */,
@@ -1517,7 +1695,9 @@
 				71DBB82F192FB60E002D7CA9 /* header-catalogs.png in Resources */,
 				718E3164199D39620000A5EB /* icn-download.png in Resources */,
 				718E316E199D39620000A5EB /* icn-specs.png in Resources */,
+				712651841A6560EE00C91AF2 /* Reader-Thumbs.png in Resources */,
 				718E3172199D39620000A5EB /* icn-video.png in Resources */,
+				712651791A6560EE00C91AF2 /* Reader-Button-N@2x.png in Resources */,
 				712651081A5DD15D00C91AF2 /* home-nav-mono.png in Resources */,
 				30AC11D8192D931900BE1072 /* icon_40_40@2x.png in Resources */,
 				718E316F199D39620000A5EB /* icn-specs@2x.png in Resources */,
@@ -1533,6 +1713,7 @@
 				718E3163199D39620000A5EB /* icn-casestudy@2x.png in Resources */,
 				71DBB81D192FB60E002D7CA9 /* white-pane@2x.png in Resources */,
 				71DBB853192FB60E002D7CA9 /* leftpane-tile.png in Resources */,
+				7126517A1A6560EE00C91AF2 /* Reader-Email.png in Resources */,
 				30AC116C192D911600BE1072 /* CanonViewController.xib in Resources */,
 				30AC11D3192D931900BE1072 /* icon_152_52@2x.png in Resources */,
 				30AC11DA192D931900BE1072 /* icon_512_512@2x.png in Resources */,
@@ -1542,6 +1723,8 @@
 				71708CD21A38F92C0041F8D5 /* header-pink.png in Resources */,
 				718D21271A379B9800980FDF /* home-nav-media.png in Resources */,
 				71708CCA1A38F92C0041F8D5 /* hdr-short-orange.png in Resources */,
+				712651851A6560EE00C91AF2 /* Reader-Thumbs@2x.png in Resources */,
+				712651801A6560EE00C91AF2 /* Reader-Mark-Y.png in Resources */,
 				71708CD41A38F92C0041F8D5 /* header-yellow.png in Resources */,
 				71DBB84E192FB60E002D7CA9 /* icn-trash.png in Resources */,
 				71DBB7FA192FB60E002D7CA9 /* hero-FPO@2x.png in Resources */,
@@ -1581,6 +1764,7 @@
 				30AC11DE192D931900BE1072 /* icon_80_80@2x.png in Resources */,
 				71DBB7E6192FB60E002D7CA9 /* hdr-short-CS3000@2x.png in Resources */,
 				712651071A5DD15D00C91AF2 /* home-nav-color.png in Resources */,
+				7126517D1A6560EE00C91AF2 /* Reader-Export@2x.png in Resources */,
 				7129482919A3FFCF00E0548D /* ico-29.png in Resources */,
 				718D21301A379BFB00980FDF /* icn-mill-all@2x-2.png in Resources */,
 				71DBB7EF192FB60E002D7CA9 /* header-catalogs@2x.png in Resources */,
@@ -1601,13 +1785,16 @@
 				71708CE91A38F9450041F8D5 /* hdr-short-yellow@X2.png in Resources */,
 				71DBB855192FB60E002D7CA9 /* Thumbs.db in Resources */,
 				30AC11DB192D931900BE1072 /* icon_58_58@2x.png in Resources */,
+				712651811A6560EE00C91AF2 /* Reader-Mark-Y@2x.png in Resources */,
 				71DBB817192FB60E002D7CA9 /* leftpane-tile@2x.png in Resources */,
 				71DBB7F3192FB60E002D7CA9 /* header-dm@2x.png in Resources */,
 				30AC11D4192D931900BE1072 /* icon_114_114@2x.png in Resources */,
 				71DBB84A192FB60E002D7CA9 /* icn-load.png in Resources */,
 				714523D219DDB32D0024CCF6 /* hdr-doc-casestudy.png in Resources */,
 				7129482B19A3FFCF00E0548D /* ico-44.png in Resources */,
+				712651761A6560EE00C91AF2 /* Reader-Button-H.png in Resources */,
 				71DBB7FE192FB60E002D7CA9 /* home-nav-books@2x.png in Resources */,
+				712651101A64184C00C91AF2 /* InitialDownload.plist in Resources */,
 				30AC11D9192D931900BE1072 /* icon_50_50@2x.png in Resources */,
 				71DBB833192FB60E002D7CA9 /* header-manuals.png in Resources */,
 				71DBB83A192FB60E002D7CA9 /* home-nav-book.png in Resources */,
@@ -1655,6 +1842,7 @@
 				71708CE81A38F9450041F8D5 /* hdr-short-purple@X2.png in Resources */,
 				71DBB802192FB60E002D7CA9 /* home-nav-continuous@2x.png in Resources */,
 				718E3162199D39620000A5EB /* icn-casestudy.png in Resources */,
+				7126517B1A6560EE00C91AF2 /* Reader-Email@2x.png in Resources */,
 				71708CE71A38F9450041F8D5 /* hdr-short-pink@X2.png in Resources */,
 				71DBB83F192FB60E002D7CA9 /* home-nav-cutsheet.png in Resources */,
 				71DBB816192FB60E002D7CA9 /* img-FPO-grid@2x.png in Resources */,
@@ -1662,6 +1850,7 @@
 				71DBB7F1192FB60E002D7CA9 /* header-continuousfeed@2x.png in Resources */,
 				7129480919A3EFE400E0548D /* home-header-all@2x.png in Resources */,
 				7129481019A3FCC600E0548D /* icn-video.png in Resources */,
+				712651831A6560EE00C91AF2 /* Reader-Print@2x.png in Resources */,
 				711FC32F1A4308F1005BEDE7 /* ico-blackwhite.png in Resources */,
 				7129481119A3FCC600E0548D /* icn-whitepaper.png in Resources */,
 				718E3174199D39620000A5EB /* icn-whitepaper.png in Resources */,
@@ -1675,11 +1864,13 @@
 				71DBB7FF192FB60E002D7CA9 /* home-nav-brochures@2x.png in Resources */,
 				71708D081A39FC430041F8D5 /* CanonTableKeyViewController.xib in Resources */,
 				71DBB7E9192FB60E002D7CA9 /* hdr-short-jetstreamdual@2x.png in Resources */,
+				7126517E1A6560EE00C91AF2 /* Reader-Mark-N.png in Resources */,
 				711FC3001A3F6373005BEDE7 /* PartnerViewController.xib in Resources */,
 				7129482819A3FFCF00E0548D /* ico-25.png in Resources */,
 				71DBB848192FB60E002D7CA9 /* icn-download.png in Resources */,
 				7129482719A3FFCF00E0548D /* ico-22.png in Resources */,
 				7129482419A3FFCF00E0548D /* ico-1024.png in Resources */,
+				712651821A6560EE00C91AF2 /* Reader-Print.png in Resources */,
 				7129482D19A3FFCF00E0548D /* ico-512.png in Resources */,
 				71DBB7F8192FB60E002D7CA9 /* header-statements@2x.png in Resources */,
 			);
@@ -1701,10 +1892,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				711FC3251A41FAB4005BEDE7 /* AFHTTPRequestOperation.m in Sources */,
+				7126514C1A6560A800C91AF2 /* ThumbsMainToolbar.m in Sources */,
+				712651431A6560A800C91AF2 /* ReaderMainToolbar.m in Sources */,
 				30AC11A9192D92B900BE1072 /* SBJsonStreamWriterState.m in Sources */,
 				30AC11A3192D92B900BE1072 /* SBJsonStreamParser.m in Sources */,
 				718D21051A3793D500980FDF /* Partner.m in Sources */,
-				30AC1189192D924400BE1072 /* UIModel.m in Sources */,
+				7126513E1A6560A800C91AF2 /* ReaderContentTile.m in Sources */,
 				718D210E1A37942500980FDF /* Paper.m in Sources */,
 				30AC1183192D922900BE1072 /* Document.m in Sources */,
 				711FC32C1A41FAB4005BEDE7 /* AFURLResponseSerialization.m in Sources */,
@@ -1714,15 +1907,19 @@
 				718D20FE1A32170E00980FDF /* WhatDoYouPrint.m in Sources */,
 				711FC32A1A41FAB4005BEDE7 /* AFURLConnectionOperation.m in Sources */,
 				711FC32D1A41FAB4005BEDE7 /* AFURLSessionManager.m in Sources */,
+				7126513B1A6560A800C91AF2 /* CGPDFDocument.m in Sources */,
 				30AC1180192D921A00BE1072 /* Video.m in Sources */,
 				30AC11A7192D92B900BE1072 /* SBJsonStreamWriter.m in Sources */,
 				30AC1174192D91B100BE1072 /* NetworkData.m in Sources */,
+				7126514B1A6560A800C91AF2 /* ReaderViewController.m in Sources */,
 				711FC3071A40C574005BEDE7 /* CanonSoftwareGridViewController.m in Sources */,
 				711FC2FF1A3F6373005BEDE7 /* PartnerViewController.m in Sources */,
 				30AC11A8192D92B900BE1072 /* SBJsonStreamWriterAccumulator.m in Sources */,
 				30AC11E1192D934100BE1072 /* Reachability.m in Sources */,
+				712651481A6560A800C91AF2 /* ReaderThumbRequest.m in Sources */,
 				71708D021A39DC810041F8D5 /* UMTableView.m in Sources */,
 				30AC11BB192D92D200BE1072 /* UIImage+RoundedCorner.m in Sources */,
+				712651491A6560A800C91AF2 /* ReaderThumbsView.m in Sources */,
 				30AC114D192D90D300BE1072 /* CanonViewController.m in Sources */,
 				30AC11AB192D92B900BE1072 /* SBJsonUTF8Stream.m in Sources */,
 				719D39ED1994216F008E56EC /* ProductSeries.m in Sources */,
@@ -1731,15 +1928,21 @@
 				718D20FB1A32163500980FDF /* ProductScroll.m in Sources */,
 				711FC32B1A41FAB4005BEDE7 /* AFURLRequestSerialization.m in Sources */,
 				71708D011A39DC810041F8D5 /* UMTableBorderView.m in Sources */,
+				7126513D1A6560A800C91AF2 /* ReaderContentPage.m in Sources */,
+				7126514A1A6560A800C91AF2 /* ReaderThumbView.m in Sources */,
 				711FC3261A41FAB4005BEDE7 /* AFHTTPRequestOperationManager.m in Sources */,
 				30AC11B9192D92D200BE1072 /* UIImage+Alpha.m in Sources */,
+				7126514D1A6560A800C91AF2 /* ThumbsViewController.m in Sources */,
 				30AC11B8192D92D200BE1072 /* UIButton+Extensions.m in Sources */,
 				30AC11AC192D92B900BE1072 /* SBJsonWriter.m in Sources */,
+				712651451A6560A800C91AF2 /* ReaderThumbFetch.m in Sources */,
 				7129486019ABE92600E0548D /* SavedVideos.m in Sources */,
 				71708D071A39FC430041F8D5 /* CanonTableKeyViewController.m in Sources */,
+				712651421A6560A800C91AF2 /* ReaderMainPagebar.m in Sources */,
 				718E314C199AC1B70000A5EB /* SeriesViewController.m in Sources */,
 				30AC1147192D90D300BE1072 /* CanonAppDelegate.m in Sources */,
 				712728061A3BA6FB0040F89E /* Solution.m in Sources */,
+				712651441A6560A800C91AF2 /* ReaderThumbCache.m in Sources */,
 				71708CB51A38E35E0041F8D5 /* CanonMediaGridViewController.m in Sources */,
 				30AC11AF192D92C400BE1072 /* NSObject+SBJson.m in Sources */,
 				711FC30C1A40C61B005BEDE7 /* CanonSoftwareViewController.m in Sources */,
@@ -1748,6 +1951,7 @@
 				7126510D1A63F9BE00C91AF2 /* CanonDownloadAll.m in Sources */,
 				30AC1177192D91CF00BE1072 /* DownloadUrlOperation.m in Sources */,
 				718E3133199957ED0000A5EB /* FilterViewController.m in Sources */,
+				712651461A6560A800C91AF2 /* ReaderThumbQueue.m in Sources */,
 				711FC3281A41FAB4005BEDE7 /* AFNetworkReachabilityManager.m in Sources */,
 				30AC11A2192D92B900BE1072 /* SBJsonParser.m in Sources */,
 				30AC11A5192D92B900BE1072 /* SBJsonStreamParserAdapter.m in Sources */,
@@ -1756,14 +1960,20 @@
 				711FC3271A41FAB4005BEDE7 /* AFHTTPSessionManager.m in Sources */,
 				718D210B1A37940E00980FDF /* Mill.m in Sources */,
 				711FC3291A41FAB4005BEDE7 /* AFSecurityPolicy.m in Sources */,
-				711FC3101A41E7A7005BEDE7 /* DownloadVideo.m in Sources */,
+				711FC3101A41E7A7005BEDE7 /* DownloadFile.m in Sources */,
+				7126513C1A6560A800C91AF2 /* ReaderConstants.m in Sources */,
+				712651411A6560A800C91AF2 /* ReaderDocumentOutline.m in Sources */,
+				7126514E1A6560A800C91AF2 /* UIXToolbarView.m in Sources */,
 				30AC11BA192D92D200BE1072 /* UIImage+Resize.m in Sources */,
 				711FC33B1A4388B5005BEDE7 /* UIBorderLabel.m in Sources */,
 				718D21011A32172300980FDF /* ShowAll.m in Sources */,
+				7126513F1A6560A800C91AF2 /* ReaderContentView.m in Sources */,
 				30AC11A4192D92B900BE1072 /* SBJsonStreamParserAccumulator.m in Sources */,
 				71708D031A39DC810041F8D5 /* UMTableViewController.m in Sources */,
 				71708D001A39DC810041F8D5 /* UMCellView.m in Sources */,
+				712651471A6560A800C91AF2 /* ReaderThumbRender.m in Sources */,
 				30AC117D192D920900BE1072 /* CanonModel.m in Sources */,
+				712651401A6560A800C91AF2 /* ReaderDocument.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

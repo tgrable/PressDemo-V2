@@ -195,8 +195,8 @@
     
     model = [self AppDataObj];
     
-    downloadVideo = [[DownloadVideo alloc] init];
-    downloadVideo.delegate = self;
+    downloadFile = [[DownloadFile alloc] init];
+    downloadFile.delegate = self;
     
     //***** Load up views to the local view controller ************//
     //the nav bar
@@ -247,7 +247,7 @@
     [tableKey setFrame:CGRectMake(690, 56, 33, 33)];
     [tableKey addTarget:self action:@selector(tableKeySelected:)forControlEvents:UIControlEventTouchDown];
     tableKey.showsTouchWhenHighlighted = YES;
-    [tableKey setBackgroundImage:[model.ui getImageWithName:@"/icn-key@2x.png"] forState:UIControlStateNormal];
+    [tableKey setBackgroundImage:[model getImageWithName:@"/icn-key@2x.png"] forState:UIControlStateNormal];
     tableKey.backgroundColor = [UIColor clearColor];
     [tableBackground addSubview:tableKey];
     
@@ -557,7 +557,7 @@
     [sideBar addSubview:mediaPapers];
     
     mediaPapersIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 35, 35)];
-    [mediaPapersIcon setImage:[model.ui getImageWithName:@"/icn-mill@2x-2.png"]];
+    [mediaPapersIcon setImage:[model getImageWithName:@"/icn-mill@2x-2.png"]];
     [mediaPapers addSubview:mediaPapersIcon];
     
     mediaPapersLabel = [[UILabel alloc] initWithFrame:CGRectMake(53, 0, 125, 36)];
@@ -910,6 +910,10 @@
                         
                     }
                     
+                    NSString *rawVideo = [v.rawVideo stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+                    NSString *name = [model getVideoFileName:rawVideo];
+                    
+                    /*
                     //add the download video image to the video top right corner
                     UIButton *download = [UIButton buttonWithType:UIButtonTypeCustom];
                     [download setFrame:CGRectMake(717, 7, 24, 24)];
@@ -920,7 +924,6 @@
                     
                     
                     NSString *rawVideo = [v.rawVideo stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-                    
                     NSString *name = [model getVideoFileName:rawVideo];
                     NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
                     
@@ -937,7 +940,7 @@
                     [download setBackgroundColor:[UIColor whiteColor]];
                     [download setHitTestEdgeInsets:UIEdgeInsetsMake(-15, -15, -15, -15)];
                     [rowContainer addSubview:download];
-                    [rowContainer bringSubviewToFront:download];
+                    [rowContainer bringSubviewToFront:download];*/
                     
                     
                     //set the data for the rest of the row
@@ -1085,15 +1088,16 @@
 }
 
 //this function tells the application to either download the video or load the video from disk
+/*
 -(void)downloadVideo:(id)sender
 {
     UIButton *b = (UIButton *)sender;
     NSString *videoURLString = [b.titleLabel.text stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
     
-    /************ Download the video to disk ************************/
+
     if(b.tag == 555){
 
-        if(downloadVideo.videoDownloading){
+        if(downloadFile.videoDownloading){
             [self displayMessage:@"Another video is currently downloading." withTitle:@"Alret"];
         }else{
             //make sure we can access the internet first
@@ -1110,7 +1114,8 @@
                 downloadingURL = [model getVideoFileName:videoURLString];
                 downloadingURL = [downloadingURL stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                    [downloadVideo downloadVideo:videoURLString];
+                    ALog(@"Function is deprecated %@", downloadingURL);
+                    //[downloadVideo downloadVideo:videoURLString];
                 });
                 //GA
                 //[model logData:@"Series View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Video to download: %@",videoURLString]];
@@ -1118,7 +1123,7 @@
                 [self displayMessage:@"Please connect to the internet to download this video" withTitle:@"Alret"];
             }
         }
-        /************ Play the video from disk ************************/
+        
     }else if(b.tag == 777){
         
         NSString *path = [videoURLString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -1139,7 +1144,7 @@
         }
     }
     
-}
+}*/
 
 
 //This function executes the functionality when a row is tapped on either a document of a video
@@ -1148,35 +1153,31 @@
     UIButton *b = (UIButton *)sender;
     
     //since we are only dealing with videos that can be tapped in the row
-        
     Video *v = [currentDocumentData objectForKey: b.titleLabel.text];
-    NSString *name = [model getVideoFileName:v.rawVideo];
-    NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
+    NSString *filename = [model getVideoFileName:v.rawVideo];
+    NSString *lookupName = [filename stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
     
-    
-    if([model.hostReachability isReachableViaWiFi]){
-        //stream if reachable
-        NSString *videoURLString = [v.streamingURL stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-        NSURL *videoURL = [NSURL URLWithString:videoURLString];
+    //try and play the moview from the device first
+    if([model fileExists:[lookupName lastPathComponent]]){
+        
+        NSString *fullPath = [model returnFilePath:lookupName];
+        NSString *urlPath = [NSString stringWithFormat:@"file://%@", fullPath];
+        NSURL *videoURL = [NSURL URLWithString:urlPath];
         MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
         [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
-    }else{
-        NSString *lookupNameAdvanced = [lookupName stringByReplacingOccurrencesOfString:@" " withString:@"_"];
+        ALog(@"LOAD VIDEO FROM DEVICE %@", videoURL);
         
-        if([model fileExists:[lookupNameAdvanced lastPathComponent]]){
-            
-            NSString *fullPath = [model returnFilePath:lookupNameAdvanced];
-            NSString *urlPath = [NSString stringWithFormat:@"file://%@", fullPath];
-            NSURL *videoURL = [NSURL URLWithString:urlPath];
+        //if not on the device, try  and stream it
+    }else{
+        
+        if([model.hostReachability isReachableViaWiFi]){
+            NSString *videoURLString = [v.streamingURL stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+            NSURL *videoURL = [NSURL URLWithString:videoURLString];
             MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
             [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
-            ALog(@"LOAD VIDEO FROM DEVICE %@", videoURL);
-        }else{
-            [self displayMessage:@"This video has not been downloaded to the device.  Please connect to the internet and stream the video, or download the video for offline usage." withTitle:@"Alert!"];
+            ALog(@"Streaming");
         }
-
     }
-    
 }
 
 
@@ -1229,7 +1230,13 @@
 //this function sends the user back home
 -(void)triggerHome:(id)sender
 {
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    for (UIViewController *vc in [self.navigationController viewControllers]) {
+        if ([vc isMemberOfClass:[CanonViewController class]]) {
+            [self.navigationController popToViewController:vc animated:YES];
+            return;
+        }
+        
+    }
 }
 
 //this function sets up the disposable views and also sets up the overview view in the main portion of the app
@@ -1242,7 +1249,7 @@
     [navBarHomeButton setBackgroundImage:[UIImage imageNamed:@"icn-home.png"] forState:UIControlStateNormal];
     
     //add the small main header
-    mainShortBanner.image = [model.ui getImageWithName:@"/hdr-short-pink@X2.png"];
+    mainShortBanner.image = [model getImageWithName:@"/hdr-short-pink@X2.png"];
     
     millNameHeader.text = [model.selectedMill.title uppercaseString];
     
@@ -1377,14 +1384,14 @@
 // Only certain columns have a fixed size, the other columns share the remainder
 - (int) fixedWidthForColumn: (int) columnIndex {
     
-        //if we are dealing with column 0 or 1 make sure the width is set to 120
-        if (columnIndex == 0) {
-              return 120;
-        }else if(columnIndex == 1){
-              return 120;
-        }else {
-            return 0;
-        }
+    //if we are dealing with column 0 or 1 make sure the width is set to 120
+    if (columnIndex == 0) {
+          return 120;
+    }else if(columnIndex == 1){
+          return 120;
+    }else {
+        return 0;
+    }
    
 }
 
@@ -2226,10 +2233,6 @@
     }
     //download
     if (buttonIndex == 1){
-        //remove nsuserdefaults
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            [model wipeOutAllModelDataForUpdate];
-        });
         
         if([model.hostReachability isReachableViaWiFi]){
             //we have now loaded
@@ -2241,8 +2244,10 @@
     }
 }
 
+
 //function that is called when the video is done downloading
 //this function adds the video URL to the button as the title for download
+/*
 -(void)videoDownloadResponse:(BOOL)flag
 {
    
@@ -2257,7 +2262,7 @@
     }else{
         [self displayMessage:@"OOPS! Something went wrong downloading your video.  Please make sure you are connected to the internet and try again." withTitle:@"Alert"];
     }
-}
+}*/
 
 //network delegate function called when a response is sent back to the main thread
 //this response will let the view and the user know that there is an update available
@@ -2386,6 +2391,7 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 
 @end

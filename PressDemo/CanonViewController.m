@@ -43,7 +43,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityDidChange:) name:kReachabilityChangedNotification object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityDidChange:) name:kReachabilityChangedNotification object:nil];
     }
     return self;
 }
@@ -54,11 +54,13 @@
  -(void)reachabilityDidChange:(NSNotification *)notification
  
  -------------------------------------------------------*/
+
+/*
 - (void)reachabilityDidChange:(NSNotification *)notification {
     //reachability object
     Reachability *reachability = (Reachability *)[notification object];
     //if we can reach the internet
-    if ([reachability isReachable]) {
+    if ([reachability isReachableViaWiFi]) {
         ALog(@"REACHABLE");
         if([[[NSUserDefaults standardUserDefaults] objectForKey:@"case-study"] isEqualToString:@""] && !downloadInProgress){
             //this means that the app failed on the initial load and needs to be loaded
@@ -69,7 +71,7 @@
         //set UI error
         ALog(@"NOT REACHABLE");
     }
-}
+}*/
 
 /* suppress anything that should be killed when app moves to the background */
 -(void)appWentIntoBackground
@@ -84,19 +86,19 @@
     //start the update check here
     ALog(@"App came back into focus");
     //if we can reach the internet
+    
     if ([model.hostReachability isReachableViaWiFi] && !downloadInProgress) {
         //make sure
-        if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"case-study"] isEqualToString:@""]){
-            ALog(@"CHECKING FOR UPDATES");
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                [network checkForUpdate];
-            });
-        }
+        ALog(@"CHECKING FOR UPDATES");
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            [network checkForUpdate];
+        });
     }
     
 }
 
 //this function is executed to run the initial downloading sequence
+/*
 -(void)runLoadingSequence
 {
     ALog(@"runLoadingSequence");
@@ -125,28 +127,9 @@
     }else{
         //execute alternative load sequence
     }
-}
+}*/
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    //ALog(@"viewWillAppear HOME");
-    
-    if(model.needsUpdate && [model.hostReachability isReachableViaWiFi]){
-        ALog(@"The app was flagged that it needed updates");
-        
-        //wipe out all data after first initial load
-        [model wipeOutAllModelData];
-        
-        model.ui.splash.image = [model.ui getImageWithName:@"/sample@2x.png"];
-        [self.view addSubview:model.ui.splash];
-        [self.view bringSubviewToFront:model.ui.splash];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            [network runInitialDownload];
-        });
-        
-    }
-}
+
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -177,12 +160,13 @@
     //remove all assets here for future memory enhancements
 }
 
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     self.screenName = @"Home View";
+    
+    [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
     
     //this notification is set to the reachability of the application
     //if the application cannot connect, then this function is called
@@ -194,8 +178,8 @@
     
     downloadInProgress = NO;
     
-    ALog(@"Hitting first load");
-    [self runLoadingSequence];
+    //ALog(@"Hitting first load");
+    //[self runLoadingSequence];
     
 
     //two arrays for generating local filters
@@ -249,23 +233,13 @@
     [self.view addSubview:showAllProducts];
     
     
-    [self.view bringSubviewToFront:model.ui.splash];
-    
-
-    //make sure this is at the bottom of the view
-    //at the end of view did load, make sure we have data and load the view up
-    //this means that we are running the app again after it has been loaded at least once
-    if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"case-study"] isEqualToString:@""]){
-        
-        //setup the local UI before I remove the splash screen
-        [self setupLocalUserInterface:^(BOOL completeFlag){
-            [model.ui.splash removeFromSuperview];
-            model.ui.splash.image = nil;
-        }];
-    }
+    //setup the local UI before I remove the splash screen
+    [self setupLocalUserInterface:^(BOOL completeFlag){
+        downloadInProgress = NO;
+    }];
     
     //GA
-    [model logData:@"Home View" withAction:@"View Tracker" withLabel:@"Landed on home view"];
+    //[model logData:@"Home View" withAction:@"View Tracker" withLabel:@"Landed on home view"];
 }
 
 //this function captures the event of one of the filter buttons being touched
@@ -291,16 +265,21 @@
             [model.filteredProducts removeAllObjects];
         }
         
+        NSMutableArray *uniqueArray = [NSMutableArray array];
         for(Product *p in model.localProds){
             NSArray *w = p.whatDoYouWantToPrint;
             NSArray *s = p.showAll;
             
-            if([s containsObject:model.currentFilter] && ![model.filteredProducts containsObject:p]){
-                [model.filteredProducts addObject:p];
-            }
+            if(![uniqueArray containsObject:p.series]){
             
-            if([w containsObject:model.currentFilter] && ![model.filteredProducts containsObject:p]){
-                [model.filteredProducts addObject:p];
+                if([s containsObject:model.currentFilter] && ![model.filteredProducts containsObject:p]){
+                    [model.filteredProducts addObject:p];
+                }
+                
+                if([w containsObject:model.currentFilter] && ![model.filteredProducts containsObject:p]){
+                    [model.filteredProducts addObject:p];
+                }
+                [uniqueArray addObject:p.series];
             }
         }
         FilterViewController *filter = [[FilterViewController alloc] initWithNibName:@"FilterViewController" bundle:nil];
@@ -313,7 +292,7 @@
 -(void)setupLocalUserInterface:(completeBlock)completeFlag
 {
     //add image to the header
-    homeHeader.image = [model.ui getImageWithName:@"/home-banner@2x.png"];
+    homeHeader.image = [model getImageWithName:@"/home-banner@2x.png"];
     
     //add first filter image for what do you want to print
     //whatPrint.image = [model.ui getImageWithName:@"/home-header-what@2x.png"];
@@ -410,47 +389,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-/***************************************
- *
- *  Network Delegate Functions
- *
- ***************************************/
-
-//called after all of the network threads have finished downloading the data
-//perform updates to the main thread here
--(void)downloadResponse:(CanonModel *)obj withFlag:(BOOL)flag{
-    //the download response was successful
-    if(flag){
-        
-        //wipe out all data after first initial load
-        [model wipeOutAllModelData];
-        
-        //before we send rebuild the ui with updated data, tear down the UI
-        if(model.needsUpdate){
-            //remove all of the what do you want to print items and the show all items
-            for(UIView *v in [showAllProducts subviews]){
-                [v removeFromSuperview];
-            }
-            for(UIView *v in [whatDoYouPrint subviews]){
-                [v removeFromSuperview];
-            }
-            model.needsUpdate = NO;
-        }
-        
-        //setup the local UI before I remove the splash screen
-        [self setupLocalUserInterface:^(BOOL completeFlag){
-            downloadInProgress = NO;
-            [model.ui.splash removeFromSuperview];
-            model.ui.splash.image = nil;
-            
-        }];
-        
-    }else{
-        downloadInProgress = NO;
-        [self displayMessage:@"There was an error loading the app.  Please close, kill the app, make sure you are initially connected to the internet, and restart it." withTitle:@"ALERT"];
-    }
-    
-}
 
 //function to delegate interaction with the user about whether or not they want to update
 //the application data
@@ -462,20 +400,14 @@
     }
     //download
     if (buttonIndex == 1){
-        //remove nsuserdefaults
+        
         if([model.hostReachability isReachableViaWiFi]){
-            [model wipeOutAllModelDataForUpdate];
+            //we have now loaded
             model.needsUpdate = YES;
-            model.ui.splash.image = [model.ui getImageWithName:@"/sample@2x.png"];
-            [self.view addSubview:model.ui.splash];
-            [self.view bringSubviewToFront:model.ui.splash];
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                [network runInitialDownload];
-            });
+            [self.navigationController popToRootViewControllerAnimated:YES];
         }else{
             [self displayMessage:@"Please connect to the internet to update the application" withTitle:@"Alert"];
         }
-       
     }
 }
 
@@ -492,6 +424,5 @@
         [alert show];
     }
 }
-
 
 @end
