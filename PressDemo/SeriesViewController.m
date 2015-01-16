@@ -157,10 +157,11 @@
 {
     [super viewWillAppear:animated];
    
+    /*
     if (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)){
         NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeLeft];
         [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
-    }
+    }*/
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -192,9 +193,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    
-    
     
     
     self.screenName = @"Series View";
@@ -370,114 +368,18 @@
     overviewLabel.text = @"OVERVIEW";
     [overview addSubview:overviewLabel];
     
-    //video button
-    videos = [UIButton buttonWithType:UIButtonTypeCustom];
-    [videos setFrame:CGRectMake(36, 96, 178, 36)];
-    [videos addTarget:self action:@selector(loadUpMainTray:)forControlEvents:UIControlEventTouchDown];
-    videos.showsTouchWhenHighlighted = YES;
-    videos.titleLabel.text = @"videos";
-    videos.tag = 96;
-    videos.backgroundColor = [UIColor clearColor];
-    [sideBar addSubview:videos];
-    
-    videoIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 35, 35)];
-    [videoIcon setImage:[UIImage imageNamed:@"icn-video.png"]];
-    [videos addSubview:videoIcon];
-    
-    videoLabel = [[UILabel alloc] initWithFrame:CGRectMake(53, 0, 125, 36)];
-    [videoLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
-    videoLabel.textColor = model.dullBlack;
-    videoLabel.numberOfLines = 2;
-    videoLabel.backgroundColor = [UIColor clearColor];
-    videoLabel.text = @"VIDEO";
-    [videos addSubview:videoLabel];
-    
-    //product spec button
-    productSpec = [UIButton buttonWithType:UIButtonTypeCustom];
-    [productSpec setFrame:CGRectMake(36, 162, 178, 36)];
-    [productSpec addTarget:self action:@selector(loadUpMainTray:)forControlEvents:UIControlEventTouchDown];
-    productSpec.showsTouchWhenHighlighted = YES;
-    productSpec.tag = 162;
-    productSpec.titleLabel.text = @"product_spec";
-    productSpec.backgroundColor = [UIColor clearColor];
-    [sideBar addSubview:productSpec];
-    
-    productSpecIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 35, 35)];
-    [productSpecIcon setImage:[UIImage imageNamed:@"icn-specs.png"]];
-    [productSpec addSubview:productSpecIcon];
-    
-    productSpecLabel = [[UILabel alloc] initWithFrame:CGRectMake(53, 0, 125, 36)];
-    [productSpecLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
-    productSpecLabel.textColor = model.dullBlack;
-    productSpecLabel.numberOfLines = 2;
-    productSpecLabel.backgroundColor = [UIColor clearColor];
-    productSpecLabel.text = @"PRODUCT SPECIFICATIONS";
-    [productSpec addSubview:productSpecLabel];
-    
-    //white paper button
-    whitePaper = [UIButton buttonWithType:UIButtonTypeCustom];
-    [whitePaper setFrame:CGRectMake(36, 228, 178, 36)];
-    [whitePaper addTarget:self action:@selector(loadUpMainTray:)forControlEvents:UIControlEventTouchDown];
-    whitePaper.showsTouchWhenHighlighted = YES;
-    whitePaper.tag = 228;
-    whitePaper.titleLabel.text = @"white_papers";
-    whitePaper.backgroundColor = [UIColor clearColor];
-    [sideBar addSubview:whitePaper];
-    
-    whitePaperIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 35, 35)];
-    [whitePaperIcon setImage:[UIImage imageNamed:@"icn-whitepaper.png"]];
-    [whitePaper addSubview:whitePaperIcon];
-    
-    whitePaperLabel = [[UILabel alloc] initWithFrame:CGRectMake(53, 0, 125, 36)];
-    [whitePaperLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
-    whitePaperLabel.textColor = model.dullBlack;
-    whitePaperLabel.numberOfLines = 2;
-    whitePaperLabel.backgroundColor = [UIColor clearColor];
-    whitePaperLabel.text = @"WHITE PAPERS";
-    [whitePaper addSubview:whitePaperLabel];
-    
-    caseStudy = [UIButton buttonWithType:UIButtonTypeCustom];
-    [caseStudy setFrame:CGRectMake(36, 294, 178, 36)];
-    [caseStudy addTarget:self action:@selector(loadUpMainTray:)forControlEvents:UIControlEventTouchDown];
-    caseStudy.showsTouchWhenHighlighted = YES;
-    caseStudy.tag = 294;
-    caseStudy.titleLabel.text = @"case_studies";
-    caseStudy.backgroundColor = [UIColor clearColor];
-    [sideBar addSubview:caseStudy];
-    
-    caseStudyIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 35, 35)];
-    [caseStudyIcon setImage:[UIImage imageNamed:@"icn-casestudy.png"]];
-    [caseStudy addSubview:caseStudyIcon];
-    
-    caseStudyLabel = [[UILabel alloc] initWithFrame:CGRectMake(53, 0, 125, 36)];
-    [caseStudyLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
-    caseStudyLabel.textColor = model.dullBlack;
-    caseStudyLabel.numberOfLines = 2;
-    caseStudyLabel.backgroundColor = [UIColor clearColor];
-    caseStudyLabel.text = @"CASE STUDIES";
-    [caseStudy addSubview:caseStudyLabel];
-    
-    prePostSolutionButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [prePostSolutionButton setFrame:CGRectMake(36, 360, 178, 36)];
-    [prePostSolutionButton addTarget:self action:@selector(loadUpMainTray:)forControlEvents:UIControlEventTouchDown];
-    prePostSolutionButton.showsTouchWhenHighlighted = YES;
-    prePostSolutionButton.tag = 360;
-    prePostSolutionButton.titleLabel.text = @"solutions";
-    prePostSolutionButton.backgroundColor = [UIColor clearColor];
-    [sideBar addSubview:prePostSolutionButton];
-    
-    prePostSolutionImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 35, 35)];
-    [prePostSolutionImage setImage:[UIImage imageNamed:@"icn-solution.png"]];
-    [prePostSolutionButton addSubview:prePostSolutionImage];
-    
-    prePostSolutionLabel = [[UILabel alloc] initWithFrame:CGRectMake(53, 0, 100, 36)];
-    [prePostSolutionLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
-    prePostSolutionLabel.textColor = model.dullBlack;
-    prePostSolutionLabel.numberOfLines = 2;
-    prePostSolutionLabel.backgroundColor = [UIColor clearColor];
-    prePostSolutionLabel.text = @"PRE/POST SOLUTIONS";
-    [prePostSolutionButton addSubview:prePostSolutionLabel];
 
+    
+    sidebarObjects = [NSMutableArray arrayWithObjects:model.selectedSeries.videos,
+                                                      model.selectedSeries.product_spec,
+                                                      model.selectedSeries.white_papers,
+                                                      model.selectedSeries.case_studies,
+                                                      model.selectedSeries.solutions, nil];
+    sidebarNames = [NSMutableArray arrayWithObjects:@"videos", @"product_spec", @"white_papers", @"case_studies", @"solutions", nil];
+    sidebarTextNames = [NSMutableArray arrayWithObjects:@"VIDEOS", @"PRODUCT SPECIFICATIONS", @"WHITE PAPERS", @"CASE STUDIES", @"PRE/POST SOLUTIONS", nil];
+    sidebarIcons = [NSMutableArray arrayWithObjects:@"icn-video.png", @"icn-specs.png", @"icn-whitepaper.png", @"icn-casestudy.png", @"icn-solution.png", nil];
+    sidebarLabelWidths = [NSMutableArray arrayWithObjects:@(125), @(125), @(125), @(125), @(100), nil];
+    
     currentDocumentData = [[NSMutableDictionary alloc] init];
     offlineImages = [[NSMutableDictionary alloc] init];
     offlineVideos = [[NSMutableDictionary alloc] init];
@@ -485,12 +387,56 @@
     potentailPartners = [NSMutableArray array];
     decodedSolutions = NO;
     
+    //setup the sidebar with all of the icon
+    [self setUpSideBarIcons];
+    
     [self setupLocalUserInterface:^(BOOL completeFlag){
         //GA
         //[model logData:@"Series View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Landed on series view: %@", model.selectedSeries.title]];
     }];
     
     downloadingURL = @"";
+}
+
+-(void)setUpSideBarIcons
+{
+    int i = 0, e = 0, y = 30;
+    while(i < [sidebarObjects count]){
+        
+        if([[sidebarObjects objectAtIndex:i] count] > 0){
+            
+            //36, 96, 178, 36
+            //36, 162, 178, 36
+            //36, 228, 178, 36
+            y += 66;
+            
+            UIButton *actualButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [actualButton setFrame:CGRectMake(36, y, 178, 36)];
+            [actualButton addTarget:self action:@selector(loadUpMainTray:)forControlEvents:UIControlEventTouchDown];
+            actualButton.showsTouchWhenHighlighted = YES;
+            actualButton.tag = y;
+            actualButton.titleLabel.text = [sidebarNames objectAtIndex:i];
+            actualButton.backgroundColor = [UIColor clearColor];
+            [sideBar addSubview:actualButton];
+            
+            UIImageView *buttonIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 35, 35)];
+            [buttonIcon setImage:[UIImage imageNamed:[sidebarIcons objectAtIndex:i]]];
+            [actualButton addSubview:buttonIcon];
+            
+            float w = [[sidebarLabelWidths objectAtIndex:i] floatValue];
+            
+            UILabel *buttonLabel = [[UILabel alloc] initWithFrame:CGRectMake(53, 0, w, 36)];
+            [buttonLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
+            buttonLabel.textColor = model.dullBlack;
+            buttonLabel.numberOfLines = 2;
+            buttonLabel.backgroundColor = [UIColor clearColor];
+            buttonLabel.text = [sidebarTextNames objectAtIndex:i];
+            [actualButton addSubview:buttonLabel];
+            
+            e++;
+        }
+        i++;
+    }
 }
 
 

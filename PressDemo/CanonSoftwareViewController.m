@@ -156,12 +156,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    /*
     if (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)){
         NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeLeft];
         [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
     }
-
+    */
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -387,76 +387,19 @@
     overviewLabel.text = @"OVERVIEW";
     [overview addSubview:overviewLabel];
     
-    //video button
-    videos = [UIButton buttonWithType:UIButtonTypeCustom];
-    [videos setFrame:CGRectMake(36, 96, 178, 36)];
-    [videos addTarget:self action:@selector(loadUpMainTray:)forControlEvents:UIControlEventTouchDown];
-    videos.showsTouchWhenHighlighted = YES;
-    videos.titleLabel.text = @"videos";
-    videos.tag = 96;
-    videos.backgroundColor = [UIColor clearColor];
-    [sideBar addSubview:videos];
-    
-    videoIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 35, 35)];
-    [videoIcon setImage:[UIImage imageNamed:@"icn-video.png"]];
-    [videos addSubview:videoIcon];
-    
-    videoLabel = [[UILabel alloc] initWithFrame:CGRectMake(53, 0, 125, 36)];
-    [videoLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
-    videoLabel.textColor = model.dullBlack;
-    videoLabel.numberOfLines = 2;
-    videoLabel.backgroundColor = [UIColor clearColor];
-    videoLabel.text = @"VIDEO";
-    [videos addSubview:videoLabel];
-    
-    //white paper button
-    datasheet = [UIButton buttonWithType:UIButtonTypeCustom];
-    [datasheet setFrame:CGRectMake(36, 162, 178, 36)];
-    [datasheet addTarget:self action:@selector(loadUpMainTray:)forControlEvents:UIControlEventTouchDown];
-    datasheet.showsTouchWhenHighlighted = YES;
-    datasheet.tag = 162;
-    datasheet.titleLabel.text = @"datasheets";
-    datasheet.backgroundColor = [UIColor clearColor];
-    [sideBar addSubview:datasheet];
-    
-    datasheetIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 35, 35)];
-    [datasheetIcon setImage:[UIImage imageNamed:@"icn-specs.png"]];
-    [datasheet addSubview:datasheetIcon];
-    
-    datasheetLabel = [[UILabel alloc] initWithFrame:CGRectMake(53, 0, 125, 36)];
-    [datasheetLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
-    datasheetLabel.textColor = model.dullBlack;
-    datasheetLabel.numberOfLines = 2;
-    datasheetLabel.backgroundColor = [UIColor clearColor];
-    datasheetLabel.text = @"DATASHEET";
-    [datasheet addSubview:datasheetLabel];
-    
-    brochure = [UIButton buttonWithType:UIButtonTypeCustom];
-    [brochure setFrame:CGRectMake(36, 228, 178, 36)];
-    [brochure addTarget:self action:@selector(loadUpMainTray:)forControlEvents:UIControlEventTouchDown];
-    brochure.showsTouchWhenHighlighted = YES;
-    brochure.tag = 228;
-    brochure.titleLabel.text = @"brochures";
-    brochure.backgroundColor = [UIColor clearColor];
-    [sideBar addSubview:brochure];
-    
-    brochureIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 35, 35)];
-    [brochureIcon setImage:[UIImage imageNamed:@"icn-casestudy.png"]];
-    [brochure addSubview:brochureIcon];
-    
-    brochureLabel = [[UILabel alloc] initWithFrame:CGRectMake(53, 0, 125, 36)];
-    [brochureLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
-    brochureLabel.textColor = model.dullBlack;
-    brochureLabel.numberOfLines = 2;
-    brochureLabel.backgroundColor = [UIColor clearColor];
-    brochureLabel.text = @"BROCHURE";
-    [brochure addSubview:brochureLabel];
+    sidebarObjects = [NSMutableArray arrayWithObjects:model.selectedSeries.videos, model.selectedSoftware.datasheets, model.selectedSoftware.brochures, nil];
+    sidebarNames = [NSMutableArray arrayWithObjects:@"videos", @"datasheets", @"brochures", nil];
+    sidebarTextNames = [NSMutableArray arrayWithObjects:@"VIDEOS", @"DATASHEET", @"BROCHURE",  nil];
+    sidebarIcons = [NSMutableArray arrayWithObjects:@"icn-video.png", @"icn-specs.png", @"icn-casestudy.png", nil];
+    sidebarLabelWidths = [NSMutableArray arrayWithObjects:@(125), @(125), @(125), nil];
     
     currentDocumentData = [[NSMutableDictionary alloc] init];
     offlineImages = [[NSMutableDictionary alloc] init];
     offlineVideos = [[NSMutableDictionary alloc] init];
     offlineVideoRows = [NSMutableArray array];
    
+    //setup the sidebar with all of the icon
+    [self setUpSideBarIcons];
     
     [self setupLocalUserInterface:^(BOOL completeFlag){
         //GA
@@ -466,6 +409,46 @@
     downloadingURL = @"";
 }
 
+-(void)setUpSideBarIcons
+{
+    int i = 0, e = 0, y = 30;
+    while(i < [sidebarObjects count]){
+        
+        if([[sidebarObjects objectAtIndex:i] count] > 0){
+            
+            //36, 96, 178, 36
+            //36, 162, 178, 36
+            //36, 228, 178, 36
+            y += 66;
+            
+            UIButton *actualButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [actualButton setFrame:CGRectMake(36, y, 178, 36)];
+            [actualButton addTarget:self action:@selector(loadUpMainTray:)forControlEvents:UIControlEventTouchDown];
+            actualButton.showsTouchWhenHighlighted = YES;
+            actualButton.tag = y;
+            actualButton.titleLabel.text = [sidebarNames objectAtIndex:i];
+            actualButton.backgroundColor = [UIColor clearColor];
+            [sideBar addSubview:actualButton];
+            
+            UIImageView *buttonIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 35, 35)];
+            [buttonIcon setImage:[UIImage imageNamed:[sidebarIcons objectAtIndex:i]]];
+            [actualButton addSubview:buttonIcon];
+            
+            float w = [[sidebarLabelWidths objectAtIndex:i] floatValue];
+            
+            UILabel *buttonLabel = [[UILabel alloc] initWithFrame:CGRectMake(53, 0, w, 36)];
+            [buttonLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
+            buttonLabel.textColor = model.dullBlack;
+            buttonLabel.numberOfLines = 2;
+            buttonLabel.backgroundColor = [UIColor clearColor];
+            buttonLabel.text = [sidebarTextNames objectAtIndex:i];
+            [actualButton addSubview:buttonLabel];
+            
+            e++;
+        }
+        i++;
+    }
+}
 
 //this function moves around the content in the main view of the app
 -(void)loadUpMainTray:(id)sender

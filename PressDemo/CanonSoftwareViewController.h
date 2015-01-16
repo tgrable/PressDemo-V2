@@ -18,6 +18,7 @@
 #import "ReaderViewController.h"
 
 @interface CanonSoftwareViewController :GAITrackedViewController<NetworkDelegate, FileDelegate, ReaderViewControllerDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate>{
+    
     //objects
     NetworkData *network;
     DownloadFile *downloadFile;
@@ -27,10 +28,9 @@
     UIButton *navBarHomeButton, *backButton, *videoButton;
     
     //sidebar views
-    UIButton *overview, *videos, *brochure, *datasheet;
-    UIImageView *sidebarIndicator, *overViewIcon, *brochureIcon;
-    UIImageView *datasheetIcon, *videoIcon;
-    UILabel *overviewLabel, *datasheetLabel, *videoLabel, *brochureLabel;
+    UIButton *overview;
+    UIImageView *sidebarIndicator, *overViewIcon;
+    UILabel *overviewLabel;
     
     //main area views
     UIImageView *mainShortBanner, *actualDocumentBanner;
@@ -47,7 +47,7 @@
     NSMutableDictionary *currentDocumentData;
     NSMutableDictionary *offlineImages;
     NSMutableDictionary *offlineVideos;
-    NSMutableArray *offlineVideoRows;
+    NSMutableArray *offlineVideoRows, *sidebarIcons, *sidebarNames, *sidebarObjects, *sidebarTextNames, *sidebarLabelWidths;
     NSString *downloadingURL;
     
 }

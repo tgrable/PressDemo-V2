@@ -913,35 +913,6 @@
                     NSString *rawVideo = [v.rawVideo stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
                     NSString *name = [model getVideoFileName:rawVideo];
                     
-                    /*
-                    //add the download video image to the video top right corner
-                    UIButton *download = [UIButton buttonWithType:UIButtonTypeCustom];
-                    [download setFrame:CGRectMake(717, 7, 24, 24)];
-                    [download addTarget:self action:@selector(downloadVideo:)forControlEvents:UIControlEventTouchUpInside];
-                    download.showsTouchWhenHighlighted = YES;
-                    [download setUserInteractionEnabled:YES];
-                    [download setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
-                    
-                    
-                    NSString *rawVideo = [v.rawVideo stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-                    NSString *name = [model getVideoFileName:rawVideo];
-                    NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
-                    
-                    if([model fileExists:lookupName]){
-                        [download setImage:[UIImage imageNamed:@"icn-load.png"] forState:UIControlStateNormal];
-                        [download setTitle:[model returnFilePath:lookupName] forState:UIControlStateNormal];
-                        download.tag = 777;
-                    }else{
-                        [download setImage:[UIImage imageNamed:@"icn-download.png"] forState:UIControlStateNormal];
-                        [download setTitle:rawVideo forState:UIControlStateNormal];
-                        download.tag = 555;
-                    }
-                    
-                    [download setBackgroundColor:[UIColor whiteColor]];
-                    [download setHitTestEdgeInsets:UIEdgeInsetsMake(-15, -15, -15, -15)];
-                    [rowContainer addSubview:download];
-                    [rowContainer bringSubviewToFront:download];*/
-                    
                     
                     //set the data for the rest of the row
                     title.text = v.title;
@@ -1086,65 +1057,6 @@
     
     
 }
-
-//this function tells the application to either download the video or load the video from disk
-/*
--(void)downloadVideo:(id)sender
-{
-    UIButton *b = (UIButton *)sender;
-    NSString *videoURLString = [b.titleLabel.text stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-    
-
-    if(b.tag == 555){
-
-        if(downloadFile.videoDownloading){
-            [self displayMessage:@"Another video is currently downloading." withTitle:@"Alret"];
-        }else{
-            //make sure we can access the internet first
-            if([model.hostReachability isReachableViaWiFi]){
-                videoButton = b;
-                [b setImage:nil forState:UIControlStateNormal];
-                UIActivityIndicatorView *gear = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-                gear.frame = CGRectMake(0, 0, 16, 16);
-                gear.alpha = 1.0;
-                gear.tag = 110;
-                [b addSubview:gear];
-                [gear startAnimating];
-                
-                downloadingURL = [model getVideoFileName:videoURLString];
-                downloadingURL = [downloadingURL stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                    ALog(@"Function is deprecated %@", downloadingURL);
-                    //[downloadVideo downloadVideo:videoURLString];
-                });
-                //GA
-                //[model logData:@"Series View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Video to download: %@",videoURLString]];
-            }else{
-                [self displayMessage:@"Please connect to the internet to download this video" withTitle:@"Alret"];
-            }
-        }
-        
-    }else if(b.tag == 777){
-        
-        NSString *path = [videoURLString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        
-        if([model fileExists:[path lastPathComponent]]){
-            
-            //NSString *p  = @"file:///var/mobile/Applications/B751E322-DE11-4813-8D8B-0F7589B9FDEF/Documents/CS3000_Flexibility_1.mp4";
-            //apply the file transfer protocol on to this path to make it a url
-            NSString *urlPath = [NSString stringWithFormat:@"file://%@", path];
-            NSURL *videoURL = [NSURL URLWithString:urlPath];
-            
-            MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-            [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
-            //GA
-            //[model logData:@"Series View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Video to play from disk: %@",videoURLString]];
-        }else{
-            [self displayMessage:@"There was an error referencing your file" withTitle:@"Alert"];
-        }
-    }
-    
-}*/
 
 
 //This function executes the functionality when a row is tapped on either a document of a video

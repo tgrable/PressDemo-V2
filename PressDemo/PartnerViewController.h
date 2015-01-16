@@ -28,10 +28,9 @@
     UIButton *navBarHomeButton, *backButton, *videoButton;
     
     //sidebar views
-    UIButton *overview, *videos, *whitePaper, *caseStudy;
-    UIImageView *sidebarIndicator, *overViewIcon, *whitePaperIcon;
-    UIImageView *caseStudyIcon, *videoIcon;
-    UILabel *overviewLabel, *caseStudyLabel, *videoLabel, *whitePaperLabel;
+    UIButton *overview;
+    UIImageView *sidebarIndicator, *overViewIcon;
+    UILabel *overviewLabel;
     
     //main area views
     UIImageView *mainShortBanner, *actualDocumentBanner, *partnerLogo;
@@ -48,7 +47,7 @@
     NSMutableDictionary *currentDocumentData;
     NSMutableDictionary *offlineImages;
     NSMutableDictionary *offlineVideos;
-    NSMutableArray *offlineVideoRows;
+    NSMutableArray *offlineVideoRows, *sidebarIcons, *sidebarNames, *sidebarObjects, *sidebarTextNames, *sidebarLabelWidths;
     NSString *downloadingURL;
     
 }

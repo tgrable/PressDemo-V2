@@ -268,7 +268,6 @@
             title.text = p.series_title;
             [back addSubview:title];
             
-            ALog(@"title %@", p.series_title);
             
             UITextView *desc = [[UITextView alloc] initWithFrame:CGRectMake(imgX, 200, 224, 100)];
             [desc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:13.0]];
