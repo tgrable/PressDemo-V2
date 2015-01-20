@@ -163,11 +163,15 @@
     [customNavBar setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:customNavBar];
     
-    logo = [[UIImageView alloc] initWithFrame:CGRectMake(891, 1, 97, 62)];
+    impressLogo = [[UIImageView alloc] initWithFrame:CGRectMake(437, 1, 151, 62)];
+    [impressLogo setUserInteractionEnabled:YES];
+    [impressLogo setImage:[UIImage imageNamed:@"impress-logo.png"]];
+    [customNavBar addSubview:impressLogo];
+    
+    logo = [[UIImageView alloc] initWithFrame:CGRectMake(893, 0, 97, 62)];
     [logo setUserInteractionEnabled:YES];
     [logo setImage:[UIImage imageNamed:@"csa-logo.png"]];
     [customNavBar addSubview:logo];
-    
     
     navBarHomeButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [navBarHomeButton setFrame:CGRectMake(36, 14, 35, 35)];
@@ -205,7 +209,7 @@
     [self loadupProducts];
     
     //GA
-    //[model logData:@"Software Grid View" withAction:@"View Tracker" withLabel:@"Landed on product filter view"];
+    [model logData:@"Software Grid View" withAction:@"View Tracker" withLabel:@"Landed on software filter view"];
 }
 
 

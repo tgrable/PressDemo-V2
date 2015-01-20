@@ -90,9 +90,7 @@
 		711FC3331A430903005BEDE7 /* ico-color@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 711FC3321A430903005BEDE7 /* ico-color@2x.png */; };
 		711FC3351A430909005BEDE7 /* ico-blackwhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 711FC3341A430909005BEDE7 /* ico-blackwhite@2x.png */; };
 		711FC33B1A4388B5005BEDE7 /* UIBorderLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 711FC33A1A4388B5005BEDE7 /* UIBorderLabel.m */; };
-		712651031A5DD14100C91AF2 /* home-nav-color@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 712651011A5DD14100C91AF2 /* home-nav-color@2x.png */; };
 		712651041A5DD14100C91AF2 /* home-nav-mono@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 712651021A5DD14100C91AF2 /* home-nav-mono@2x.png */; };
-		712651071A5DD15D00C91AF2 /* home-nav-color.png in Resources */ = {isa = PBXBuildFile; fileRef = 712651051A5DD15D00C91AF2 /* home-nav-color.png */; };
 		712651081A5DD15D00C91AF2 /* home-nav-mono.png in Resources */ = {isa = PBXBuildFile; fileRef = 712651061A5DD15D00C91AF2 /* home-nav-mono.png */; };
 		7126510D1A63F9BE00C91AF2 /* CanonDownloadAll.m in Sources */ = {isa = PBXBuildFile; fileRef = 7126510B1A63F9BE00C91AF2 /* CanonDownloadAll.m */; };
 		7126510E1A63F9BE00C91AF2 /* CanonDownloadAll.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7126510C1A63F9BE00C91AF2 /* CanonDownloadAll.xib */; };
@@ -159,8 +157,6 @@
 		7129483019A3FFCF00E0548D /* ico-80.png in Resources */ = {isa = PBXBuildFile; fileRef = 7129481F19A3FFCF00E0548D /* ico-80.png */; };
 		7129483119A3FFCF00E0548D /* launch-iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = 7129482019A3FFCF00E0548D /* launch-iPhone.png */; };
 		7129483219A3FFCF00E0548D /* launch-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7129482119A3FFCF00E0548D /* launch-iPhone@2x.png */; };
-		7129483319A3FFCF00E0548D /* launch.png in Resources */ = {isa = PBXBuildFile; fileRef = 7129482219A3FFCF00E0548D /* launch.png */; };
-		7129483419A3FFCF00E0548D /* launch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7129482319A3FFCF00E0548D /* launch@2x.png */; };
 		7129483619A4061D00E0548D /* CSA-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 7129483519A4061D00E0548D /* CSA-logo.png */; };
 		7129486019ABE92600E0548D /* SavedVideos.m in Sources */ = {isa = PBXBuildFile; fileRef = 7129485F19ABE92600E0548D /* SavedVideos.m */; };
 		714523D219DDB32D0024CCF6 /* hdr-doc-casestudy.png in Resources */ = {isa = PBXBuildFile; fileRef = 714523D019DDB32D0024CCF6 /* hdr-doc-casestudy.png */; };
@@ -355,6 +351,12 @@
 		71DBB857192FB60E002D7CA9 /* tmb-FPO-video.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB7DD192FB60E002D7CA9 /* tmb-FPO-video.png */; };
 		71DBB858192FB60E002D7CA9 /* tmb-FPO-whitepaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB7DE192FB60E002D7CA9 /* tmb-FPO-whitepaper.png */; };
 		71DBB859192FB60E002D7CA9 /* white-pane.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB7DF192FB60E002D7CA9 /* white-pane.png */; };
+		71F497761A6EF8ED005D0F24 /* impress-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71F497751A6EF8ED005D0F24 /* impress-logo@2x.png */; };
+		71F497781A6EF8FB005D0F24 /* impress-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 71F497771A6EF8FB005D0F24 /* impress-logo.png */; };
+		71F4977A1A6EF911005D0F24 /* launch.png in Resources */ = {isa = PBXBuildFile; fileRef = 71F497791A6EF911005D0F24 /* launch.png */; };
+		71F4977C1A6EF91E005D0F24 /* launch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71F4977B1A6EF91E005D0F24 /* launch@2x.png */; };
+		71F4977E1A6F01D7005D0F24 /* home-nav-color.png in Resources */ = {isa = PBXBuildFile; fileRef = 71F4977D1A6F01D7005D0F24 /* home-nav-color.png */; };
+		71F497801A6F01E5005D0F24 /* home-nav-color@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71F4977F1A6F01E5005D0F24 /* home-nav-color@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -496,9 +498,7 @@
 		711FC3341A430909005BEDE7 /* ico-blackwhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ico-blackwhite@2x.png"; sourceTree = "<group>"; };
 		711FC3391A4388B5005BEDE7 /* UIBorderLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIBorderLabel.h; sourceTree = "<group>"; };
 		711FC33A1A4388B5005BEDE7 /* UIBorderLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIBorderLabel.m; sourceTree = "<group>"; };
-		712651011A5DD14100C91AF2 /* home-nav-color@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-color@2x.png"; sourceTree = "<group>"; };
 		712651021A5DD14100C91AF2 /* home-nav-mono@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-mono@2x.png"; sourceTree = "<group>"; };
-		712651051A5DD15D00C91AF2 /* home-nav-color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-color.png"; sourceTree = "<group>"; };
 		712651061A5DD15D00C91AF2 /* home-nav-mono.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-mono.png"; sourceTree = "<group>"; };
 		7126510A1A63F9BE00C91AF2 /* CanonDownloadAll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CanonDownloadAll.h; sourceTree = "<group>"; };
 		7126510B1A63F9BE00C91AF2 /* CanonDownloadAll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CanonDownloadAll.m; sourceTree = "<group>"; };
@@ -589,8 +589,6 @@
 		7129481F19A3FFCF00E0548D /* ico-80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ico-80.png"; sourceTree = "<group>"; };
 		7129482019A3FFCF00E0548D /* launch-iPhone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "launch-iPhone.png"; sourceTree = "<group>"; };
 		7129482119A3FFCF00E0548D /* launch-iPhone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "launch-iPhone@2x.png"; sourceTree = "<group>"; };
-		7129482219A3FFCF00E0548D /* launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = launch.png; sourceTree = "<group>"; };
-		7129482319A3FFCF00E0548D /* launch@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "launch@2x.png"; sourceTree = "<group>"; };
 		7129483519A4061D00E0548D /* CSA-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CSA-logo.png"; sourceTree = "<group>"; };
 		7129485E19ABE92600E0548D /* SavedVideos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SavedVideos.h; sourceTree = "<group>"; };
 		7129485F19ABE92600E0548D /* SavedVideos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SavedVideos.m; sourceTree = "<group>"; };
@@ -812,6 +810,12 @@
 		71DBB7DD192FB60E002D7CA9 /* tmb-FPO-video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tmb-FPO-video.png"; sourceTree = "<group>"; };
 		71DBB7DE192FB60E002D7CA9 /* tmb-FPO-whitepaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tmb-FPO-whitepaper.png"; sourceTree = "<group>"; };
 		71DBB7DF192FB60E002D7CA9 /* white-pane.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "white-pane.png"; sourceTree = "<group>"; };
+		71F497751A6EF8ED005D0F24 /* impress-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "impress-logo@2x.png"; sourceTree = "<group>"; };
+		71F497771A6EF8FB005D0F24 /* impress-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "impress-logo.png"; sourceTree = "<group>"; };
+		71F497791A6EF911005D0F24 /* launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = launch.png; sourceTree = "<group>"; };
+		71F4977B1A6EF91E005D0F24 /* launch@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "launch@2x.png"; sourceTree = "<group>"; };
+		71F4977D1A6F01D7005D0F24 /* home-nav-color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-color.png"; sourceTree = "<group>"; };
+		71F4977F1A6F01E5005D0F24 /* home-nav-color@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-nav-color@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1220,8 +1224,6 @@
 				7129481F19A3FFCF00E0548D /* ico-80.png */,
 				7129482019A3FFCF00E0548D /* launch-iPhone.png */,
 				7129482119A3FFCF00E0548D /* launch-iPhone@2x.png */,
-				7129482219A3FFCF00E0548D /* launch.png */,
-				7129482319A3FFCF00E0548D /* launch@2x.png */,
 			);
 			path = launch;
 			sourceTree = "<group>";
@@ -1407,6 +1409,8 @@
 				71708CB71A38F8F90041F8D5 /* headers */,
 				718D21101A379A0400980FDF /* software-solutions */,
 				718D210F1A3799E500980FDF /* media */,
+				71F4977B1A6EF91E005D0F24 /* launch@2x.png */,
+				71F497751A6EF8ED005D0F24 /* impress-logo@2x.png */,
 				714523D419DDB5D60024CCF6 /* hdr-doc-casestudy@2x.png */,
 				714523D519DDB5D60024CCF6 /* hdr-doc-whitepaper@2x.png */,
 				718E314E199D39620000A5EB /* icn-casestudy.png */,
@@ -1457,9 +1461,9 @@
 				71DBB783192FB60E002D7CA9 /* home-nav-books@2x.png */,
 				71DBB784192FB60E002D7CA9 /* home-nav-brochures@2x.png */,
 				71DBB785192FB60E002D7CA9 /* home-nav-catalogs@2x.png */,
-				712651011A5DD14100C91AF2 /* home-nav-color@2x.png */,
 				712651021A5DD14100C91AF2 /* home-nav-mono@2x.png */,
 				71DBB787192FB60E002D7CA9 /* home-nav-continuous@2x.png */,
+				71F4977F1A6F01E5005D0F24 /* home-nav-color@2x.png */,
 				71DBB788192FB60E002D7CA9 /* home-nav-cutsheet@2x.png */,
 				71DBB789192FB60E002D7CA9 /* home-nav-dm@2x.png */,
 				71DBB78A192FB60E002D7CA9 /* home-nav-healthcare@2x.png */,
@@ -1487,6 +1491,8 @@
 				71708CB81A38F9040041F8D5 /* headers */,
 				718D21191A379AEC00980FDF /* media */,
 				718D21181A379AE200980FDF /* software-solutions */,
+				71F497791A6EF911005D0F24 /* launch.png */,
+				71F497771A6EF8FB005D0F24 /* impress-logo.png */,
 				714523D019DDB32D0024CCF6 /* hdr-doc-casestudy.png */,
 				714523D119DDB32D0024CCF6 /* hdr-doc-whitepaper.png */,
 				7129480C19A3EFF200E0548D /* home-header-all.png */,
@@ -1519,11 +1525,11 @@
 				71DBB7C1192FB60E002D7CA9 /* home-nav-broch.png */,
 				71DBB7C2192FB60E002D7CA9 /* home-nav-cat.png */,
 				71DBB7C4192FB60E002D7CA9 /* home-nav-continuous.png */,
+				71F4977D1A6F01D7005D0F24 /* home-nav-color.png */,
 				71DBB7C5192FB60E002D7CA9 /* home-nav-cutsheet.png */,
 				71DBB7C6192FB60E002D7CA9 /* home-nav-dm.png */,
 				71DBB7C7192FB60E002D7CA9 /* home-nav-health.png */,
 				71DBB7C8192FB60E002D7CA9 /* home-nav-manuals.png */,
-				712651051A5DD15D00C91AF2 /* home-nav-color.png */,
 				712651061A5DD15D00C91AF2 /* home-nav-mono.png */,
 				71DBB7CA192FB60E002D7CA9 /* home-nav-specialty.png */,
 				71DBB7CB192FB60E002D7CA9 /* home-nav-state.png */,
@@ -1628,7 +1634,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				712651871A6595AE00C91AF2 /* ITC - ITCAvantGardeStd-Bold.ttf in Resources */,
-				7129483319A3FFCF00E0548D /* launch.png in Resources */,
 				718E3148199AB9F70000A5EB /* ITC - ITCAvantGardeStd-Md.ttf in Resources */,
 				718E3147199AB9EF0000A5EB /* ITC - ITCAvantGardeStd-Bk.ttf in Resources */,
 				71DBB804192FB60E002D7CA9 /* home-nav-dm@2x.png in Resources */,
@@ -1654,12 +1659,14 @@
 				7126517F1A6560EE00C91AF2 /* Reader-Mark-N@2x.png in Resources */,
 				718E3169199D39620000A5EB /* icn-load@2x.png in Resources */,
 				718E316B199D39620000A5EB /* icn-overview@2x.png in Resources */,
+				71F4977A1A6EF911005D0F24 /* launch.png in Resources */,
 				71708CEE1A38F9450041F8D5 /* header-pink@2x.png in Resources */,
 				7129483619A4061D00E0548D /* CSA-logo.png in Resources */,
 				71708CC71A38F92C0041F8D5 /* hdr-short-blue.png in Resources */,
 				30AC11D6192D931900BE1072 /* icon_144_144@2x.png in Resources */,
 				7126517C1A6560EE00C91AF2 /* Reader-Export.png in Resources */,
 				718E316D199D39620000A5EB /* icn-selected@2x.png in Resources */,
+				71F497801A6F01E5005D0F24 /* home-nav-color@2x.png in Resources */,
 				711FC30D1A40C61B005BEDE7 /* CanonSoftwareViewController.xib in Resources */,
 				71DBB840192FB60E002D7CA9 /* home-nav-dm.png in Resources */,
 				71DBB7E8192FB60E002D7CA9 /* hdr-short-jetstreamcompact@2x.png in Resources */,
@@ -1735,6 +1742,7 @@
 				7129482619A3FFCF00E0548D /* ico-152.png in Resources */,
 				30AC11D7192D931900BE1072 /* icon_29_29@2x.png in Resources */,
 				71DBB805192FB60E002D7CA9 /* home-nav-healthcare@2x.png in Resources */,
+				71F497781A6EF8FB005D0F24 /* impress-logo.png in Resources */,
 				71708CCE1A38F92C0041F8D5 /* header-blue.png in Resources */,
 				71DBB7FB192FB60E002D7CA9 /* home-banner@2x.png in Resources */,
 				718E316C199D39620000A5EB /* icn-selected.png in Resources */,
@@ -1743,19 +1751,18 @@
 				71DBB81A192FB60E002D7CA9 /* tmb-FPO-casestudy@2x.png in Resources */,
 				7129483119A3FFCF00E0548D /* launch-iPhone.png in Resources */,
 				71708CEC1A38F9450041F8D5 /* header-green@2x.png in Resources */,
+				71F497761A6EF8ED005D0F24 /* impress-logo@2x.png in Resources */,
 				718E314D199AC1B70000A5EB /* SeriesViewController.xib in Resources */,
 				71DBB808192FB60E002D7CA9 /* home-nav-specialty@2x.png in Resources */,
 				718D21201A379B5300980FDF /* btn-close.png in Resources */,
 				714523D319DDB32D0024CCF6 /* hdr-doc-whitepaper.png in Resources */,
 				30AC11D5192D931900BE1072 /* icon_120_120@2x.png in Resources */,
 				71DBB82D192FB60E002D7CA9 /* header-workflow.png in Resources */,
-				712651031A5DD14100C91AF2 /* home-nav-color@2x.png in Resources */,
 				7126510E1A63F9BE00C91AF2 /* CanonDownloadAll.xib in Resources */,
 				71DBB82E192FB60E002D7CA9 /* header-dm.png in Resources */,
 				71DBB834192FB60E002D7CA9 /* header-specialty.png in Resources */,
 				71DBB7E2192FB60E002D7CA9 /* btn-backgrid@2x.png in Resources */,
 				71DBB849192FB60E002D7CA9 /* icn-home.png in Resources */,
-				7129483419A3FFCF00E0548D /* launch@2x.png in Resources */,
 				7129483019A3FFCF00E0548D /* ico-80.png in Resources */,
 				71DBB827192FB60E002D7CA9 /* hdr-short-prisma.png in Resources */,
 				71DBB83E192FB60E002D7CA9 /* home-nav-continuous.png in Resources */,
@@ -1763,7 +1770,6 @@
 				71DBB83B192FB60E002D7CA9 /* home-nav-broch.png in Resources */,
 				30AC11DE192D931900BE1072 /* icon_80_80@2x.png in Resources */,
 				71DBB7E6192FB60E002D7CA9 /* hdr-short-CS3000@2x.png in Resources */,
-				712651071A5DD15D00C91AF2 /* home-nav-color.png in Resources */,
 				7126517D1A6560EE00C91AF2 /* Reader-Export@2x.png in Resources */,
 				7129482919A3FFCF00E0548D /* ico-29.png in Resources */,
 				718D21301A379BFB00980FDF /* icn-mill-all@2x-2.png in Resources */,
@@ -1836,6 +1842,7 @@
 				71DBB845192FB60E002D7CA9 /* home-nav-state.png in Resources */,
 				71708CCB1A38F92C0041F8D5 /* hdr-short-pink.png in Resources */,
 				71708D0C1A3A4ACE0041F8D5 /* icn-info-blue.png in Resources */,
+				71F4977E1A6F01D7005D0F24 /* home-nav-color.png in Resources */,
 				718D21151A379A6100980FDF /* icn-solution@2x.png in Resources */,
 				71708CC91A38F92C0041F8D5 /* hdr-short-green.png in Resources */,
 				7129480D19A3EFF200E0548D /* home-header-all.png in Resources */,
@@ -1873,6 +1880,7 @@
 				712651821A6560EE00C91AF2 /* Reader-Print.png in Resources */,
 				7129482D19A3FFCF00E0548D /* ico-512.png in Resources */,
 				71DBB7F8192FB60E002D7CA9 /* header-statements@2x.png in Resources */,
+				71F4977C1A6EF91E005D0F24 /* launch@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

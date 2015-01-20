@@ -23,7 +23,7 @@
     DownloadFile *downloadFile;
     
     //global views
-    UIImageView *topBanner, *logo;
+    UIImageView *topBanner, *logo, *impressLogo;
     UIView *customNavBar, *mainView, *sideBar;
     UIButton *navBarHomeButton, *backButton, *videoButton;
     

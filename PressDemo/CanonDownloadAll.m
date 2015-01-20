@@ -27,6 +27,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.screenName = @"Download View";
+    
     network = [[NetworkData alloc] init];
     network.delegate = self;
     
@@ -146,6 +148,11 @@
     }else{
         [self displayMessage:@"Please connect to WiFi to start the download" withTitle:@"Alert"];
     }
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
 }
 
 //universal view function to display dynamic alerts

@@ -13,8 +13,9 @@
 #import "AppDelegateProtocol.h"
 #import "CanonViewController.h"
 #import "DownloadFile.h"
+#import "GAITrackedViewController.h"
 
-@interface CanonDownloadAll : UIViewController<NetworkDelegate, FileDelegate>{
+@interface CanonDownloadAll : GAITrackedViewController<NetworkDelegate, FileDelegate>{
     UIButton *downloadAll;
     UIActivityIndicatorView *activityIndicator;
     DownloadFile *download;

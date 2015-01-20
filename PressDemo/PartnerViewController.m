@@ -209,7 +209,12 @@
     [customNavBar setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:customNavBar];
     
-    logo = [[UIImageView alloc] initWithFrame:CGRectMake(891, 1, 97, 62)];
+    impressLogo = [[UIImageView alloc] initWithFrame:CGRectMake(437, 1, 151, 62)];
+    [impressLogo setUserInteractionEnabled:YES];
+    [impressLogo setImage:[UIImage imageNamed:@"impress-logo.png"]];
+    [customNavBar addSubview:impressLogo];
+    
+    logo = [[UIImageView alloc] initWithFrame:CGRectMake(893, 0, 97, 62)];
     [logo setUserInteractionEnabled:YES];
     [logo setImage:[UIImage imageNamed:@"csa-logo.png"]];
     [customNavBar addSubview:logo];
@@ -434,7 +439,7 @@
     
     [self setupLocalUserInterface:^(BOOL completeFlag){
         //GA
-        //[model logData:@"Series View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Landed on series view: %@", model.selectedPartner.title]];
+        [model logData:@"Partner View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Landed on patner view: %@", model.selectedPartner.title]];
     }];
     
     downloadingURL = @"";
@@ -491,17 +496,17 @@
     
     if([b.titleLabel.text isEqualToString:@"videos"]){
         //add the small main header
-        bannerTitle.text = [NSString stringWithFormat:@"PRE/POST SOLUTION : %@ : VIDEOS",[model.selectedPartner.title uppercaseString]];
+        bannerTitle.text = [NSString stringWithFormat:@"Pre/Post Solution : %@ : Videos",model.selectedPartner.title];
     }else if([b.titleLabel.text isEqualToString:@"white_papers"]){
         //add the small main header
-        bannerTitle.text = [NSString stringWithFormat:@"PRE/POST SOLUTION : %@ : WHITE PAPERS",[model.selectedPartner.title uppercaseString]];
+        bannerTitle.text = [NSString stringWithFormat:@"Pre/Post Solution : %@ : White Papers",model.selectedPartner.title ];
     }else if([b.titleLabel.text isEqualToString:@"case_studies"]){
         //add the small main header
-        bannerTitle.text = [NSString stringWithFormat:@"PRE/POST SOLUTION : %@ : CASE STUDIES",[model.selectedPartner.title uppercaseString]];
+        bannerTitle.text = [NSString stringWithFormat:@"Pre/Post Solution : %@ : Case Studies",model.selectedPartner.title];
         
     }else if([b.titleLabel.text isEqualToString:@"overview"]){
         //add the small main header
-        bannerTitle.text = [NSString stringWithFormat:@"PRE/POST SOLUTION : %@", [model.selectedPartner.title uppercaseString]];
+        bannerTitle.text = [NSString stringWithFormat:@"Pre/Post Solution : %@", model.selectedPartner.title];
     }
     
     //if overview is present
@@ -830,7 +835,8 @@
                 readerViewController.delegate = self; // Set the ReaderViewController delegate to self
                 [self.navigationController pushViewController:readerViewController animated:YES];
                 [self.navigationController setToolbarHidden:YES];
-                
+                //GA
+                [model logData:@"Partner View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Loading document: %@", d.title]];
             }
         }else{
             [self displayMessage:@"The file you are looking for was not found on the device" withTitle:@"Alert"];
@@ -853,6 +859,8 @@
             [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
             ALog(@"LOAD VIDEO FROM DEVICE %@", videoURL);
             
+            //GA
+            [model logData:@"Partner View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Loading video from the device: %@", v.title]];
             //if not on the device, try  and stream it
         }else{
             
@@ -862,6 +870,9 @@
                 MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
                 [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
                 ALog(@"Streaming");
+                
+                //GA
+                [model logData:@"Partner View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Streaming video: %@", v.title]];
             }
         }
 
@@ -914,7 +925,6 @@
     if([url rangeOfString:@"http://"].location == NSNotFound){
         url = [NSString stringWithFormat:@"http://%@", url];
     }
-    ALog(@"%@", url);
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
 }
 
@@ -928,7 +938,7 @@
     [navBarHomeButton setBackgroundImage:[UIImage imageNamed:@"icn-home.png"] forState:UIControlStateNormal];
     
     //add the small main header
-    bannerTitle.text = [NSString stringWithFormat:@"PRE/POST SOLUTION : %@", [model.selectedPartner.title uppercaseString]];
+    bannerTitle.text = [NSString stringWithFormat:@"Pre/Post Solution : %@", model.selectedPartner.title];
     
     //####################################### setup image slider in overview view ##############
     //set the images
@@ -969,7 +979,7 @@
     //the actual titke if the partner
     float descHeight = 270;
     
-    partnerHeader.text = [model.selectedPartner.title uppercaseString];
+    partnerHeader.text = model.selectedPartner.title;
     
     //set the logo, or try and set the logo
     [partnerLogo setImageWithURL:[NSURL URLWithString:model.selectedPartner.logo] placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"]];

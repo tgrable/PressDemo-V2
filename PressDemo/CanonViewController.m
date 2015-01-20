@@ -48,30 +48,7 @@
     return self;
 }
 
-/*-----------------------------------------------------
- 
- Function to dispense the reachability notifications
- -(void)reachabilityDidChange:(NSNotification *)notification
- 
- -------------------------------------------------------*/
 
-/*
-- (void)reachabilityDidChange:(NSNotification *)notification {
-    //reachability object
-    Reachability *reachability = (Reachability *)[notification object];
-    //if we can reach the internet
-    if ([reachability isReachableViaWiFi]) {
-        ALog(@"REACHABLE");
-        if([[[NSUserDefaults standardUserDefaults] objectForKey:@"case-study"] isEqualToString:@""] && !downloadInProgress){
-            //this means that the app failed on the initial load and needs to be loaded
-            [self runLoadingSequence];
-        }
-        
-    } else {
-        //set UI error
-        ALog(@"NOT REACHABLE");
-    }
-}*/
 
 /* suppress anything that should be killed when app moves to the background */
 -(void)appWentIntoBackground
@@ -97,44 +74,9 @@
     
 }
 
-//this function is executed to run the initial downloading sequence
-/*
--(void)runLoadingSequence
-{
-    ALog(@"runLoadingSequence");
-
-    //execute the first load sequence load
-    if([[[NSUserDefaults standardUserDefaults] objectForKey:@"case-study"] isEqualToString:@""] && !downloadInProgress){
-        
-        model.ui.splash.image = [model.ui getImageWithName:@"/sample@2x.png"];
-        [self.view addSubview:model.ui.splash];
-        [self.view bringSubviewToFront:model.ui.splash];
-       
-        if([model.hostReachability isReachableViaWiFi]){
-            downloadInProgress = YES;
-            UIActivityIndicatorView *ac = (UIActivityIndicatorView *)[model.ui.splash viewWithTag:444];
-            ac.alpha = 1.0;
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                ALog(@"runLoadingSequence, case study blank, no other download in progress, network is reachable, running download");
-                [network runInitialDownload];
-            });
-        }else{
-            UIActivityIndicatorView *ac = (UIActivityIndicatorView *)[model.ui.splash viewWithTag:444];
-            ac.alpha = 0.0;
-            [self displayMessage:@"Please connect to the internet to initially load up the application" withTitle:@"Alert"];
-        }
-    
-    }else{
-        //execute alternative load sequence
-    }
-}*/
-
-
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    //ALog(@"viewDidAppear HOME");
     //app going into background notification
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appWentIntoBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -166,8 +108,6 @@
     
     self.screenName = @"Home View";
     
-    [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
-    
     //this notification is set to the reachability of the application
     //if the application cannot connect, then this function is called
     
@@ -177,10 +117,6 @@
     model = [self AppDataObj];
     
     downloadInProgress = NO;
-    
-    //ALog(@"Hitting first load");
-    //[self runLoadingSequence];
-    
 
     //two arrays for generating local filters
     whatImageNames = [NSMutableArray array];
@@ -192,7 +128,12 @@
     [customNavBar setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:customNavBar];
     
-    logo = [[UIImageView alloc] initWithFrame:CGRectMake(464, 1, 97, 62)];
+    impressLogo = [[UIImageView alloc] initWithFrame:CGRectMake(437, 1, 151, 62)];
+    [impressLogo setUserInteractionEnabled:YES];
+    [impressLogo setImage:[UIImage imageNamed:@"impress-logo.png"]];
+    [customNavBar addSubview:impressLogo];
+    
+    logo = [[UIImageView alloc] initWithFrame:CGRectMake(893, 0, 97, 62)];
     [logo setUserInteractionEnabled:YES];
     [logo setImage:[UIImage imageNamed:@"csa-logo.png"]];
     [customNavBar addSubview:logo];
@@ -239,7 +180,7 @@
     }];
     
     //GA
-    //[model logData:@"Home View" withAction:@"View Tracker" withLabel:@"Landed on home view"];
+    [model logData:@"Home View" withAction:@"View Tracker" withLabel:@"Landed on home view"];
 }
 
 //this function captures the event of one of the filter buttons being touched
@@ -308,6 +249,7 @@
     if(model.localProds != nil){
         
         for(Product *p in model.localProds){
+        
             for(NSString *w in p.whatDoYouWantToPrint){
                 if(![whatImageNames containsObject:w]){
                     [whatImageNames addObject:w];
@@ -318,6 +260,7 @@
                     [showAllImageNames addObject:s];
                 }
             }
+            
         }
         
         if(![showAllImageNames containsObject:@"media"]){
@@ -330,40 +273,48 @@
             [showAllImageNames addObject:@"software"];
         }
    
+        NSMutableArray *orderedWhatArray = [NSMutableArray arrayWithObjects:@"books",@"statements",@"brochures-&-collateral",@"direct-mail",@"catalogs",@"manuals",@"specialty", nil];
         //load all what do your want to print buttons
         int x1 = 0, e1 = 0;
-        for(NSString *wf in whatImageNames){
-            x1 = e1 * 204 + 14;
-            if(x1 == 0) x1 = 14;
-            UIButton *wfButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            [wfButton setFrame:CGRectMake(x1, 0, 197, 187)];
-            [wfButton addTarget:self action:@selector(captureFilterButtons:)forControlEvents:UIControlEventTouchUpInside];
-            wfButton.showsTouchWhenHighlighted = YES;
-            [wfButton setBackgroundImage:[model.whatDoYouWantToPrint objectForKey:wf] forState:UIControlStateNormal];
-            [wfButton setTitle:wf forState:UIControlStateNormal];
-            [wfButton setBackgroundColor:[UIColor yellowColor]];
-            [wfButton setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
-            [whatDoYouPrint addSubview:wfButton];
-            e1++;
+        for(NSString *wf in orderedWhatArray){
+            //make sure these home icons are now in order
+            if([whatImageNames containsObject:wf]){
+                x1 = e1 * 204 + 14;
+                if(x1 == 0) x1 = 14;
+                UIButton *wfButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                [wfButton setFrame:CGRectMake(x1, 0, 197, 187)];
+                [wfButton addTarget:self action:@selector(captureFilterButtons:)forControlEvents:UIControlEventTouchUpInside];
+                wfButton.showsTouchWhenHighlighted = YES;
+                [wfButton setBackgroundImage:[model.whatDoYouWantToPrint objectForKey:wf] forState:UIControlStateNormal];
+                [wfButton setTitle:wf forState:UIControlStateNormal];
+                [wfButton setBackgroundColor:[UIColor yellowColor]];
+                [wfButton setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+                [whatDoYouPrint addSubview:wfButton];
+                e1++;
+            }
         }
         //set the content size so the view scrolls
         [whatDoYouPrint setContentSize:CGSizeMake((x1 + 201), 187)];
         
+        NSMutableArray *orderedShowArray = [NSMutableArray arrayWithObjects:@"color",@"monochrome",@"continuous-feed",@"cutsheet",@"software",@"media", nil];
         //load all of the show all products
         int x2 = 0, e2 = 0;
-        for(NSString *sa in showAllImageNames){
-            x2 = e2 * 204 + 14;
-            if(x2 == 0) x2 = 14;
-            UIButton *saButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            [saButton setFrame:CGRectMake(x2, 0, 197, 187)];
-            [saButton addTarget:self action:@selector(captureFilterButtons:)forControlEvents:UIControlEventTouchUpInside];
-            saButton.showsTouchWhenHighlighted = YES;
-            [saButton setBackgroundImage:[model.showAll objectForKey:sa] forState:UIControlStateNormal];
-            [saButton setTitle:sa forState:UIControlStateNormal];
-            [saButton setBackgroundColor:[UIColor redColor]];
-            [saButton setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
-            [showAllProducts addSubview:saButton];
-            e2++;
+        for(NSString *sa in orderedShowArray){
+            //make sure these home icons are now in order
+            if([showAllImageNames containsObject:sa]){
+                x2 = e2 * 204 + 14;
+                if(x2 == 0) x2 = 14;
+                UIButton *saButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                [saButton setFrame:CGRectMake(x2, 0, 197, 187)];
+                [saButton addTarget:self action:@selector(captureFilterButtons:)forControlEvents:UIControlEventTouchUpInside];
+                saButton.showsTouchWhenHighlighted = YES;
+                [saButton setBackgroundImage:[model.showAll objectForKey:sa] forState:UIControlStateNormal];
+                [saButton setTitle:sa forState:UIControlStateNormal];
+                [saButton setBackgroundColor:[UIColor redColor]];
+                [saButton setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+                [showAllProducts addSubview:saButton];
+                e2++;
+            }
         }
         //set the content size so the view scrolls
         [showAllProducts setContentSize:CGSizeMake((x2 + 201), 187)];

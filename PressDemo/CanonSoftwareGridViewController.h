@@ -17,7 +17,7 @@
 @interface CanonSoftwareGridViewController : GAITrackedViewController<NetworkDelegate, UIScrollViewDelegate, UIAlertViewDelegate>{
     
     //local views
-    UIImageView *logo;
+    UIImageView *logo, *impressLogo;
     
 }
 @property(nonatomic)NetworkData *network;

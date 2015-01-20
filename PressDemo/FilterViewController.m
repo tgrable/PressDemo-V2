@@ -159,7 +159,12 @@
     [customNavBar setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:customNavBar];
     
-    logo = [[UIImageView alloc] initWithFrame:CGRectMake(891, 1, 97, 62)];
+    impressLogo = [[UIImageView alloc] initWithFrame:CGRectMake(437, 1, 151, 62)];
+    [impressLogo setUserInteractionEnabled:YES];
+    [impressLogo setImage:[UIImage imageNamed:@"impress-logo.png"]];
+    [customNavBar addSubview:impressLogo];
+    
+    logo = [[UIImageView alloc] initWithFrame:CGRectMake(893, 0, 97, 62)];
     [logo setUserInteractionEnabled:YES];
     [logo setImage:[UIImage imageNamed:@"csa-logo.png"]];
     [customNavBar addSubview:logo];
@@ -193,7 +198,7 @@
     [self loadupProducts];
     
     //GA
-    //[model logData:@"Product Filter View" withAction:@"View Tracker" withLabel:@"Landed on product filter view"];
+    [model logData:@"Product Filter View" withAction:@"View Tracker" withLabel:@"Landed on product filter view"];
 }
 
 
@@ -320,7 +325,6 @@
     //below I am calculating the content height for the scrollview that displays the products
     int multi = e / 4, add = multi * 50;
     int mod = e % 4;
-    //ALog(@"mod %d e %d", mod, e);
     if(mod >= 1) add += 344;
     //set the dynamic content height
     [productScroll setContentSize:CGSizeMake(952, ((multi * 300) + add + 10))];
@@ -345,7 +349,7 @@
     }
     
     //GA
-    //[model logData:@"Product Filter View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Product: %@",b.titleLabel.text]];
+    [model logData:@"Product Filter View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Product: %@",b.titleLabel.text]];
     
    
 }

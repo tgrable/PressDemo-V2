@@ -60,23 +60,24 @@
         //Full on UIImages to be referenced in the ViewController by Key
         whatDoYouWantToPrint = [[NSMutableDictionary alloc] init];
         [whatDoYouWantToPrint setObject:[UIImage imageNamed:@"home-nav-books.png"] forKey:@"books"];
+        [whatDoYouWantToPrint setObject:[UIImage imageNamed:@"home-nav-statements.png"] forKey:@"statements"];
         [whatDoYouWantToPrint setObject:[UIImage imageNamed:@"home-nav-brochures.png"] forKey:@"brochures-&-collateral"];
-        [whatDoYouWantToPrint setObject:[UIImage imageNamed:@"home-nav-catalogs.png"] forKey:@"catalogs"];
         [whatDoYouWantToPrint setObject:[UIImage imageNamed:@"home-nav-dm.png"] forKey:@"direct-mail"];
-        [whatDoYouWantToPrint setObject:[UIImage imageNamed:@"home-nav-healthcare.png"] forKey:@"healthcare-eobs"];
+        [whatDoYouWantToPrint setObject:[UIImage imageNamed:@"home-nav-catalogs.png"] forKey:@"catalogs"];
         [whatDoYouWantToPrint setObject:[UIImage imageNamed:@"home-nav-manuals.png"] forKey:@"manuals"];
         [whatDoYouWantToPrint setObject:[UIImage imageNamed:@"home-nav-specialty.png"] forKey:@"specialty"];
-        [whatDoYouWantToPrint setObject:[UIImage imageNamed:@"home-nav-statements.png"] forKey:@"statements"];
+        //[whatDoYouWantToPrint setObject:[UIImage imageNamed:@"home-nav-healthcare.png"] forKey:@"healthcare-eobs"];
         
         //Full on UIImages to be referenced in the ViewController by Key
         showAll = [[NSMutableDictionary alloc] init];
         [showAll setObject:[UIImage imageNamed:@"home-nav-color.png"] forKey:@"color"];
+        [showAll setObject:[UIImage imageNamed:@"home-nav-mono.png"] forKey:@"monochrome"];
         [showAll setObject:[UIImage imageNamed:@"home-nav-continuous.png"] forKey:@"continuous-feed"];
         [showAll setObject:[UIImage imageNamed:@"home-nav-cutsheet.png"] forKey:@"cutsheet"];
-        [showAll setObject:[UIImage imageNamed:@"home-nav-mono.png"] forKey:@"monochrome"];
-        [showAll setObject:[UIImage imageNamed:@"home-nav-workflow.png"] forKey:@"workflow"];
-        [showAll setObject:[UIImage imageNamed:@"home-nav-media.png"] forKey:@"media"];
+        //[showAll setObject:[UIImage imageNamed:@"home-nav-workflow.png"] forKey:@"workflow"];
         [showAll setObject:[UIImage imageNamed:@"home-nav-software.png"] forKey:@"software"];
+        [showAll setObject:[UIImage imageNamed:@"home-nav-media.png"] forKey:@"media"];
+        
         
         //Full on UIImages to be referenced in the ViewController by Key
         topBanners = [[NSMutableDictionary alloc] init];
@@ -140,7 +141,7 @@
 
 -(void)logData:(NSString *)category withAction:(NSString *)action withLabel:(NSString *)label
 {
-    //[tracker send:[[GAIDictionaryBuilder createEventWithCategory:category action:action label:label value:nil] build]];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:category action:action label:label value:nil] build]];
 }
 
 
@@ -854,6 +855,11 @@
 {
     NSString *path = [[NSBundle mainBundle] pathForResource:filename ofType:nil];
     return [UIImage imageWithContentsOfFile:path];
+}
+
+-(NSString *)addAccentToOCEString:(NSString *)string
+{
+    return [string stringByReplacingOccurrencesOfString:@"Oce" withString:@"Océ"];
 }
 
 /*----------------------------------------------*

@@ -625,7 +625,7 @@
     
     [self setupLocalUserInterface:^(BOOL completeFlag){
         //GA
-        //[model logData:@"Series View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Landed on series view: %@", model.selectedSeries.title]];
+        [model logData:@"Mill View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Landed on mill view: %@", model.selectedMill.title]];
     }];
     
     downloadingURL = @"";
@@ -647,7 +647,7 @@
             [self buildAllPaperData];
         }];
         
-        NSString *bannerTitle = [NSString stringWithFormat:@"ALL MILLS MEDIA LIST"];
+        NSString *bannerTitle = [NSString stringWithFormat:@"All Mills Media List"];
         //the name of the mill
         millNameHeader.text = bannerTitle;
         
@@ -659,16 +659,16 @@
             [self buildPaperTableData];
         }];
         
-        NSString *bannerTitle = [NSString stringWithFormat:@"%@ : MEDIA/PAPERS", [model.selectedMill.title uppercaseString]];
+        NSString *bannerTitle = [NSString stringWithFormat:@"%@ : Media/Papers", model.selectedMill.title];
         //the name of the mill
         millNameHeader.text = bannerTitle;
         
     }else if([b.titleLabel.text isEqualToString:@"videos"]){
-        NSString *bannerTitle = [NSString stringWithFormat:@"%@ : VIDEOS", [model.selectedMill.title uppercaseString]];
+        NSString *bannerTitle = [NSString stringWithFormat:@"%@ : Videos", model.selectedMill.title];
         //the name of the mill
         millNameHeader.text = bannerTitle;
     }else if([b.titleLabel.text isEqualToString:@"overview"]){
-        millNameHeader.text = [model.selectedMill.title uppercaseString];
+        millNameHeader.text = model.selectedMill.title;
     }
     
     
@@ -982,7 +982,9 @@
                tableView.borderMode = UMTableViewBordersRows;
                tableView.outlineMode = UMTableViewOutlineNone;
                [tableBackground addSubview:tableView];
-                
+               
+               //GA
+               [model logData:@"Mill View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Loading up paper table for mill: %@", model.selectedMill.title]];
                
             }else{
                 
@@ -1029,6 +1031,9 @@
                 tableView.outlineMode = UMTableViewOutlineNone;
                 
                 [tableBackground addSubview:tableView];
+                
+                //GA
+                [model logData:@"Mill View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Loading up full mill table for mill: %@", model.selectedMill.title]];
                 
                
             }
@@ -1079,6 +1084,8 @@
         [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
         ALog(@"LOAD VIDEO FROM DEVICE %@", videoURL);
         
+        //GA
+        [model logData:@"Mill View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Loading video from the device: %@", v.title]];
         //if not on the device, try  and stream it
     }else{
         
@@ -1088,6 +1095,9 @@
             MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
             [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
             ALog(@"Streaming");
+            
+            //GA
+            [model logData:@"Mill View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Streaming video: %@", v.title]];
         }
     }
 }
@@ -1163,7 +1173,7 @@
     //add the small main header
     mainShortBanner.image = [model getImageWithName:@"/hdr-short-pink@X2.png"];
     
-    millNameHeader.text = [model.selectedMill.title uppercaseString];
+    millNameHeader.text = model.selectedMill.title;
     
     //set the logo, or try and set the logo
     [millLogo setImageWithURL:[NSURL URLWithString:model.selectedMill.logo] placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"]];

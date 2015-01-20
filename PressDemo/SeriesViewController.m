@@ -211,7 +211,12 @@
     [customNavBar setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:customNavBar];
     
-    logo = [[UIImageView alloc] initWithFrame:CGRectMake(891, 1, 97, 62)];
+    impressLogo = [[UIImageView alloc] initWithFrame:CGRectMake(437, 1, 151, 62)];
+    [impressLogo setUserInteractionEnabled:YES];
+    [impressLogo setImage:[UIImage imageNamed:@"impress-logo.png"]];
+    [customNavBar addSubview:impressLogo];
+    
+    logo = [[UIImageView alloc] initWithFrame:CGRectMake(893, 0, 97, 62)];
     [logo setUserInteractionEnabled:YES];
     [logo setImage:[UIImage imageNamed:@"csa-logo.png"]];
     [customNavBar addSubview:logo];
@@ -392,7 +397,7 @@
     
     [self setupLocalUserInterface:^(BOOL completeFlag){
         //GA
-        //[model logData:@"Series View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Landed on series view: %@", model.selectedSeries.title]];
+        [model logData:@"Series View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Landed on series view: %@", model.selectedSeries.title]];
     }];
     
     downloadingURL = @"";
@@ -446,22 +451,24 @@
     UIButton *b = (UIButton *)sender;
     
     //make sure that we are properly displaying the title of the section the user just selected
-    
     if([b.titleLabel.text isEqualToString:@"videos"]){
-        //add the small main header
-        bannerTitle.text = [NSString stringWithFormat:@"%@ : VIDEOS",[model.selectedSeries.title uppercaseString]];
+
+        bannerTitle.text = [NSString stringWithFormat:@"%@ : Videos",[model addAccentToOCEString:model.selectedSeries.title]];
     }else if([b.titleLabel.text isEqualToString:@"product_spec"]){
         //add the small main header
-        bannerTitle.text = [NSString stringWithFormat:@"%@ : PRODUCT SPECS",[model.selectedSeries.title uppercaseString]];
+        bannerTitle.text = [NSString stringWithFormat:@"%@ : Product Specs",[model addAccentToOCEString:model.selectedSeries.title] ];
     }else if([b.titleLabel.text isEqualToString:@"white_papers"]){
         //add the small main header
-        bannerTitle.text = [NSString stringWithFormat:@"%@ : WHITE PAPERS",[model.selectedSeries.title uppercaseString]];
+        bannerTitle.text = [NSString stringWithFormat:@"%@ : White Papers",[model addAccentToOCEString:model.selectedSeries.title]];
     }else if([b.titleLabel.text isEqualToString:@"case_studies"]){
         //add the small main header
-        bannerTitle.text = [NSString stringWithFormat:@"%@ : CASE STUDIES",[model.selectedSeries.title uppercaseString]];
+        bannerTitle.text = [NSString stringWithFormat:@"%@ : Case Studies",[model addAccentToOCEString:model.selectedSeries.title]];
     }else if([b.titleLabel.text isEqualToString:@"solutions"]){
         //add the small main header
-        bannerTitle.text = [NSString stringWithFormat:@"%@ : PRE/POST SOLUTIONS",[model.selectedSeries.title uppercaseString]];
+        bannerTitle.text = [NSString stringWithFormat:@"%@ : Pre/Post Solution",[model addAccentToOCEString:model.selectedSeries.title]];
+    }else if([b.titleLabel.text isEqualToString:@"overview"]){
+        //add the small main header
+        bannerTitle.text = [model addAccentToOCEString:model.selectedSeries.title];
     }
     
 
@@ -989,6 +996,8 @@
                 [self.navigationController pushViewController:readerViewController animated:YES];
                 [self.navigationController setToolbarHidden:YES];
                 
+                //GA
+                [model logData:@"Series View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Loading document: %@", d.title]];
             }
         }else{
             [self displayMessage:@"The file you are looking for was not found on the device" withTitle:@"Alert"];
@@ -1010,7 +1019,9 @@
             MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
             [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
             ALog(@"LOAD VIDEO FROM DEVICE %@", videoURL);
-        
+            
+            //GA
+            [model logData:@"Series View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Loading video from the device: %@", v.title]];
             //if not on the device, try  and stream it
         }else{
             
@@ -1020,6 +1031,9 @@
                 MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
                 [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
                 ALog(@"Streaming");
+                
+                //GA
+                [model logData:@"Series View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Streaming video: %@", v.title]];
             }
         }
         
@@ -1076,7 +1090,7 @@
     [navBarHomeButton setBackgroundImage:[UIImage imageNamed:@"icn-home.png"] forState:UIControlStateNormal];
     
     //add the small main header
-    bannerTitle.text = [model.selectedSeries.title uppercaseString];
+    bannerTitle.text = [model addAccentToOCEString:model.selectedSeries.title];
     
     //####################################### setup image slider in overview view ##############
     NSMutableArray *images = [self generateSeriesProductImages:model.selectedSeries.products];

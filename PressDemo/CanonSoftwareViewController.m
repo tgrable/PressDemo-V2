@@ -209,7 +209,12 @@
     [customNavBar setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:customNavBar];
     
-    logo = [[UIImageView alloc] initWithFrame:CGRectMake(891, 1, 97, 62)];
+    impressLogo = [[UIImageView alloc] initWithFrame:CGRectMake(437, 1, 151, 62)];
+    [impressLogo setUserInteractionEnabled:YES];
+    [impressLogo setImage:[UIImage imageNamed:@"impress-logo.png"]];
+    [customNavBar addSubview:impressLogo];
+    
+    logo = [[UIImageView alloc] initWithFrame:CGRectMake(893, 0, 97, 62)];
     [logo setUserInteractionEnabled:YES];
     [logo setImage:[UIImage imageNamed:@"csa-logo.png"]];
     [customNavBar addSubview:logo];
@@ -403,7 +408,7 @@
     
     [self setupLocalUserInterface:^(BOOL completeFlag){
         //GA
-        //[model logData:@"Series View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Landed on series view: %@", model.selectedSoftware.title]];
+        [model logData:@"Software View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Landed on software view: %@", model.selectedSoftware.title]];
     }];
     
     downloadingURL = @"";
@@ -459,13 +464,13 @@
     
     if([b.titleLabel.text isEqualToString:@"videos"]){
         //add the small main header
-        bannerTitle.text = [NSString stringWithFormat:@"%@ : VIDEOS",[model.selectedSoftware.title uppercaseString]];
+        bannerTitle.text = [NSString stringWithFormat:@"%@ : Videos",model.selectedSoftware.title];
     }else if([b.titleLabel.text isEqualToString:@"datasheets"]){
         //add the small main header
-        bannerTitle.text = [NSString stringWithFormat:@"%@ : DATASHEET",[model.selectedSoftware.title uppercaseString]];
+        bannerTitle.text = [NSString stringWithFormat:@"%@ : Datasheet",model.selectedSoftware.title];
     }else if([b.titleLabel.text isEqualToString:@"brochures"]){
         //add the small main header
-        bannerTitle.text = [NSString stringWithFormat:@"%@ : BROCHURE",[model.selectedSoftware.title uppercaseString]];
+        bannerTitle.text = [NSString stringWithFormat:@"%@ : Brochure",model.selectedSoftware.title];
     }
     
     
@@ -807,6 +812,8 @@
                 readerViewController.delegate = self; // Set the ReaderViewController delegate to self
                 [self.navigationController pushViewController:readerViewController animated:YES];
                 [self.navigationController setToolbarHidden:YES];
+                //GA
+                [model logData:@"Software View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Loading document: %@", d.title]];
                 
             }
         }else{
@@ -830,6 +837,8 @@
             [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
             ALog(@"LOAD VIDEO FROM DEVICE %@", videoURL);
             
+            //GA
+            [model logData:@"Software View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Loading video from the device: %@", v.title]];
             //if not on the device, try  and stream it
         }else{
             
@@ -839,6 +848,9 @@
                 MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
                 [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
                 ALog(@"Streaming");
+                
+                //GA
+                [model logData:@"Software View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Streaming video: %@", v.title]];
             }
         }
     }
