@@ -9,6 +9,7 @@
 #import "FilterViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "SeriesViewController.h"
+#import "UILabel+FontSize.h"
 
 #define ResourcePath(path)[[NSBundle mainBundle] pathForResource:path ofType:nil]
 
@@ -271,6 +272,7 @@
             title.backgroundColor = [UIColor whiteColor];
             //title.text = [p.series_title uppercaseString];
             title.text = p.series_title;
+            [title alterSubstring:@"®" withSize:8];
             [back addSubview:title];
             
             

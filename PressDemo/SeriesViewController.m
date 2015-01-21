@@ -10,6 +10,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "UIButton+Extensions.h"
 #import "PartnerViewController.h"
+#import "UILabel+FontSize.h"
 
 #define ResourcePath(path)[[NSBundle mainBundle] pathForResource:path ofType:nil]
 
@@ -471,7 +472,8 @@
         bannerTitle.text = [model addAccentToOCEString:model.selectedSeries.title];
     }
     
-
+    [bannerTitle alterSubstring:@"®" withSize:12];
+    
     //if overview is present
     if(sidebarIndicator.frame.origin.y == 30){
 
@@ -813,6 +815,7 @@
                     
                     //set the data for the rest of the row
                     title.text = v.title;
+                    [title alterSubstring:@"®" withSize:8];
                     desc.text = v.description;
                     
                     //make sure to resize the description after the text is added
@@ -884,6 +887,9 @@
                     //set the data for the rest of the row
                     title.frame = CGRectMake(328, 16, 400, 24);
                     title.text = d.title;
+                    [title alterSubstring:@"®" withSize:8];
+                    
+                    
                     if([flag isEqualToString:@"product_spec"]){
                         desc.text = @"Specifications document for the whole product series.";
                     }else{
@@ -1091,6 +1097,7 @@
     
     //add the small main header
     bannerTitle.text = [model addAccentToOCEString:model.selectedSeries.title];
+    [bannerTitle alterSubstring:@"®" withSize:12];
     
     //####################################### setup image slider in overview view ##############
     NSMutableArray *images = [self generateSeriesProductImages:model.selectedSeries.products];

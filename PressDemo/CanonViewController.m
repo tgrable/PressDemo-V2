@@ -10,6 +10,7 @@
 #import "FilterViewController.h"
 #import "CanonMediaGridViewController.h"
 #import "CanonSoftwareGridViewController.h"
+#import <AVFoundation/AVFoundation.h>
 
 #define ResourcePath(path)[[NSBundle mainBundle] pathForResource:path ofType:nil]
 
@@ -22,7 +23,8 @@
 @synthesize model, network, customNavBar;
 @synthesize whatDoYouPrint, showAllProducts;
 @synthesize whatImageNames, showAllImageNames;
-
+//@synthesize moviePlayerController;
+@synthesize firstVideoItem, player, avPlayerLayer;
 //Here we are setting up the delegate method
 - (CanonModel *) AppDataObj;
 {
@@ -85,6 +87,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appCameBackIntoFocus) name:UIApplicationDidBecomeActiveNotification object:nil];
 
+
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -106,7 +110,8 @@
 {
     [super viewDidLoad];
     
-    self.screenName = @"Home View";
+    
+    //self.screenName = @"Home View";
     
     //this notification is set to the reachability of the application
     //if the application cannot connect, then this function is called
@@ -174,14 +179,68 @@
     [self.view addSubview:showAllProducts];
     
     
+    poster = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 1024, 768)];
+    poster.image = [model getImageWithName:@"/launch@2x.png"];
+    [poster setUserInteractionEnabled:YES];
+    [self.view addSubview:poster];
+    [self.view bringSubviewToFront:poster];
+    
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    //NSString *path = [[NSBundle mainBundle] pathForResource:@"imPRESS_animation_screen_4" ofType:@"mp4"];
+    //NSString *path = [[NSBundle mainBundle] pathForResource:@"kerry_app_ani" ofType:@"mp4"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"imPRESS-animation-screen_1024x768" ofType:@"mp4"];
+    NSURL *urlHome = [NSURL fileURLWithPath:path];
+    
+    ALog(@"%@", urlHome);
+    
+    self.firstVideoItem = [[AVPlayerItem alloc] initWithURL:urlHome];
+    self.player = [[AVPlayer alloc]initWithPlayerItem:self.firstVideoItem];
+    self.avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
+    self.avPlayerLayer.bounds = self.view.bounds;
+    self.avPlayerLayer.frame = CGRectMake(0, 0, 1024, 768);
+    [self.view.layer addSublayer:avPlayerLayer];
+    [self.player play];
+    //here's our selector to fire when the video is comepleted
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(movieFinishedCallback:) name:AVPlayerItemDidPlayToEndTimeNotification object:firstVideoItem];
+    
+    
+    //play the video
+    
+    
+    [UIView animateWithDuration:2.0f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
+        poster.alpha = 0.0;
+        
+    }completion:^(BOOL finished) {
+        ALog(@"Start playing");
+        
+    }];
+
+}
+
+/*-----------------------------------------------------
+ *
+ * # the callback function for the movie
+ *
+ *----------------------------------------------------*/
+- (void)movieFinishedCallback:(NSNotification *)aNotification
+{
     //setup the local UI before I remove the splash screen
     [self setupLocalUserInterface:^(BOOL completeFlag){
         downloadInProgress = NO;
+        [avPlayerLayer removeFromSuperlayer];
+        ALog(@"Finished");
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
+
     }];
     
-    //GA
-    [model logData:@"Home View" withAction:@"View Tracker" withLabel:@"Landed on home view"];
 }
+
 
 //this function captures the event of one of the filter buttons being touched
 -(void)captureFilterButtons:(id)sender
@@ -241,7 +300,7 @@
     
     //add second filter image for show all
     //showProducts.image = [model.ui getImageWithName:@"/home-header-all@2x.png"];
-    showProducts.image = [UIImage imageNamed:@"home-header-all.png"];
+    showProducts.image = [UIImage imageNamed:@"home-nav-whatsolution.png"];
     
     //get the local set of products from disk
     model.localProds = [model getInitialSetofPorducts];

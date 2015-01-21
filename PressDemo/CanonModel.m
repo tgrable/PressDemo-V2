@@ -12,7 +12,7 @@
 #import "GAI.h"
 #import "GAIFields.h"
 #import "GAIDictionaryBuilder.h"
-
+#import <CoreText/CTStringAttributes.h>
 
 //this is a local macro that sets up a class wide logging scheme
 #define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
@@ -859,8 +859,15 @@
 
 -(NSString *)addAccentToOCEString:(NSString *)string
 {
-    return [string stringByReplacingOccurrencesOfString:@"Oce" withString:@"Océ"];
+    //"®"
+    ALog(@"Title %@", [string stringByReplacingOccurrencesOfString:@"Oce" withString:@"Océ"]);
+    NSString *accent = [string stringByReplacingOccurrencesOfString:@"Oce" withString:@"Océ"];
+    //NSString *trademark = [accent stringByReplacingOccurrencesOfString:@"®" withString:@"\00AE"];
+    
+    return accent;
+
 }
+
 
 /*----------------------------------------------*
  Functionas that handle interaction with documents saved to the application

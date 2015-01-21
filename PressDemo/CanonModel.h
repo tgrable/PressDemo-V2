@@ -56,6 +56,7 @@ typedef void(^completeBlock)(BOOL);
 -(NSString *)cleanseStringName:(NSString *)filename;
 -(CGFloat)widthOfString:(NSString *)string withStringSize:(float)size andFontKey:(NSString *)key;
 
+
 -(NSString *)addAccentToOCEString:(NSString *)string;
 -(UIImage *)getImageWithName:(NSString *)filename;
 -(void)wipeOutAllModelData;
