@@ -154,6 +154,7 @@
            <div class="media-valet-thumb">
               <img class="cannon-media-valet" src="/sites/all/modules/cannon_media_valet_image_field/images/placeholder.jpg" width="130" height="80" />
            </div>
+           <div class="media-remove"><a href="#" class="remove">Remove Image</a></div>
            <div class="media-valet-url"></div>
            <div class="media-valet-modal">
              <div class="modal-header">

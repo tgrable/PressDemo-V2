@@ -67,6 +67,13 @@
 
              });
 
+             //remove the banner data
+             $('.media-remove a.remove').click(function(e){
+                e.preventDefault();
+                $(this).parent().siblings('input').attr('value', '');
+                $(this).parent().siblings('.media-valet-thumb').find('img').attr('src', '/sites/all/modules/cannon_banner_image_field/images/placeholder.jpg');
+             });
+
              //this function attaches the elements that have just been loaded to event handlers
              function attachEventHandlers(){
 
