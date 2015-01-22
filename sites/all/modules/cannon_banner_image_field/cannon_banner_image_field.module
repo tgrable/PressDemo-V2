@@ -148,6 +148,7 @@
            <div class="banner-thumb">
               <img class="cannon-banner" src="/sites/all/modules/cannon_banner_image_field/images/placeholder.jpg" width="130" height="80" />
            </div>
+           <div class="banner-remove"><a href="#" class="remove">Remove Image</a></div>
            <div class="banner-url"></div>
            <div class="banner-modal">
              <div class="modal-header">
