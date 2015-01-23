@@ -81,7 +81,7 @@
 
         //*****************products****************
         }else if($type == 'product'){
-
+            dpm($node);
            //get the product series information
            $product_series_array = _cannon_data_api_get_series($node->nid);
            //product objects
@@ -145,7 +145,7 @@
               'title' => $node->title,
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--series',
               'description' => isset($node->field_series_overview[LANGUAGE_NONE]) ? _cannon_data_api_cleanse_string(_cannon_data_api_breakup_description($node->field_series_overview[LANGUAGE_NONE])) : array(),
-              'product_spec' => _cannon_data_api_get_reference_key($node->field_product_specification_refe, '--product-spec'),
+              'product_spec' => isset($node->field_product_specification_refe[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_product_specification_refe, '--product-spec') : array(),
               'case_studies' => isset($node->field_product_case_study_referen[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_product_case_study_referen, '--case-study') : array(),
               'white_papers' => isset($node->field_product_white_paper_refere[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_product_white_paper_refere, '--white-paper') : array(),
               'videos' =>  isset($node->field_video_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_video_reference, '--video') : array(),
@@ -268,8 +268,8 @@
       }
 
       //print out the JSON
-      print json_encode(array('data'=> array($type => $data, 'last-updated' => date("Y-m-d H:i:s", _cannon_data_api_get_time_of_last_updated_node($machine_name[$type])))));
-      drupal_exit();
+      //print json_encode(array('data'=> array($type => $data, 'last-updated' => date("Y-m-d H:i:s", _cannon_data_api_get_time_of_last_updated_node($machine_name[$type])))));
+      //drupal_exit();
     }else{
       print json_encode(array('error'=>true, 'message'=>'Sorry, that is not a valid content type.'));
       drupal_exit();
