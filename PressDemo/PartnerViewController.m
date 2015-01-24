@@ -961,6 +961,7 @@
                 model.layoutSync = NO;
             }
         }];
+        img.backgroundColor = [UIColor whiteColor];
         [img setUserInteractionEnabled:YES];
         [overviewImages addSubview:img];
         i++;

@@ -396,9 +396,10 @@
     //setup the sidebar with all of the icon
     [self setUpSideBarIcons];
     
+    
     [self setupLocalUserInterface:^(BOOL completeFlag){
         //GA
-        [model logData:@"Series View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Landed on series view: %@", model.selectedSeries.title]];
+       // [model logData:@"Series View" withAction:@"View Tracker" withLabel:[NSString stringWithFormat:@"Landed on series view: %@", model.selectedSeries.title]];
     }];
     
     downloadingURL = @"";
@@ -1119,6 +1120,8 @@
                 model.layoutSync = NO;
             }
         }];
+        img.backgroundColor = [UIColor whiteColor];
+        img.contentMode = UIViewContentModeScaleAspectFit;
         [img setUserInteractionEnabled:YES];
         [overviewImages addSubview:img];
         i++;
@@ -1134,6 +1137,7 @@
     }
     
     //############################ setup the overview description boxes #########################
+    
     int descCount = (int)[model.selectedSeries.description count], y = 0, e = 0, x = 0;
     if(descCount > 0){
         NSMutableArray *rowData = [NSMutableArray array];
@@ -1239,7 +1243,7 @@
         //setup the contentSize for the desc text boxes
         [overviewContent setContentSize:CGSizeMake(704, 400)];
     }
-   
+    
     completeFlag(YES);
 }
 

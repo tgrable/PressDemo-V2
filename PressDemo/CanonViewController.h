@@ -16,14 +16,14 @@
 #import "WhatDoYouPrint.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import <AVFoundation/AVFoundation.h>
+#import <QuartzCore/QuartzCore.h>
 
 @interface CanonViewController : GAITrackedViewController <NetworkDelegate, UIScrollViewDelegate, UIAlertViewDelegate>{
     //local views
     UIImageView *homeHeader, *whatPrint, *showProducts, *logo, *impressLogo, *poster;
-
-    
-    //data
+   
     BOOL downloadInProgress;
+    int imageIndex;
     
 }
 @property(nonatomic)NetworkData *network;

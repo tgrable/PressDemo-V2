@@ -31,7 +31,7 @@
     
     //Register the Google Analytics Library
     // Optional: automatically send uncaught exceptions to Google Analytics.
-    [GAI sharedInstance].trackUncaughtExceptions = YES;
+    //[GAI sharedInstance].trackUncaughtExceptions = YES;
     
     // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
     [GAI sharedInstance].dispatchInterval = 120;
@@ -42,7 +42,7 @@
     // Initialize tracker.
     [[GAI sharedInstance] trackerWithTrackingId:@"UA-49102313-4"];
     
-    [GAI sharedInstance].dryRun = YES;
+    //[GAI sharedInstance].dryRun = YES;
     
     //setup NSUserDefaults for LastUpdated
     [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"LastUpdated" ofType:@"plist"]]];

@@ -59,6 +59,9 @@
 {
     [super viewWillAppear:animated];
 
+    //reset the animation flag
+    model.animationRun = NO;
+    
     if(model.needsUpdate && [model.hostReachability isReachableViaWiFi]){
         ALog(@"The app was flagged that it needed updates");
         //clear all image memory

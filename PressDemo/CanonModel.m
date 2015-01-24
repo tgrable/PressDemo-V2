@@ -18,7 +18,7 @@
 #define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 
 @implementation CanonModel
-@synthesize orange, blue, green, dullBlack, lightGray, red, yellow, pink, purple, gray, testingString;
+@synthesize orange, blue, green, dullBlack, lightGray, red, yellow, pink, purple, gray, testingString, animationRun;
 @synthesize localProds, currentFilter, filteredProducts, selectedSeries, tracker, selectedMill, selectedPartner, selectedSoftware;
 - (id)init
 {
@@ -131,6 +131,7 @@
         blue = [UIColor colorWithRed:1.0f/255.0f green:120.0f/255.0f blue:180.0f/255.0f alpha:1.0];
 
         layoutSync = YES;
+        animationRun = NO;
         needsUpdate = NO;
         imageCount = 0;
     }
@@ -306,7 +307,7 @@
         
         NSString *keyProduct = [dict objectForKey:@"key"];
         p.key = keyProduct;
-        p.series = [dict objectForKey:@"series"];
+        p.series = [self cleanseStringName:[dict objectForKey:@"series"]];
         
         if([dict objectForKey:@"product-description"] != nil){
           p.description = [dict objectForKey:@"product-description"];
@@ -368,8 +369,7 @@
         //solutions keys
         ps.solutions = [dict objectForKey:@"solutions"];
         
-        
-        
+     
         NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:ps];
         [productSeriesData setObject:encodedObject forKey:keyProduct];
     }
@@ -459,14 +459,6 @@
         NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:d];
         [documentData setObject:encodedObject forKey:key];
         
-        //deprecated function
-        //NSData *data = [[dict objectForKey:@"document-data"] dataUsingEncoding:NSUTF8StringEncoding];
-        //NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:d];
-        //save the html file and save the object
-        //[self saveHTMLFile:data andFileName:filename complete:^(BOOL completeFlag){
-
-             //[documentData setObject:encodedObject forKey:key];
-        //}];
     }
 }
 
@@ -590,8 +582,7 @@
         s.datasheets = [dict objectForKey:@"datasheets"];
         s.brochures = [dict objectForKey:@"brochures"];
         s.videos = [dict objectForKey:@"videos"];
-        //ALog(@"Software title %@", s.title);
-        //ALog(@"Software key %@", s.key);
+   
         [initialSofware addObject:s];
     }
 }
@@ -732,6 +723,7 @@
             
             [self saveFile:[productData objectForKey:key] andFileName:key complete:^(BOOL completeFlag){
                 c1++;
+                
                 if(c1 == [productData count]){
                     __block int c2 = 0;
                     //save all product series data
@@ -825,12 +817,9 @@
 {
     if([url length] > 0){
         NSArray *chopped = [url componentsSeparatedByString:@"//"];
-        //ALog(@"Chopped One link %@", chopped);
         if([chopped count] > 0){
             NSArray *choppedSecond = [[chopped objectAtIndex:1] componentsSeparatedByString:@"/"];
-            //ALog(@"Chopped Second link %@", choppedSecond);
             if([choppedSecond objectAtIndex:2] != nil){
-                //ALog(@"Chopped %@", [choppedSecond objectAtIndex:2]);
                 return [choppedSecond objectAtIndex:2];
             }else{
                 return [choppedSecond objectAtIndex:2];
@@ -851,18 +840,24 @@
     return [[[NSAttributedString alloc] initWithString:string attributes:attributes] size].width;
 }
 
+
 -(UIImage *)getImageWithName:(NSString *)filename
 {
     NSString *path = [[NSBundle mainBundle] pathForResource:filename ofType:nil];
-    return [UIImage imageWithContentsOfFile:path];
+    @autoreleasepool {
+      return [UIImage imageWithContentsOfFile:path];
+    }
 }
 
 -(NSString *)addAccentToOCEString:(NSString *)string
 {
     //"®"
-    ALog(@"Title %@", [string stringByReplacingOccurrencesOfString:@"Oce" withString:@"Océ"]);
     NSString *accent = [string stringByReplacingOccurrencesOfString:@"Oce" withString:@"Océ"];
-    //NSString *trademark = [accent stringByReplacingOccurrencesOfString:@"®" withString:@"\00AE"];
+    
+    //here we are accounting for a "one off request"
+    if([string isEqualToString:@"Canon imagePRESS C800C700 Series"]){
+        accent = @"Canon imPRESS C800/C700";
+    }
     
     return accent;
 
@@ -890,7 +885,7 @@
             NSString* path = [documentsDirectory stringByAppendingPathComponent:filename];
 
             if([data writeToFile:path atomically:YES]){
-                //ALog(@"Model SAVED FILE SUCCESSFULLY %@", path);
+                ALog(@"Model SAVED FILE SUCCESSFULLY %@", path);
                 completeFlag(YES);
             }else{
                 ALog(@"ERROR SAVING FILE %@", path);
@@ -971,7 +966,7 @@
     NSString* path = [documentsDirectory stringByAppendingPathComponent:fileName];
     NSError *err = nil;
     NSData *data = [NSData dataWithContentsOfFile:path options:NSDataReadingUncached error:&err];
-    
+
     if(data != nil && [data length] > 0){
         //ALog("Filename %@", fileName);
         //ALog("Data length %d", [data length]);

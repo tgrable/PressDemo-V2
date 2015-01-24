@@ -12,8 +12,8 @@
 #import "CanonSoftwareGridViewController.h"
 #import <AVFoundation/AVFoundation.h>
 
-#define ResourcePath(path)[[NSBundle mainBundle] pathForResource:path ofType:nil]
 
+#define ResourcePath(path)[[NSBundle mainBundle] pathForResource:path ofType:nil]
 #define ImageWithPath(path)[UIImage imageWithContentsOfFile:path]
 
 //this is a local macro that sets up a class wide logging scheme
@@ -45,7 +45,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityDidChange:) name:kReachabilityChangedNotification object:nil];
     }
     return self;
 }
@@ -110,11 +109,7 @@
 {
     [super viewDidLoad];
     
-    
-    //self.screenName = @"Home View";
-    
-    //this notification is set to the reachability of the application
-    //if the application cannot connect, then this function is called
+    self.screenName = @"Home View";
     
     network = [[NetworkData alloc] init];
     network.delegate = self;
@@ -178,6 +173,7 @@
     showAllProducts.clipsToBounds = YES;
     [self.view addSubview:showAllProducts];
     
+
     
     poster = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 1024, 768)];
     poster.image = [model getImageWithName:@"/launch@2x.png"];
@@ -185,42 +181,85 @@
     [self.view addSubview:poster];
     [self.view bringSubviewToFront:poster];
     
+    
+    imageIndex = 0;
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    //NSString *path = [[NSBundle mainBundle] pathForResource:@"imPRESS_animation_screen_4" ofType:@"mp4"];
-    //NSString *path = [[NSBundle mainBundle] pathForResource:@"kerry_app_ani" ofType:@"mp4"];
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"imPRESS-animation-screen_1024x768" ofType:@"mp4"];
-    NSURL *urlHome = [NSURL fileURLWithPath:path];
-    
-    ALog(@"%@", urlHome);
-    
-    self.firstVideoItem = [[AVPlayerItem alloc] initWithURL:urlHome];
-    self.player = [[AVPlayer alloc]initWithPlayerItem:self.firstVideoItem];
-    self.avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
-    self.avPlayerLayer.bounds = self.view.bounds;
-    self.avPlayerLayer.frame = CGRectMake(0, 0, 1024, 768);
-    [self.view.layer addSublayer:avPlayerLayer];
-    [self.player play];
-    //here's our selector to fire when the video is comepleted
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(movieFinishedCallback:) name:AVPlayerItemDidPlayToEndTimeNotification object:firstVideoItem];
-    
-    
-    //play the video
-    
-    
-    [UIView animateWithDuration:2.0f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
-        poster.alpha = 0.0;
+    if(!model.animationRun){
         
-    }completion:^(BOOL finished) {
-        ALog(@"Start playing");
+        /*
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"imPRESS-animation-screen_1024x768" ofType:@"mp4"];
+        NSURL *urlHome = [NSURL fileURLWithPath:path];
         
-    }];
+        self.firstVideoItem = [[AVPlayerItem alloc] initWithURL:urlHome];
+        self.player = [[AVPlayer alloc]initWithPlayerItem:self.firstVideoItem];
+        self.avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
+        self.avPlayerLayer.bounds = self.view.bounds;
+        self.avPlayerLayer.frame = CGRectMake(0, 0, 1024, 768);
+        [self.view.layer addSublayer:avPlayerLayer];
+        [self.player play];
+        //here's our selector to fire when the video is comepleted
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(movieFinishedCallback:) name:AVPlayerItemDidPlayToEndTimeNotification object:firstVideoItem];
+        
+        
+        [UIView animateWithDuration:2.0f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
+            poster.alpha = 0.0;
+            
+        }completion:^(BOOL finished) {
+            ALog(@"Start playing");
+            
+        }];
+         
+        model.animationRun = YES;
+        */
+        
+        [self setupLocalUserInterface:^(BOOL completeBlock){}];
+        
+        [self runAnimation];
+        model.animationRun = YES;
+        [UIView animateWithDuration:0.5f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
+            poster.alpha = 0.0;
+            
+        }completion:^(BOOL finished) {
+            ALog(@"Start playing");
+            
+        }];
+    }
+}
 
+-(void)runAnimation
+{
+    @autoreleasepool {
+        
+        NSString *imageStringOne = [NSString stringWithFormat:@"/imPRESS-animation-screen_%d@2x.png", imageIndex];
+        NSString *pathOne = [[NSBundle mainBundle] pathForResource:imageStringOne ofType:nil];
+        
+        UIView *ivOne = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1024, 768)];
+        ivOne.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageWithContentsOfFile:pathOne]];
+        
+        [self.view addSubview:ivOne];
+        
+        [UIView animateWithDuration:0.0001f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
+            
+        }completion:^(BOOL finished) {
+
+            [ivOne removeFromSuperview];
+            imageIndex++;
+            if(imageIndex < 99){
+                
+                [self runAnimation];
+            }else{
+                ALog(@"Stopped");
+               
+            }
+            
+        }];
+    }
 }
 
 /*-----------------------------------------------------
@@ -240,6 +279,8 @@
     }];
     
 }
+
+
 
 
 //this function captures the event of one of the filter buttons being touched

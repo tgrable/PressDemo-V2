@@ -19,7 +19,7 @@
 @interface CanonModel : AppDataObject{
     UIColor *orange, *pink, *red, *blue, *dullBlack, *green, *purple, *gray, *yellow, *lightGray;
     int imageCount;
-    
+    BOOL animationRun;
 }
 //Model Properties
 @property(nonatomic, assign) id tracker;
@@ -31,16 +31,13 @@
 @property(nonatomic, strong)NSMutableArray *localProds, *filteredProducts;
 @property(nonatomic, strong)UIColor *orange, *pink, *red, *blue, *dullBlack, *green, *purple, *gray, *yellow, *lightGray;
 @property(nonatomic) Reachability *hostReachability;
+@property BOOL animationRun;
+
+/** type definitions **/
 typedef void(^completeBlock)(BOOL);
 
 //Function prototypes
--(void)breakoutIncomingData:(NSData *)data complete:(completeBlock)completeFlag;
--(void)saveHTMLFile:(NSData *)data andFileName:(NSString *)filename complete:(completeBlock)completeFlag;
--(void)saveFile:(NSData *)data andFileName:(NSString *)filename complete:(completeBlock)completeFlag;
--(NSData *)getFileData:(NSString *)fileName complete:(completeBlock)completeFlag;
--(BOOL)fileExists:(NSString *)filename;
--(void)breakoutDocumentData:(NSArray *)documents withType:(NSString *)type;
--(NSData *)getHTMLFile:(NSString *)filename complete:(completeBlock)completeFlag;
+/** model functions **/
 -(void)breakoutProductData:(NSArray* )products;
 -(void)wipeOutAllModelDataForUpdate;
 -(void)breakoutVideoData:(NSArray *)videos;
@@ -49,24 +46,34 @@ typedef void(^completeBlock)(BOOL);
 -(void)breakoutMillData:(NSArray *)mills;
 -(void)breakoutPaperData:(NSArray *)papers;
 -(void)breakoutSolutionData:(NSArray* )solution;
-
 -(BOOL)breakoutUpdateData:(NSData *)data;
 -(void)breakoutProductSeriesData:(NSArray *)series;
--(void)saveAllDataToDisk:(completeBlock)completeFlagArgument;
--(NSString *)cleanseStringName:(NSString *)filename;
--(CGFloat)widthOfString:(NSString *)string withStringSize:(float)size andFontKey:(NSString *)key;
+-(void)breakoutIncomingData:(NSData *)data complete:(completeBlock)completeFlag;
+-(void)breakoutDocumentData:(NSArray *)documents withType:(NSString *)type;
 
-
--(NSString *)addAccentToOCEString:(NSString *)string;
+/** file functions **/
 -(UIImage *)getImageWithName:(NSString *)filename;
--(void)wipeOutAllModelData;
 -(NSString *)getVideoFileName:(NSString *)url;
--(NSMutableArray *)getInitialSetofPorducts;
 -(BOOL)videoExists:(NSString *)videoURL;
 -(NSString *)returnFilePath:(NSString *)name;
 -(BOOL)deleteFile:(NSString *)filename;
--(NSMutableArray *)cleanArray:(NSMutableArray *)array;
-//google analytics
+-(void)saveAllDataToDisk:(completeBlock)completeFlagArgument;
+-(NSData *)getHTMLFile:(NSString *)filename complete:(completeBlock)completeFlag;
+-(BOOL)fileExists:(NSString *)filename;
+-(void)saveHTMLFile:(NSData *)data andFileName:(NSString *)filename complete:(completeBlock)completeFlag;
+-(void)saveFile:(NSData *)data andFileName:(NSString *)filename complete:(completeBlock)completeFlag;
+-(NSData *)getFileData:(NSString *)fileName complete:(completeBlock)completeFlag;
+
+/** google analytics **/
 -(void)logData:(NSString *)category withAction:(NSString *)action withLabel:(NSString *)label;
+
+/** utility functions **/
 -(void)sortInitialPaperDataAlpha:(NSString *)key complete:(completeBlock)completeFlag;
+-(NSMutableArray *)cleanArray:(NSMutableArray *)array;
+-(NSMutableArray *)getInitialSetofPorducts;
+-(void)wipeOutAllModelData;
+-(NSString *)addAccentToOCEString:(NSString *)string;
+-(NSString *)cleanseStringName:(NSString *)filename;
+-(CGFloat)widthOfString:(NSString *)string withStringSize:(float)size andFontKey:(NSString *)key;
+
 @end

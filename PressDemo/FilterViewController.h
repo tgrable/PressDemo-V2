@@ -16,7 +16,6 @@
 #import "CanonViewController.h"
 
 @interface FilterViewController : GAITrackedViewController<NetworkDelegate, UIScrollViewDelegate, UIAlertViewDelegate>{
- 
     //local views
     UIImageView *logo, *impressLogo;
 

@@ -82,10 +82,9 @@
     //start the update check here
     ALog(@"App came back into focus");
 
-    
     //make sure to check the connectivity again
     if ([model.hostReachability isReachableViaWiFi]) {
-        ALog(@"CHECKING FOR UPDATES");
+
         //make sure this thread runs in the background
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             [network checkForUpdate];
@@ -98,10 +97,9 @@
                if([url objectAtIndex:1] != nil){
                   [i setImageWithURL:[NSURL URLWithString:[url objectAtIndex:1]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]
                          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-                            ALog(@"Got the image %@", image);
+                         //successfully downloaded the image
                   }];
                }
-                
            }
             
            [offlineImages removeAllObjects];
@@ -113,14 +111,13 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    //ALog(@"viewWillAppear FILTER");
-    
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    //ALog(@"viewDidAppear FILTER");
+
     //app going into background notification
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appWentIntoBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -219,7 +216,6 @@
             int width = 241;
             if([ends containsObject:[NSString stringWithFormat:@"%d",e]]) width = 233;
 
-
             UIView *v = [[UIView alloc] initWithFrame:CGRectMake(x, y, width, 300)];
             v.backgroundColor = [UIColor whiteColor];
             
@@ -233,6 +229,7 @@
             back.tag = e;
             [back setBackgroundColor:[UIColor whiteColor]];
             [v addSubview:back];
+            
             
             if(x != 0){
                 UIView *leftLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 300)];
@@ -251,6 +248,7 @@
             //check to make sure the everything is reachable
             NSString *u = [[p.images objectForKey:@"grid-image"] stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
             __weak typeof(UIImageView) *imgView = iv;
+
             [iv setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
                 if(error){
                     ALog(@"Error %@", error);
@@ -270,7 +268,6 @@
             title.numberOfLines = 2;
             title.adjustsFontSizeToFitWidth = YES;
             title.backgroundColor = [UIColor whiteColor];
-            //title.text = [p.series_title uppercaseString];
             title.text = p.series_title;
             [title alterSubstring:@"®" withSize:8];
             [back addSubview:title];
@@ -339,20 +336,27 @@
 -(void)productTouched:(id)sender
 {
     UIButton *b = (UIButton *)sender;
+    ALog(@"Product touched %@", b.titleLabel.text);
     
-    NSData *seriesData = [model getFileData:b.titleLabel.text complete:^(BOOL completeFlag){}];
-    if(seriesData != nil){
-        model.selectedSeries = [NSKeyedUnarchiver unarchiveObjectWithData:seriesData];
+    if([model fileExists:b.titleLabel.text]){
+        
+        NSData *seriesData = [model getFileData:b.titleLabel.text complete:^(BOOL completeFlag){}];
      
-        SeriesViewController *series = [[SeriesViewController alloc] initWithNibName:@"SeriesViewController" bundle:nil];
-        [self.navigationController pushViewController:series animated:YES];
+        if(seriesData != nil){
+            model.selectedSeries = [NSKeyedUnarchiver unarchiveObjectWithData:seriesData];
+            ALog(@"HEREE %@", model.selectedSeries.title);
+            SeriesViewController *series = [[SeriesViewController alloc] initWithNibName:@"SeriesViewController" bundle:nil];
+            [self.navigationController pushViewController:series animated:YES];
+        }else{
+            [self displayMessage:@"Alert" withTitle:@"There was an internal error, please contact support."];
+        }
+        
+        //GA
+        [model logData:@"Product Filter View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Product: %@",b.titleLabel.text]];
+         
     }else{
-        [self displayMessage:@"Alert" withTitle:@"There was an internal error, please contact support."];
+        [self displayMessage:@"Alert" withTitle:@"The product you selected was not found, please try again"];
     }
-    
-    //GA
-    [model logData:@"Product Filter View" withAction:@"Action Tracker" withLabel:[NSString stringWithFormat:@"Selected Product: %@",b.titleLabel.text]];
-    
    
 }
 
