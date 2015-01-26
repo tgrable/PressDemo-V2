@@ -11,7 +11,7 @@
 #import "CanonMediaGridViewController.h"
 #import "CanonSoftwareGridViewController.h"
 #import <AVFoundation/AVFoundation.h>
-
+#import "LegalViewController.h"
 
 #define ResourcePath(path)[[NSBundle mainBundle] pathForResource:path ofType:nil]
 #define ImageWithPath(path)[UIImage imageWithContentsOfFile:path]
@@ -122,11 +122,24 @@
     whatImageNames = [NSMutableArray array];
     showAllImageNames = [NSMutableArray array];
     
+    
+    
     //***** Load up views to the local view controller ************//
     //the nav bar
     customNavBar = [[UIView alloc] initWithFrame:CGRectMake(0, 20, 1024, 64)];
     [customNavBar setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:customNavBar];
+    
+    UIButton *legal = [UIButton buttonWithType:UIButtonTypeCustom];
+    [legal setFrame:CGRectMake(20, 40, 80, 20)];
+    [legal addTarget:self action:@selector(legalTapped:)forControlEvents:UIControlEventTouchUpInside];
+    legal.showsTouchWhenHighlighted = YES;
+    [legal setUserInteractionEnabled:YES];
+    [legal setTitle:@"LEGAL" forState:UIControlStateNormal];
+    [legal setTitleColor:model.blue forState:UIControlStateNormal];
+    [legal setBackgroundColor:[UIColor clearColor]];
+    legal.titleLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Md" size:18.0];
+    [self.view addSubview:legal];
     
     impressLogo = [[UIImageView alloc] initWithFrame:CGRectMake(437, 1, 151, 62)];
     [impressLogo setUserInteractionEnabled:YES];
@@ -260,6 +273,14 @@
             
         }];
     }
+}
+
+-(void)legalTapped:(id)sender
+{
+    LegalViewController *legal = [[LegalViewController alloc] initWithNibName:@"LegalViewController" bundle:nil];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:legal];
+    [nav setNavigationBarHidden:YES animated:NO];
+    [self presentViewController:nav animated:YES completion:^{}];
 }
 
 /*-----------------------------------------------------

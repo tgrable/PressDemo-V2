@@ -9,6 +9,7 @@
 #import "CanonMediaMillViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "UIButton+Extensions.h"
+#import "LegalViewController.h"
 
 #define ResourcePath(path)[[NSBundle mainBundle] pathForResource:path ofType:nil]
 
@@ -631,6 +632,7 @@
     downloadingURL = @"";
     
 }
+
 
 
 //this function moves around the content in the main view of the app

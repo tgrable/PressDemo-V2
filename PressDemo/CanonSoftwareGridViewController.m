@@ -9,6 +9,7 @@
 #import "CanonSoftwareGridViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "CanonSoftwareViewController.h"
+#import "LegalViewController.h"
 
 #define ResourcePath(path)[[NSBundle mainBundle] pathForResource:path ofType:nil]
 
@@ -162,6 +163,7 @@
     customNavBar = [[UIView alloc] initWithFrame:CGRectMake(0, 20, 1024, 64)];
     [customNavBar setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:customNavBar];
+    
     
     impressLogo = [[UIImageView alloc] initWithFrame:CGRectMake(437, 1, 151, 62)];
     [impressLogo setUserInteractionEnabled:YES];
@@ -334,7 +336,6 @@
     [productScroll setContentSize:CGSizeMake(952, ((multi * 300) + add))];
     
 }
-
 
 
 //this function handles a product being touched

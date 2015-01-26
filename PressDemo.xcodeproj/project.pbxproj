@@ -270,6 +270,8 @@
 		71706CE11A72ADA3002CB444 /* imPRESS-animation-screen_97@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71706C7D1A72ADA3002CB444 /* imPRESS-animation-screen_97@2x.png */; };
 		71706CE21A72ADA3002CB444 /* imPRESS-animation-screen_98@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71706C7E1A72ADA3002CB444 /* imPRESS-animation-screen_98@2x.png */; };
 		71706CE31A72ADA3002CB444 /* imPRESS-animation-screen_99@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71706C7F1A72ADA3002CB444 /* imPRESS-animation-screen_99@2x.png */; };
+		71706CE81A76F014002CB444 /* LegalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71706CE61A76F014002CB444 /* LegalViewController.m */; };
+		71706CE91A76F014002CB444 /* LegalViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 71706CE71A76F014002CB444 /* LegalViewController.xib */; };
 		71708CB51A38E35E0041F8D5 /* CanonMediaGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71708CB31A38E35E0041F8D5 /* CanonMediaGridViewController.m */; };
 		71708CB61A38E35E0041F8D5 /* CanonMediaGridViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 71708CB41A38E35E0041F8D5 /* CanonMediaGridViewController.xib */; };
 		71708CC71A38F92C0041F8D5 /* hdr-short-blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 71708CB91A38F92C0041F8D5 /* hdr-short-blue.png */; };
@@ -826,6 +828,9 @@
 		71706C7D1A72ADA3002CB444 /* imPRESS-animation-screen_97@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "imPRESS-animation-screen_97@2x.png"; sourceTree = "<group>"; };
 		71706C7E1A72ADA3002CB444 /* imPRESS-animation-screen_98@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "imPRESS-animation-screen_98@2x.png"; sourceTree = "<group>"; };
 		71706C7F1A72ADA3002CB444 /* imPRESS-animation-screen_99@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "imPRESS-animation-screen_99@2x.png"; sourceTree = "<group>"; };
+		71706CE51A76F014002CB444 /* LegalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LegalViewController.h; sourceTree = "<group>"; };
+		71706CE61A76F014002CB444 /* LegalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LegalViewController.m; sourceTree = "<group>"; };
+		71706CE71A76F014002CB444 /* LegalViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LegalViewController.xib; sourceTree = "<group>"; };
 		71708CB21A38E35E0041F8D5 /* CanonMediaGridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CanonMediaGridViewController.h; sourceTree = "<group>"; };
 		71708CB31A38E35E0041F8D5 /* CanonMediaGridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CanonMediaGridViewController.m; sourceTree = "<group>"; };
 		71708CB41A38E35E0041F8D5 /* CanonMediaGridViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CanonMediaGridViewController.xib; sourceTree = "<group>"; };
@@ -1093,7 +1098,6 @@
 		30AC112A192D90D300BE1072 = {
 			isa = PBXGroup;
 			children = (
-				71706C1B1A72AD88002CB444 /* sequence */,
 				30AC113C192D90D300BE1072 /* PressDemo */,
 				30AC115B192D90D300BE1072 /* PressDemoTests */,
 				30AC1135192D90D300BE1072 /* Frameworks */,
@@ -1149,6 +1153,9 @@
 				718E314A199AC1B70000A5EB /* SeriesViewController.m */,
 				711FC2FC1A3F6373005BEDE7 /* PartnerViewController.h */,
 				711FC2FD1A3F6373005BEDE7 /* PartnerViewController.m */,
+				71706CE51A76F014002CB444 /* LegalViewController.h */,
+				71706CE61A76F014002CB444 /* LegalViewController.m */,
+				71706CE71A76F014002CB444 /* LegalViewController.xib */,
 				7126510C1A63F9BE00C91AF2 /* CanonDownloadAll.xib */,
 				711FC2FE1A3F6373005BEDE7 /* PartnerViewController.xib */,
 				718E314B199AC1B70000A5EB /* SeriesViewController.xib */,
@@ -1316,6 +1323,7 @@
 				30E9460C19A00D49002A996C /* placeholder@2x.png */,
 				71706C011A71B7C9002CB444 /* animation.seq */,
 				71F497B21A70604E005D0F24 /* imPRESS-animation-screen_1024x768.mp4 */,
+				71706C1B1A72AD88002CB444 /* sequence */,
 				71DBB764192FB60E002D7CA9 /* Retina */,
 				71DBB7A3192FB60E002D7CA9 /* Standard */,
 				7129481219A3FFCF00E0548D /* launch */,
@@ -1592,6 +1600,7 @@
 				71706C7F1A72ADA3002CB444 /* imPRESS-animation-screen_99@2x.png */,
 			);
 			name = sequence;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		71708CB71A38F8F90041F8D5 /* headers */ = {
@@ -2065,6 +2074,7 @@
 				71DBB818192FB60E002D7CA9 /* leftpane-top@2x.png in Resources */,
 				71706CDA1A72ADA3002CB444 /* imPRESS-animation-screen_90@2x.png in Resources */,
 				30AC11DD192D931900BE1072 /* icon_76_76@2x.png in Resources */,
+				71706CE91A76F014002CB444 /* LegalViewController.xib in Resources */,
 				718D21291A379BB100980FDF /* icn-key@2x.png in Resources */,
 				71DBB81F192FB60E002D7CA9 /* btn-back.png in Resources */,
 				718E316A199D39620000A5EB /* icn-overview.png in Resources */,
@@ -2419,6 +2429,7 @@
 				30AC11AB192D92B900BE1072 /* SBJsonUTF8Stream.m in Sources */,
 				719D39ED1994216F008E56EC /* ProductSeries.m in Sources */,
 				30AC11AA192D92B900BE1072 /* SBJsonTokeniser.m in Sources */,
+				71706CE81A76F014002CB444 /* LegalViewController.m in Sources */,
 				712946EA19A37BD800E0548D /* NetworkManager.m in Sources */,
 				718D20FB1A32163500980FDF /* ProductScroll.m in Sources */,
 				711FC32B1A41FAB4005BEDE7 /* AFURLRequestSerialization.m in Sources */,

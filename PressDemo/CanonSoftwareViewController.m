@@ -209,6 +209,7 @@
     [customNavBar setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:customNavBar];
     
+    
     impressLogo = [[UIImageView alloc] initWithFrame:CGRectMake(437, 1, 151, 62)];
     [impressLogo setUserInteractionEnabled:YES];
     [impressLogo setImage:[UIImage imageNamed:@"impress-logo.png"]];
@@ -454,6 +455,7 @@
         i++;
     }
 }
+
 
 //this function moves around the content in the main view of the app
 -(void)loadUpMainTray:(id)sender

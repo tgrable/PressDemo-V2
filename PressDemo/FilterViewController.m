@@ -157,6 +157,7 @@
     [customNavBar setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:customNavBar];
     
+    
     impressLogo = [[UIImageView alloc] initWithFrame:CGRectMake(437, 1, 151, 62)];
     [impressLogo setUserInteractionEnabled:YES];
     [impressLogo setImage:[UIImage imageNamed:@"impress-logo.png"]];
@@ -329,7 +330,6 @@
     [productScroll setContentSize:CGSizeMake(952, ((multi * 300) + add + 10))];
 
 }
-
 
 //this function handles a product being touched
 //this function also sets the appropriate data so the product series can display the correct data

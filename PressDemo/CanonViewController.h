@@ -33,7 +33,7 @@
 @property(nonatomic, strong)WhatDoYouPrint *whatDoYouPrint;
 @property(nonatomic, strong)ShowAll *showAllProducts;
 @property(nonatomic, strong)UIView *customNavBar;
-@property(nonatomic, strong) MPMoviePlayerController *moviePlayerController;
+@property(nonatomic, strong)MPMoviePlayerController *moviePlayerController;
 
 
 /* Misc */
