@@ -186,7 +186,7 @@
   **/
  function _cannon_document_field_request_data_from_asset_store(){
 
-  $url = 'http://canoncache.trekkweb.com/data/api/document';
+  $url = 'http://canoncdn.trekkweb.com/data/api/document';
   $data = _cannon_document_field_api_call($url);
   $decoded = json_decode($data);
   $doc = "";

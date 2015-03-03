@@ -171,7 +171,7 @@
   **/
  function _cannon_logo_image_field_request_data_from_asset_store(){
 
-  $url = 'http://canoncache.trekkweb.com/data/api/image';
+  $url = 'http://canoncdn.trekkweb.com/data/api/image';
   $data = _cannon_logo_image_field_api_call($url);
   $decoded = json_decode($data);
   $images = "";

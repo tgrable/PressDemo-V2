@@ -181,7 +181,7 @@
   **/
  function _cannon_media_valet_video_field_request_data_from_mdeia_valet(){
 
-  $url = 'http://canoncache.trekkweb.com/data/api/video';
+  $url = 'http://canoncdn.trekkweb.com/data/api/video';
   $data = _cannon_testing_api_call($url);
 
   $decoded = json_decode($data);
