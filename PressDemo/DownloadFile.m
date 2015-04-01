@@ -106,7 +106,7 @@
                         ALog(@"The File is on Disk. Total MBs read %@", megs);
                     
                         if(index == downloadCount){
-                        //if(index == 4){
+                        //if(index == 2){
                             //this lets the UI know that we are complete
                             dispatch_async(dispatch_get_main_queue(), ^{
                                [_delegate fileDownloadResponse:YES];
@@ -177,13 +177,14 @@
 -(void)downloadAllImagesAndSaveThem:(NSString *)url
 {
     
-    __block int count = [model.downloadedImages count];
+    __block int count = (int)[model.downloadedImages count];
     __block NSString *u = [url stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
 
-    [manager downloadWithURL:[NSURL URLWithString:u] options:0 progress:^(NSUInteger receivedSize, long long expectedSize){
+    
+    [manager downloadImageWithURL:[NSURL URLWithString:u] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize){
         // progression tracking code
         totaldata += receivedSize;
-    }completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished){
+    }completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url){
 
         if(finished){
             //notifiy the main thread of the file update

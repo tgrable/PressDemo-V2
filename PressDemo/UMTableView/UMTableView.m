@@ -90,9 +90,12 @@
  */
 - (UMCellView*) viewInRow: (NSUInteger) rowIndex column: (NSUInteger) columnIndex {
     UMCellView* cell = nil;
-    NSDictionary* row = [self.rowMap valueForKey:[[NSNumber numberWithInt:rowIndex] stringValue]];
+    
+    int rowValue = (int)rowIndex;
+    int colValue = (int)columnIndex;
+    NSDictionary* row = [self.rowMap valueForKey:[[NSNumber numberWithInt:rowValue] stringValue]];
     if (row != nil) {
-        cell = [row valueForKey:[[NSNumber numberWithInt:columnIndex] stringValue]];
+        cell = [row valueForKey:[[NSNumber numberWithInt:colValue] stringValue]];
     }
     return cell;
 }
@@ -260,7 +263,10 @@
  * Internally removes row from data structure and removes views
  */             
 - (void) removeRowAt: (NSUInteger) index {
-    NSString* key = [[NSNumber numberWithInt:index] stringValue];
+    
+    int ind = (int)index;
+    
+    NSString* key = [[NSNumber numberWithInt:ind] stringValue];
     NSMutableDictionary* row = [self.rowMap objectForKey:key];
     if (row != nil) {                                
         for (UMCellView* cellView in [row allValues]) {

@@ -7,7 +7,7 @@
 //
 
 #import "CanonMediaMillViewController.h"
-#import <SDWebImage/UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
 #import "UIButton+Extensions.h"
 #import "LegalViewController.h"
 
@@ -107,9 +107,9 @@
                     UIImageView *i = [offlineImages objectForKey:key];
                     //check to see what type of image we are replacing
                     if(i.frame.size.width < 776)
-                        [i setImageWithURL:key placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+                        [i sd_setImageWithURL:key placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
                     else
-                        [i setImageWithURL:key placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"]];
+                        [i sd_setImageWithURL:key placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"]];
                 }
                 [offlineImages removeAllObjects];
                 
@@ -899,16 +899,7 @@
                     }else{
                         //try and load the image via the internet, otherwise use placeholder as a fallback
                         NSString *u = [v.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-                        __weak typeof(UIImageView) *imgView = iv;
-                        [iv setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-                            if(error){
-                                ALog(@"Error %@", error);
-                                imgView.image = [UIImage imageNamed:@"placeholder.png"];
-                                //load the image view in an
-                                [offlineImages setObject:imgView forKey:[NSURL URLWithString:u]];
-                                model.layoutSync = NO;
-                            }
-                        }];
+                        [iv sd_setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
                         
                     }
                     
@@ -1178,7 +1169,7 @@
     millNameHeader.text = model.selectedMill.title;
     
     //set the logo, or try and set the logo
-    [millLogo setImageWithURL:[NSURL URLWithString:model.selectedMill.logo] placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"]];
+    [millLogo sd_setImageWithURL:[NSURL URLWithString:model.selectedMill.logo] placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"]];
     
     //set the mill name in the overview container
     millNameOverview.text = model.selectedMill.title;
@@ -1216,15 +1207,7 @@
         
         NSString *u = [url stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
         //check to make sure the value exists on disk
-        __weak typeof(UIImageView) *imgView = img;
-        [img setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-            if(error){
-                ALog(@"Error %@", error);
-                imgView.image = [UIImage imageNamed:@"overviewPlaceholder.png"];
-                [offlineImages setObject:imgView forKey:[NSURL URLWithString:u]];
-                model.layoutSync = NO;
-            }
-        }];
+        [img sd_setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"]];
         img.backgroundColor = [UIColor whiteColor];
         img.contentMode = UIViewContentModeScaleAspectFit;
         [img setUserInteractionEnabled:YES];
@@ -1392,7 +1375,7 @@
         
         float widthCell = cellView.frame.size.width;
         float heightCell = cellView.frame.size.height;
-        int intCount = ([rowArray count] - 1);
+        int intCount = (int)([rowArray count] - 1);
         
         UIButton *maskButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [maskButton setFrame:CGRectMake(0, 0, widthCell, heightCell)];

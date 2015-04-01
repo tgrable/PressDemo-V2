@@ -7,7 +7,7 @@
 //
 
 #import "PartnerViewController.h"
-#import <SDWebImage/UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
 #import "UIButton+Extensions.h"
 
 #define ResourcePath(path)[[NSBundle mainBundle] pathForResource:path ofType:nil]
@@ -106,9 +106,9 @@
                     UIImageView *i = [offlineImages objectForKey:key];
                     //check to see what type of image we are replacing
                     if(i.frame.size.width < 776)
-                        [i setImageWithURL:key placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+                        [i sd_setImageWithURL:key placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
                     else
-                        [i setImageWithURL:key placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"]];
+                        [i sd_setImageWithURL:key placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"]];
                 }
                 [offlineImages removeAllObjects];
                 
@@ -665,16 +665,7 @@
                 }else{
                     //try and load the image via the internet, otherwise use placeholder as a fallback
                     NSString *u = [v.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-                    __weak typeof(UIImageView) *imgView = iv;
-                    [iv setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-                        if(error){
-                            ALog(@"Error %@", error);
-                            imgView.image = [UIImage imageNamed:@"placeholder.png"];
-                            //load the image view in an
-                            [offlineImages setObject:imgView forKey:[NSURL URLWithString:u]];
-                            model.layoutSync = NO;
-                        }
-                    }];
+                    [iv sd_setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
                     
                 }
                 
@@ -737,15 +728,7 @@
                 }else{
                     //try and load the image via the internet, otherwise use placeholder as a fallback
                     NSString *u = [d.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-                    __weak typeof(UIImageView) *imgView = iv;
-                    [iv setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-                        if(error){
-                            ALog(@"Error %@", error);
-                            imgView.image = [UIImage imageNamed:@"placeholder.png"];
-                            [offlineImages setObject:imgView forKey:[NSURL URLWithString:u]];
-                            model.layoutSync = NO;
-                        }
-                    }];
+                    [iv sd_setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
                 }
                 
                 //set the data for the rest of the row
@@ -952,15 +935,7 @@
         
         NSString *u = [url stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
         //check to make sure the value exists on disk
-        __weak typeof(UIImageView) *imgView = img;
-        [img setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-            if(error){
-                ALog(@"Error %@", error);
-                imgView.image = [UIImage imageNamed:@"overviewPlaceholder.png"];
-                [offlineImages setObject:imgView forKey:[NSURL URLWithString:u]];
-                model.layoutSync = NO;
-            }
-        }];
+        [img sd_setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"]];
         img.backgroundColor = [UIColor whiteColor];
         [img setUserInteractionEnabled:YES];
         [overviewImages addSubview:img];
@@ -983,7 +958,7 @@
     partnerHeader.text = model.selectedPartner.title;
     
     //set the logo, or try and set the logo
-    [partnerLogo setImageWithURL:[NSURL URLWithString:model.selectedPartner.logo] placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"]];
+    [partnerLogo sd_setImageWithURL:[NSURL URLWithString:model.selectedPartner.logo] placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"]];
     
     if([model.selectedPartner.website isEqualToString:@""]){
         NSString *websiteTitle = [NSString stringWithFormat:@"%@'s Website is Not Available", model.selectedPartner.title];

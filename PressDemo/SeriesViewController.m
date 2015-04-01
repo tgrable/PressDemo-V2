@@ -7,7 +7,7 @@
 //
 
 #import "SeriesViewController.h"
-#import <SDWebImage/UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
 #import "UIButton+Extensions.h"
 #import "PartnerViewController.h"
 #import "UILabel+FontSize.h"
@@ -107,9 +107,9 @@
                     UIImageView *i = [offlineImages objectForKey:key];
                     //check to see what type of image we are replacing
                     if(i.frame.size.width < 776)
-                      [i setImageWithURL:key placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+                      [i sd_setImageWithURL:key placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
                     else
-                      [i setImageWithURL:key placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"]];
+                      [i sd_setImageWithURL:key placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"]];
                 }
                 [offlineImages removeAllObjects];
                 
@@ -798,16 +798,7 @@
                     }else{
                         //try and load the image via the internet, otherwise use placeholder as a fallback
                         NSString *u = [v.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-                        __weak typeof(UIImageView) *imgView = iv;
-                        [iv setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-                            if(error){
-                                ALog(@"Error %@", error);
-                                imgView.image = [UIImage imageNamed:@"placeholder.png"];
-                                //load the image view in an 
-                                [offlineImages setObject:imgView forKey:[NSURL URLWithString:u]];
-                                model.layoutSync = NO;
-                            }
-                        }];
+                        [iv sd_setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
                       
                     }
                     
@@ -874,15 +865,7 @@
                     }else{
                         //try and load the image via the internet, otherwise use placeholder as a fallback
                         NSString *u = [d.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-                        __weak typeof(UIImageView) *imgView = iv;
-                        [iv setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-                            if(error){
-                                ALog(@"Error %@", error);
-                                imgView.image = [UIImage imageNamed:@"placeholder.png"];
-                                [offlineImages setObject:imgView forKey:[NSURL URLWithString:u]];
-                                model.layoutSync = NO;
-                            }
-                        }];
+                        [iv sd_setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
                     }
                     
                     //set the data for the rest of the row
@@ -1111,15 +1094,7 @@
         
         NSString *u = [url stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
         //check to make sure the value exists on disk
-        __weak typeof(UIImageView) *imgView = img;
-        [img setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-            if(error){
-                ALog(@"Error %@", error);
-                imgView.image = [UIImage imageNamed:@"overviewPlaceholder.png"];
-                [offlineImages setObject:imgView forKey:[NSURL URLWithString:u]];
-                model.layoutSync = NO;
-            }
-        }];
+        [img sd_setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"overviewPlaceholder.png"]];
         img.backgroundColor = [UIColor whiteColor];
         img.contentMode = UIViewContentModeScaleAspectFit;
         [img setUserInteractionEnabled:YES];
@@ -1211,7 +1186,7 @@
             
         }
         //calculate the row heights
-        int c = [rowData count];
+        int c = (int)[rowData count];
         if(c >= 2){
             y1 = [[rowData objectAtIndex:(c -2)] intValue];
             y2 = [[rowData objectAtIndex:(c -1)] intValue];

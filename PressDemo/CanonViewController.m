@@ -123,7 +123,6 @@
     showAllImageNames = [NSMutableArray array];
     
     
-    
     //***** Load up views to the local view controller ************//
     //the nav bar
     customNavBar = [[UIView alloc] initWithFrame:CGRectMake(0, 20, 1024, 64)];

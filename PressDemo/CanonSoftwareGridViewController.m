@@ -7,7 +7,7 @@
 //
 
 #import "CanonSoftwareGridViewController.h"
-#import <SDWebImage/UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
 #import "CanonSoftwareViewController.h"
 #import "LegalViewController.h"
 
@@ -96,10 +96,7 @@
                 UIImageView *i = [offlineImages objectForKey:key];
                 NSArray *url = [key componentsSeparatedByString:@"---"];
                 if([url objectAtIndex:1] != nil){
-                    [i setImageWithURL:[NSURL URLWithString:[url objectAtIndex:1]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]
-                             completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-                                 ALog(@"Got the image %@", image);
-                             }];
+                    [i sd_setImageWithURL:[NSURL URLWithString:[url objectAtIndex:1]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
                 }
                 
             }
@@ -256,16 +253,8 @@
         UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(imgX, 0, 224, 151)];
         //check to make sure the everything is reachable
         NSString *u = [s.logo  stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-        __weak typeof(UIImageView) *imgView = iv;
-        [iv setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-            if(error){
-                ALog(@"Error %@", error);
-                NSString *key = [NSString stringWithFormat:@"%d---%@",i,u];
-                imgView.image = [UIImage imageNamed:@"placeholder.png"];
-                [offlineImages setObject:imgView forKey:key];
-                model.layoutSync = NO;
-            }
-        }];
+
+        [iv sd_setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
         iv.contentMode = UIViewContentModeScaleAspectFit;
         [back addSubview:iv];
         

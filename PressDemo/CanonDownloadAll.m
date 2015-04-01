@@ -179,8 +179,8 @@
     if(flag){
         
         ALog(@"Initial download response %d", flag);
-        ALog(@"Inititial Dictionary Count %d", [model.initialFilesToDownload count]);
-        download.downloadCount = [model.initialFilesToDownload count];
+        ALog(@"Inititial Dictionary Count %d", (int)[model.initialFilesToDownload count]);
+        download.downloadCount = (int)[model.initialFilesToDownload count];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
           [download getThreadIndex];
         });
@@ -197,7 +197,7 @@
 
     if(flag){
         ALog(@"File download response %d", flag);
-        download.imageCount = [model.downloadedImages count];
+        download.imageCount = (int)[model.downloadedImages count];
         download.index = 0;
         
         //set the status to download images
@@ -252,7 +252,7 @@
 -(void)dowloadStatus:(int)stage withDocumentIndex:(int)index
 {
     if(stage == 1){
-        downloadStatus.text = [NSString stringWithFormat:@"Download Status: Stage 2 of 3. Downloading Document: %d / %d", (index +1), [model.initialFilesToDownload count]];
+        downloadStatus.text = [NSString stringWithFormat:@"Download Status: Stage 2 of 3. Downloading Document: %d / %d", (index +1), (int)[model.initialFilesToDownload count]];
     }else if(stage == 2){
         downloadStatus.text = [NSString stringWithFormat:@"Download Status: Stage 3 of 3. Downloading Image: %d / %d", (index +1), download.imageCount];
     }

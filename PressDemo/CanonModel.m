@@ -8,7 +8,7 @@
 
 #import "CanonModel.h"
 #import "SBJson.h"
-#import <SDWebImage/SDWebImageManager.h>
+#import "SDWebImageManager.h"
 #import "GAI.h"
 #import "GAIFields.h"
 #import "GAIDictionaryBuilder.h"

@@ -11,7 +11,7 @@
 #import "AppDataObject.h"
 #import "CanonModel.h"
 #import "AppDelegateProtocol.h"
-#import <SDWebImage/UIImageView+WebCache.h>
+#import "SDWebImage/SDWebImageManager.h"
 
 @protocol FileDelegate <NSObject>
 @optional
