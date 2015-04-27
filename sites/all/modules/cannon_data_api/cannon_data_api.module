@@ -284,7 +284,7 @@
             $value = array(
               'title' => $node->title,
               'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--banner',
-              'custom-banner' => isset($node->field_partner_banner[LANGUAGE_NONE]) ? _cannon_data_api_break_out_array_of_items($node->field_partner_banner[LANGUAGE_NONE], 'url_text') : array(),
+              'banners' => isset($node->field_partner_banner[LANGUAGE_NONE]) ? _cannon_data_api_break_out_array_of_items($node->field_partner_banner[LANGUAGE_NONE], 'url_text') : array(),
               'product-series-reference' => (strlen($product_series_key) > 0) ? $product_series_key : ''
             );
         }
