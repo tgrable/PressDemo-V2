@@ -33,7 +33,20 @@
    */
   function cannon_data_api_form($form, &$form_state, $type){
     //the translation between the incoming argument and the machine name content type
-    $machine_name = array('case-study' => 'case_study', 'product' => 'product', 'product-spec' => 'product_specification', 'video' => 'video', 'white-paper' => 'white_paper', 'product-series' => 'product_series', 'paper' => 'paper', 'mill' => 'mill', 'partner' => 'partner', 'software' => 'software', 'datasheet' => 'datasheet', 'brochure' => 'brochure', 'solution' => 'solution');
+    $machine_name = array('case-study' => 'case_study',
+                          'product' => 'product',
+                          'product-spec' => 'product_specification',
+                          'video' => 'video',
+                          'white-paper' => 'white_paper',
+                          'product-series' => 'product_series',
+                          'paper' => 'paper',
+                          'mill' => 'mill',
+                          'partner' => 'partner',
+                          'software' => 'software',
+                          'datasheet' => 'datasheet',
+                          'brochure' => 'brochure',
+                          'solution' => 'solution',
+                          'banner' => 'banner');
 
     //if we match the argument in the machine name array that means we are dealing with a valid route
     if(array_key_exists ($type, $machine_name)){
@@ -262,7 +275,21 @@
               'key' => strtolower(_cannon_data_api_normalize_string($term->name)) . '--solution',
               'description' => isset($term->description) ? strip_tags(_cannon_data_api_cleanse_string($term->description)) : '',
             );
+        }else if($type == 'banner'){
+            $product_series_key = "";
+            if(isset($node->field_product_series_reference[LANGUAGE_NONE][0]['nid'])){
+              $node_series = node_load($node->field_product_series_reference[LANGUAGE_NONE][0]['nid']);
+              $product_series_key = strtolower(_cannon_data_api_normalize_string($node_series->title)) . '--series';
+            }
+            $value = array(
+              'title' => $node->title,
+              'key' => strtolower(_cannon_data_api_normalize_string($node->title)) . '--banner',
+              'custom-banner' => isset($node->field_partner_banner[LANGUAGE_NONE]) ? _cannon_data_api_break_out_array_of_items($node->field_partner_banner[LANGUAGE_NONE], 'url_text') : array(),
+              'product-series-reference' => (strlen($product_series_key) > 0) ? $product_series_key : ''
+            );
         }
+
+
         //add each node represented as JSON to the data array
         $data[] = $value;
       }
