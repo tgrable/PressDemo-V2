@@ -387,7 +387,7 @@
    *  Outputs the date and time the latest content type was updated
    */
   function cannon_data_api_update_form($form, &$form_state){
-     $machine_name = array('case-study' => 'case_study', 'product' => 'product', 'product-spec' => 'product_specification', 'video' => 'video', 'white-paper' => 'white_paper', 'product-series' => 'product_series', 'paper' => 'paper', 'mill' => 'mill', 'partner' => 'partner', 'software' => 'software', 'datasheet' => 'datasheet', 'brochure' => 'brochure');
+     $machine_name = array('case-study' => 'case_study', 'product' => 'product', 'product-spec' => 'product_specification', 'video' => 'video', 'white-paper' => 'white_paper', 'product-series' => 'product_series', 'paper' => 'paper', 'mill' => 'mill', 'partner' => 'partner', 'software' => 'software', 'datasheet' => 'datasheet', 'brochure' => 'brochure', 'banner' => 'banner');
      $dates = array();
      foreach ($machine_name as $key => $value) {
        $dates[$key] = date("Y-m-d H:i:s", _cannon_data_api_get_time_of_last_updated_node($value));
