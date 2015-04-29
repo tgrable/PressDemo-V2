@@ -150,9 +150,9 @@
     model = [self AppDataObj];
     
     //make sure we have data
-    if([model.initialSofware count] == 0){
-        NSData *softwareData = [model getFileData:@"initialSoftwareData" complete:^(BOOL completeFlag){}];
-        model.initialSofware = [NSKeyedUnarchiver unarchiveObjectWithData:softwareData];
+    if([model.initialSofwareData count] == 0){
+        NSData *softwareData = [model getFileData:@"initialSoftware" complete:^(BOOL completeFlag){}];
+        model.initialSofwareData = [NSKeyedUnarchiver unarchiveObjectWithData:softwareData];
     }
     
     //***** Load up views to the local view controller ************//
@@ -220,7 +220,7 @@
     //cycle through the data and load up a grid of products
     NSArray *ends = [NSArray arrayWithObjects:@"0",@"3",@"4",@"7",@"8",@"11",@"12",@"15",@"16",@"19",@"20",@"23", nil];
     int x = 0, y = 24, e = 0, i = 1;
-    for(Software *s in model.initialSofware){
+    for(Software *s in model.initialSofwareData){
         int width = 241;
         if([ends containsObject:[NSString stringWithFormat:@"%d",e]]) width = 233;
         
@@ -304,7 +304,7 @@
         
         //check to add the divider
         if((i % 4) == 0){
-            if(i < [model.initialSofware count]){
+            if(i < [model.initialSofwareData count]){
                 int dy = y + 300;
                 UIView *shadow = [[UIView alloc] initWithFrame:CGRectMake(0, dy, 952, 50)];
                 shadow.backgroundColor = [UIColor whiteColor];
@@ -333,7 +333,7 @@
 {
     UIButton *b = (UIButton *)sender;
     
-    for(Software *s in model.initialSofware){
+    for(Software *s in model.initialSofwareData){
         if([s.key isEqualToString:b.titleLabel.text]){
             model.selectedSoftware = s;
             

@@ -27,6 +27,7 @@
 @property(nonatomic, strong)Mill *selectedMill;
 @property(nonatomic, strong)Partner *selectedPartner;
 @property(nonatomic, strong)Software *selectedSoftware;
+@property(nonatomic, strong)NSMutableDictionary *initialBannerDictionary;
 @property(nonatomic, strong)NSString *testingString, *currentFilter;
 @property(nonatomic, strong)NSMutableArray *localProds, *filteredProducts;
 @property(nonatomic, strong)UIColor *orange, *pink, *red, *blue, *dullBlack, *green, *purple, *gray, *yellow, *lightGray;
@@ -71,6 +72,7 @@ typedef void(^completeBlock)(BOOL);
 -(void)sortInitialPaperDataAlpha:(NSString *)key complete:(completeBlock)completeFlag;
 -(NSMutableArray *)cleanArray:(NSMutableArray *)array;
 -(NSMutableArray *)getInitialSetofPorducts;
+-(NSMutableDictionary *)getInitialBannerData;
 -(void)wipeOutAllModelData;
 -(NSString *)addAccentToOCEString:(NSString *)string;
 -(NSString *)cleanseStringName:(NSString *)filename;

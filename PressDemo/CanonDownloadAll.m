@@ -101,7 +101,7 @@
     message.numberOfLines = 4;
     message.textAlignment = NSTextAlignmentCenter;
     message.backgroundColor = [UIColor clearColor];
-    message.text = @"NOTE: Before starting the application data download, please make sure you are connected to a Wi-Fi network.\n The initial download could take up to 20 minutes based on your connection.\n Subsequent updates will have shorter download times.";
+    message.text = @"NOTE: Before starting the application data download, please make sure you are connected to a Wi-Fi network.\n The initial download could take up to an hour based on your connection.\n Subsequent updates will have shorter download times.";
     [mainView addSubview:message];
     
     

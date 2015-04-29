@@ -12,6 +12,8 @@
 #import "CanonSoftwareGridViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import "LegalViewController.h"
+#import "SeriesViewController.h"
+#import "UIButton+WebCache.h"
 
 #define ResourcePath(path)[[NSBundle mainBundle] pathForResource:path ofType:nil]
 #define ImageWithPath(path)[UIImage imageWithContentsOfFile:path]
@@ -151,9 +153,18 @@
     [customNavBar addSubview:logo];
     
     //the header image
-    homeHeader = [[UIImageView alloc] initWithFrame:CGRectMake(0, 84, 1024, 281)];
-    [homeHeader setUserInteractionEnabled:YES];
-    [self.view addSubview:homeHeader];
+    
+    headerButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [headerButton setFrame:CGRectMake(0, 84, 1024, 281)];
+    [headerButton addTarget:self action:@selector(tappedHeaderButton:)forControlEvents:UIControlEventTouchUpInside];
+    headerButton.showsTouchWhenHighlighted = YES;
+    [headerButton setBackgroundColor:[UIColor whiteColor]];
+    [headerButton setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+    [self.view addSubview:headerButton];
+    
+    //homeHeader = [[UIImageView alloc] initWithFrame:CGRectMake(0, 84, 1024, 281)];
+    //[homeHeader setUserInteractionEnabled:YES];
+    //[self.view addSubview:homeHeader];
     
     //image header for the scrollview
     whatPrint = [[UIImageView alloc] initWithFrame:CGRectMake(0, 365, 290, 201)];
@@ -186,7 +197,6 @@
     [self.view addSubview:showAllProducts];
     
 
-    
     poster = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 1024, 768)];
     poster.image = [model getImageWithName:@"/launch@2x.png"];
     [poster setUserInteractionEnabled:YES];
@@ -200,7 +210,6 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
     if(!model.animationRun){
         
         /*
@@ -267,9 +276,7 @@
                 [self runAnimation];
             }else{
                 ALog(@"Stopped");
-               
             }
-            
         }];
     }
 }
@@ -287,6 +294,7 @@
  * # the callback function for the movie
  *
  *----------------------------------------------------*/
+/*
 - (void)movieFinishedCallback:(NSNotification *)aNotification
 {
     //setup the local UI before I remove the splash screen
@@ -298,10 +306,32 @@
 
     }];
     
+}*/
+
+/*-----------------------------------------------------
+ *
+ * # the callback function for when a header is tapped
+ * # the header does not need to link off somewhere
+ * # err... this is very webish
+ *
+ *----------------------------------------------------*/
+-(void)tappedHeaderButton:(id)sender
+{
+    UIButton *b = (UIButton *)sender;
+    model.currentFilter = b.titleLabel.text;
+    if([b.titleLabel.text length] > 0){
+        NSData *seriesData = [model getFileData:b.titleLabel.text complete:^(BOOL completeFlag){}];
+        
+        if(seriesData != nil){
+            model.selectedSeries = [NSKeyedUnarchiver unarchiveObjectWithData:seriesData];
+            ALog(@"HEREE %@", model.selectedSeries.title);
+            SeriesViewController *series = [[SeriesViewController alloc] initWithNibName:@"SeriesViewController" bundle:nil];
+            [self.navigationController pushViewController:series animated:YES];
+        }else{
+            [self displayMessage:@"Alert" withTitle:@"There was an internal error, please contact support."];
+        }
+    }
 }
-
-
-
 
 //this function captures the event of one of the filter buttons being touched
 -(void)captureFilterButtons:(id)sender
@@ -353,7 +383,26 @@
 -(void)setupLocalUserInterface:(completeBlock)completeFlag
 {
     //add image to the header
-    homeHeader.image = [model getImageWithName:@"/home-banner@2x.png"];
+    
+    model.initialBannerDictionary = [model getInitialBannerData];
+    ALog(@"Initial Banner Data %@", model.initialBannerDictionary);
+    if([model.initialBannerDictionary count] > 0){
+        for(id key in model.initialBannerDictionary){
+
+            Banner *b = [model.initialBannerDictionary objectForKey:key];
+            ALog(@"object %@", b);
+            
+            NSString *url = [b.banners objectAtIndex:0];
+            ALog(@"Banner url %@", url);
+            [headerButton sd_setBackgroundImageWithURL:[NSURL URLWithString:url] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+            if([b.product_series_reference length] > 0){
+                [headerButton setTitle:b.product_series_reference forState:UIControlStateNormal];
+            }
+        }
+    }else{
+        [headerButton setBackgroundImage:[model getImageWithName:@"/home-banner@2x.png"] forState:UIControlStateNormal];
+        [headerButton setTitle:@"" forState:UIControlStateNormal];
+    }
     
     //add first filter image for what do you want to print
     //whatPrint.image = [model.ui getImageWithName:@"/home-header-what@2x.png"];

@@ -21,7 +21,8 @@
 @interface CanonViewController : GAITrackedViewController <NetworkDelegate, UIScrollViewDelegate, UIAlertViewDelegate>{
     //local views
     UIImageView *homeHeader, *whatPrint, *showProducts, *logo, *impressLogo, *poster;
-   
+    UIButton *headerButton;
+    
     BOOL downloadInProgress;
     int imageIndex;
     

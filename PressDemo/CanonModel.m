@@ -19,7 +19,8 @@
 
 @implementation CanonModel
 @synthesize orange, blue, green, dullBlack, lightGray, red, yellow, pink, purple, gray, testingString, animationRun;
-@synthesize localProds, currentFilter, filteredProducts, selectedSeries, tracker, selectedMill, selectedPartner, selectedSoftware;
+@synthesize localProds, currentFilter, filteredProducts, selectedSeries, tracker, selectedMill, selectedPartner;
+@synthesize initialBannerDictionary, selectedSoftware;
 - (id)init
 {
     self = [super init];
@@ -43,12 +44,14 @@
         millData = [[NSMutableDictionary alloc] init];
         paperData = [[NSMutableDictionary alloc] init];
         softwareData = [[NSMutableDictionary alloc] init];
+        initialBannerDictionary = [[NSMutableDictionary alloc] init];
         initialFilesToDownload = [NSMutableArray array];
         initialPartnerData = [NSMutableArray array];
         initialSetOfMills = [NSMutableArray array];
         initialSetOfPaper = [NSMutableArray array];
         initialSolutionData = [NSMutableArray array];
-        initialSofware = [NSMutableArray array];
+        initialSofwareData = [NSMutableArray array];
+        initialBannerData = [NSMutableArray array];
         
         //initial setup of products in the first view
         localProds = [NSMutableArray array];
@@ -74,7 +77,6 @@
         [showAll setObject:[UIImage imageNamed:@"home-nav-mono.png"] forKey:@"monochrome"];
         [showAll setObject:[UIImage imageNamed:@"home-nav-continuous.png"] forKey:@"continuous-feed"];
         [showAll setObject:[UIImage imageNamed:@"home-nav-cutsheet.png"] forKey:@"cutsheet"];
-        //[showAll setObject:[UIImage imageNamed:@"home-nav-workflow.png"] forKey:@"workflow"];
         [showAll setObject:[UIImage imageNamed:@"home-nav-software.png"] forKey:@"software"];
         [showAll setObject:[UIImage imageNamed:@"home-nav-media.png"] forKey:@"media"];
         
@@ -273,6 +275,12 @@
         [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"solution"];
         //break out the product data to be saved to memory
         [self breakoutSolutionData:[localData objectForKey:@"solution"]];
+        
+    }else if([localData objectForKey:@"banner"]){
+        //set when the video content type was last updated
+        [lastUpdated setObject:[localData objectForKey:@"last-updated"] forKey:@"banner"];
+        //break out the product data to be saved to memory
+        [self breakoutBannerData:[localData objectForKey:@"banner"]];
     }
    
     completeFlag(YES);
@@ -292,6 +300,30 @@
         
         [initialSolutionData addObject:s];
     
+    }
+}
+
+//function that creates solution objects out of an array of dictionaries
+-(void)breakoutBannerData:(NSArray* )banner
+{
+    for(NSDictionary *dict in banner){
+        Banner *b = [[Banner alloc] init];
+        
+        b.title = [dict objectForKey:@"title"];
+        
+        NSString *keyBanner = [dict objectForKey:@"key"];
+        b.key = keyBanner;
+        b.banners = [dict objectForKey:@"banners"];
+        b.product_series_reference = [dict objectForKey:@"product_series_reference"];
+        
+        //make sure and add the banners to the downloadImages array
+        for(NSString *urlString in b.banners){
+            ALog(@"HERE IS THE BANNER URL %@", urlString);
+            [downloadedImages addObject:urlString];
+        }
+        
+        [initialBannerData addObject:b];
+        
     }
 }
 
@@ -583,7 +615,7 @@
         s.brochures = [dict objectForKey:@"brochures"];
         s.videos = [dict objectForKey:@"videos"];
    
-        [initialSofware addObject:s];
+        [initialSofwareData addObject:s];
     }
 }
 
@@ -645,9 +677,10 @@
     [millData removeAllObjects];
     [initialSetOfMills removeAllObjects];
     [initialSetOfPaper removeAllObjects];
-    [initialSofware removeAllObjects];
+    [initialSofwareData removeAllObjects];
     [initialSolutionData removeAllObjects];
     [initialPartnerData removeAllObjects];
+    [initialBannerData removeAllObjects];
     
     if([self deleteFile:@"initialPapers"]){
         ALog(@"Deleted Papers");
@@ -655,10 +688,13 @@
             ALog(@"Deleted Solutions");
             if([self deleteFile:@"initialPartners"]){
                 ALog(@"Deleted Partners");
-                if([self deleteFile:@"initialSoftwareData"]){
+                if([self deleteFile:@"initialSoftware"]){
                     ALog(@"Deleted Software");
                     if([self deleteFile:@"initialMills"]){
                         ALog(@"Deleted Mills");
+                        if([self deleteFile:@"initialBanners"]){
+                            ALog(@"Deleted Banners");
+                        }
                     }
                 }
             }
@@ -700,9 +736,10 @@
         [millData removeAllObjects];
         [initialSetOfMills removeAllObjects];
         [initialSetOfPaper removeAllObjects];
-        [initialSofware removeAllObjects];
+        [initialSofwareData removeAllObjects];
         [initialSolutionData removeAllObjects];
         [initialPartnerData removeAllObjects];
+        [initialBannerData removeAllObjects];
         [lastUpdated removeAllObjects];
         
     }];
@@ -748,7 +785,7 @@
                                                     if(c4 == [documentData count]){
                      
                                                         //save inital dataset of software as object
-                                                        NSData *encodedSoftware = [NSKeyedArchiver archivedDataWithRootObject:initialSofware];
+                                                        NSData *encodedSoftware = [NSKeyedArchiver archivedDataWithRootObject:initialSofwareData];
                                                         
                                                         //save inital dataset of mills as object
                                                         NSData *encodedMills = [NSKeyedArchiver archivedDataWithRootObject:initialSetOfMills];
@@ -756,18 +793,22 @@
                                                         NSData *encodedPapers = [NSKeyedArchiver archivedDataWithRootObject:initialSetOfPaper];
                                                         //save the initial dataset of solutions
                                                         NSData *encodedSolutions = [NSKeyedArchiver archivedDataWithRootObject:initialSolutionData];
+                                                        NSData *encodedBanners = [NSKeyedArchiver archivedDataWithRootObject:initialBannerData];
+                                                        
                                                         //save the initial dataset of partners
                                                         NSData *encodedPartners = [NSKeyedArchiver archivedDataWithRootObject:initialPartnerData];
                                                         [self saveFile:encodedMills andFileName:@"initialMills" complete:^(BOOL completeFlag){
                                                             [self saveFile:encodedPapers andFileName:@"initialPapers" complete:^(BOOL completeFlag){
                                                                 [self saveFile:encodedSolutions andFileName:@"initialSolutions" complete:^(BOOL completeFlag){
                                                                     [self saveFile:encodedPartners andFileName:@"initialPartners" complete:^(BOOL completeFlag){
-                                                                        [self saveFile:encodedSoftware andFileName:@"initialSoftwareData" complete:^(BOOL completeFlag){
-                                                                            if(completeFlag){
-                                                                                completeFlagArgument(YES);
-                                                                            }else{
-                                                                                completeFlagArgument(NO);
-                                                                            }
+                                                                        [self saveFile:encodedSoftware andFileName:@"initialSoftware" complete:^(BOOL completeFlag){
+                                                                            [self saveFile:encodedBanners andFileName:@"initialBanners" complete:^(BOOL completeFlag){
+                                                                                if(completeFlag){
+                                                                                    completeFlagArgument(YES);
+                                                                                }else{
+                                                                                    completeFlagArgument(NO);
+                                                                                }
+                                                                            }];
                                                                         }];
                                                                     }];
                                                                 }];
@@ -954,6 +995,19 @@
         ALog(@"Error retrieving the file from disk %@", err);
         return nil;
     }
+}
+
+-(NSMutableDictionary *)getInitialBannerData
+{
+    NSMutableDictionary *bannerData = [[NSMutableDictionary alloc] init];
+    NSData *localBannerData = [self getFileData:@"initialBanners" complete:^(BOOL completeFlag){}];
+    
+    
+    NSMutableArray *bannerArray = [NSKeyedUnarchiver unarchiveObjectWithData:localBannerData];
+    for(Banner *b in bannerArray){
+        [bannerData setObject:b forKey:b.key];
+    }
+    return bannerData;
 }
 
 //function the retrieves the nsdata based upon file name
