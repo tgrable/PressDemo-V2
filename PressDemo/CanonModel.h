@@ -14,7 +14,7 @@
 #import "AppDataObject.h"
 #import <AVFoundation/AVFoundation.h>
 #import "Reachability.h"
-
+#import "SDWebImage/SDWebImageManager.h"
 
 @interface CanonModel : AppDataObject{
     UIColor *orange, *pink, *red, *blue, *dullBlack, *green, *purple, *gray, *yellow, *lightGray;
@@ -64,6 +64,7 @@ typedef void(^completeBlock)(BOOL);
 -(void)saveHTMLFile:(NSData *)data andFileName:(NSString *)filename complete:(completeBlock)completeFlag;
 -(void)saveFile:(NSData *)data andFileName:(NSString *)filename complete:(completeBlock)completeFlag;
 -(NSData *)getFileData:(NSString *)fileName complete:(completeBlock)completeFlag;
+-(NSURL *)getProperURL:(NSString *)url;
 
 /** google analytics **/
 -(void)logData:(NSString *)category withAction:(NSString *)action withLabel:(NSString *)label;

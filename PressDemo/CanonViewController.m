@@ -392,7 +392,23 @@
             Banner *b = [model.initialBannerDictionary objectForKey:key];
             ALog(@"object %@", b);
             
-            NSString *url = [b.banners objectAtIndex:0];
+            NSString *url = @"";
+            if([b.banners count] > 1){
+                if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
+                    ([UIScreen mainScreen].scale == 2.0)) {
+                    // Retina display
+                    if ([[b.banners objectAtIndex:0] rangeOfString:@"@2x"].location != NSNotFound)
+                       url = [b.banners objectAtIndex:0];
+                    else if([[b.banners objectAtIndex:1] rangeOfString:@"@2x"].location != NSNotFound)
+                       url = [b.banners objectAtIndex:1];
+                } else {
+                    // non-Retina display
+                    if ([[b.banners objectAtIndex:0] rangeOfString:@"@2x"].location == NSNotFound)
+                        url = [b.banners objectAtIndex:0];
+                    else if([[b.banners objectAtIndex:1] rangeOfString:@"@2x"].location == NSNotFound)
+                        url = [b.banners objectAtIndex:1];
+                }
+            }
             ALog(@"Banner url %@", url);
             [headerButton sd_setBackgroundImageWithURL:[NSURL URLWithString:url] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
             if([b.product_series_reference length] > 0){

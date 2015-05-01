@@ -1094,6 +1094,29 @@
 
 }
 
+
+/**
+ * Attempt to load the correct URL for the correct device
+ **/
+-(NSURL *)getProperURL:(NSString *)url
+{
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
+        ([UIScreen mainScreen].scale == 2.0)) {
+        // Retina display
+        if ([url rangeOfString:@"@2x"].location != NSNotFound) {
+            //the url contains @2x, return it
+            return [NSURL URLWithString:url];
+        }
+
+    } else {
+        // non-Retina display
+        if ([url rangeOfString:@"@2x"].location == NSNotFound) {
+            return [NSURL URLWithString:url];
+        }
+    }
+    return nil;
+}
+
 //function that returns the file path based upon a filename
 //this function is used a lot for videos that were just downloaded to the device
 -(NSString *)returnFilePath:(NSString *)name
