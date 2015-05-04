@@ -19,7 +19,7 @@
 #import "UIBorderLabel.h"
 #import "CanonViewController.h"
 
-@interface CanonMediaMillViewController : GAITrackedViewController<NetworkDelegate, FileDelegate, UMTableViewDelegate, UIPopoverControllerDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate>{
+@interface CanonMediaMillViewController : GAITrackedViewController<NetworkDelegate, FileDelegate, UMTableViewDelegate, UIPopoverControllerDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate, UIPrintInteractionControllerDelegate>{
     //objects
     NetworkData *network;
     DownloadFile *downloadFile;
@@ -30,7 +30,7 @@
     UIButton *navBarHomeButton, *backButton, *videoButton;
     
     //sidebar views
-    UIButton *overview, *videos, *mediaPapers, *allMills;
+    UIButton *overview, *videos, *mediaPapers, *allMills, *printButton;
     UIImageView *sidebarIndicator, *overViewIcon, *mediaPapersIcon;
     UIImageView *allMillsIcon, *videoIcon;
     UILabel *overviewLabel, *mediaPapersLabel, *videoLabel, *allMillsLabel;
@@ -56,6 +56,10 @@
     BOOL paperTable, tableEmpty;
     int tableRows, tableColumns;
     float contentHeight;
+    
+    /* No Internet View/Label */
+    UIView *noConnection;
+    UILabel *noConnectionLabel;
     
 }
 @property(nonatomic)NetworkData *network;

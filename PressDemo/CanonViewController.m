@@ -69,10 +69,14 @@
     
     if ([model.hostReachability isReachableViaWiFi] && !downloadInProgress) {
         //make sure
+        noConnection.alpha = 0.0;
         ALog(@"CHECKING FOR UPDATES");
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             [network checkForUpdate];
         });
+    }else{
+        noConnection.alpha = 1.0;
+        [model logData:@"CanonViewController" withAction:@"No Internet Connection" withLabel:@"Came back into focus with no connection"];
     }
     
 }
@@ -87,8 +91,6 @@
     //set observation notification on completion
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appCameBackIntoFocus) name:UIApplicationDidBecomeActiveNotification object:nil];
-
-
 
 }
 
@@ -142,6 +144,18 @@
     legal.titleLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Md" size:18.0];
     [self.view addSubview:legal];
     
+    noConnection = [[UIView alloc] initWithFrame:CGRectMake(36, -17, 134, 15)];
+    noConnection.alpha = 0.0;
+    noConnection.backgroundColor = model.blue;
+    [customNavBar addSubview:noConnection];
+    
+    noConnectionLabel = [[UILabel alloc] initWithFrame:CGRectMake(2, 3, 132, 11)];
+    noConnectionLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Md" size:10.0];
+    noConnectionLabel.text = @"NO INTERNET CONNECTION";
+    noConnectionLabel.textColor = [UIColor whiteColor];
+    noConnectionLabel.backgroundColor = [UIColor clearColor];
+    [noConnection addSubview:noConnectionLabel];
+    
     impressLogo = [[UIImageView alloc] initWithFrame:CGRectMake(437, 1, 151, 62)];
     [impressLogo setUserInteractionEnabled:YES];
     [impressLogo setImage:[UIImage imageNamed:@"impress-logo.png"]];
@@ -161,10 +175,6 @@
     [headerButton setBackgroundColor:[UIColor whiteColor]];
     [headerButton setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
     [self.view addSubview:headerButton];
-    
-    //homeHeader = [[UIImageView alloc] initWithFrame:CGRectMake(0, 84, 1024, 281)];
-    //[homeHeader setUserInteractionEnabled:YES];
-    //[self.view addSubview:homeHeader];
     
     //image header for the scrollview
     whatPrint = [[UIImageView alloc] initWithFrame:CGRectMake(0, 365, 290, 201)];
@@ -205,39 +215,29 @@
     
     
     imageIndex = 0;
+    //get the data about the device
+    NSString *dimensions = @"1024x768";
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
+       ([UIScreen mainScreen].scale == 2.0)) {
+        dimensions = @"2048x1536";
+    }
+    NSString *deviceData = [NSString stringWithFormat:@"%@ - %@", [model deviceInformation], dimensions];
+    ALog(@"Device data %@", deviceData);
+    [model logData:@"CanonViewController" withAction:@"Device Name" withLabel:deviceData];
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    if ([model.hostReachability isReachableViaWiFi] && !downloadInProgress) {
+        noConnection.alpha = 0.0;
+    }else{
+        noConnection.alpha = 1.0;
+        [model logData:@"CanonViewController" withAction:@"No Internet Connection" withLabel:@"Running the app with no internet"];
+    }
+    
     if(!model.animationRun){
-        
-        /*
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"imPRESS-animation-screen_1024x768" ofType:@"mp4"];
-        NSURL *urlHome = [NSURL fileURLWithPath:path];
-        
-        self.firstVideoItem = [[AVPlayerItem alloc] initWithURL:urlHome];
-        self.player = [[AVPlayer alloc]initWithPlayerItem:self.firstVideoItem];
-        self.avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
-        self.avPlayerLayer.bounds = self.view.bounds;
-        self.avPlayerLayer.frame = CGRectMake(0, 0, 1024, 768);
-        [self.view.layer addSublayer:avPlayerLayer];
-        [self.player play];
-        //here's our selector to fire when the video is comepleted
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(movieFinishedCallback:) name:AVPlayerItemDidPlayToEndTimeNotification object:firstVideoItem];
-        
-        
-        [UIView animateWithDuration:2.0f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
-            poster.alpha = 0.0;
-            
-        }completion:^(BOOL finished) {
-            ALog(@"Start playing");
-            
-        }];
-         
-        model.animationRun = YES;
-        */
         
         [self setupLocalUserInterface:^(BOOL completeBlock){}];
         
@@ -251,6 +251,8 @@
             
         }];
     }
+    
+    
 }
 
 -(void)runAnimation
@@ -289,24 +291,8 @@
     [self presentViewController:nav animated:YES completion:^{}];
 }
 
-/*-----------------------------------------------------
- *
- * # the callback function for the movie
- *
- *----------------------------------------------------*/
-/*
-- (void)movieFinishedCallback:(NSNotification *)aNotification
-{
-    //setup the local UI before I remove the splash screen
-    [self setupLocalUserInterface:^(BOOL completeFlag){
-        downloadInProgress = NO;
-        [avPlayerLayer removeFromSuperlayer];
-        ALog(@"Finished");
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
 
-    }];
-    
-}*/
+
 
 /*-----------------------------------------------------
  *
@@ -385,12 +371,11 @@
     //add image to the header
     
     model.initialBannerDictionary = [model getInitialBannerData];
-    ALog(@"Initial Banner Data %@", model.initialBannerDictionary);
+
     if([model.initialBannerDictionary count] > 0){
         for(id key in model.initialBannerDictionary){
 
             Banner *b = [model.initialBannerDictionary objectForKey:key];
-            ALog(@"object %@", b);
             
             NSString *url = @"";
             if([b.banners count] > 1){
@@ -409,7 +394,6 @@
                         url = [b.banners objectAtIndex:1];
                 }
             }
-            ALog(@"Banner url %@", url);
             [headerButton sd_setBackgroundImageWithURL:[NSURL URLWithString:url] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
             if([b.product_series_reference length] > 0){
                 [headerButton setTitle:b.product_series_reference forState:UIControlStateNormal];
@@ -540,8 +524,10 @@
         if([model.hostReachability isReachableViaWiFi]){
             //we have now loaded
             model.needsUpdate = YES;
+            noConnection.alpha = 0.0;
             [self.navigationController popToRootViewControllerAnimated:YES];
         }else{
+            noConnection.alpha = 1.0;
             [self displayMessage:@"Please connect to the internet to update the application" withTitle:@"Alert"];
         }
     }

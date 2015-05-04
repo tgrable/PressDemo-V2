@@ -43,6 +43,10 @@
     UIButton *documentHeaderButton, *partnerWebsite;
     UITextView *partnerDescription;
     
+    /* No Internet View/Label */
+    UIView *noConnection;
+    UILabel *noConnectionLabel;
+    
     //global data
     NSMutableDictionary *currentDocumentData;
     NSMutableDictionary *offlineImages;

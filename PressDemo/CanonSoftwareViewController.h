@@ -50,6 +50,10 @@
     NSMutableArray *offlineVideoRows, *sidebarIcons, *sidebarNames, *sidebarObjects, *sidebarTextNames, *sidebarLabelWidths;
     NSString *downloadingURL;
     
+    /* No Internet View/Label */
+    UIView *noConnection;
+    UILabel *noConnectionLabel;
+    
 }
 @property(nonatomic)NetworkData *network;
 @property(nonatomic, readonly)CanonModel *model;

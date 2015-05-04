@@ -93,6 +93,7 @@
     ALog(@"Reachable %@", model.hostReachability);
     if ([model.hostReachability isReachable]) {
         ALog(@"APP came back into focus and it is reachable");
+        noConnection.alpha = 0.0;
         //check for the app on a background thread
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             [network checkForUpdate];
@@ -140,6 +141,8 @@
                 
             }
         }
+        noConnection.alpha = 1.0;
+        [model logData:@"CanonMediaMillViewController" withAction:@"No Internet Connection" withLabel:@"Came back into focus with no connection"];
     }
     
 }
@@ -157,7 +160,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    if ([model.hostReachability isReachableViaWiFi]) {
+        noConnection.alpha = 0.0;
+    }else{
+        noConnection.alpha = 1.0;
+        [model logData:@"CanonMediaMillViewController" withAction:@"No Internet Connection" withLabel:@"Running the app with no internet"];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -205,6 +213,18 @@
     [customNavBar setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:customNavBar];
     
+    noConnection = [[UIView alloc] initWithFrame:CGRectMake(36, -17, 134, 15)];
+    noConnection.alpha = 0.0;
+    noConnection.backgroundColor = model.blue;
+    [customNavBar addSubview:noConnection];
+    
+    noConnectionLabel = [[UILabel alloc] initWithFrame:CGRectMake(2, 3, 132, 11)];
+    noConnectionLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Md" size:10.0];
+    noConnectionLabel.text = @"NO INTERNET CONNECTION";
+    noConnectionLabel.textColor = [UIColor whiteColor];
+    noConnectionLabel.backgroundColor = [UIColor clearColor];
+    [noConnection addSubview:noConnectionLabel];
+    
     logo = [[UIImageView alloc] initWithFrame:CGRectMake(891, 1, 97, 62)];
     [logo setUserInteractionEnabled:YES];
     [logo setImage:[UIImage imageNamed:@"csa-logo.png"]];
@@ -223,6 +243,17 @@
     navBarHomeButton.showsTouchWhenHighlighted = YES;
     navBarHomeButton.tag = 20;
     [customNavBar addSubview:navBarHomeButton];
+    
+    /*
+    printButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [printButton setFrame:CGRectMake(247, 14, 135, 36)];
+    [printButton addTarget:self action:@selector(printView:)forControlEvents:UIControlEventTouchDown];
+    printButton.showsTouchWhenHighlighted = YES;
+    [printButton setTitle:@"PRINT" forState:UIControlStateNormal];
+    [printButton setTitleColor:model.blue forState:UIControlStateNormal];
+    printButton.tag = 20;
+    [customNavBar addSubview:printButton];
+     */
     
     mainView = [[UIView alloc] initWithFrame:CGRectMake(248, 84, 776, 684)];
     mainView.backgroundColor = model.dullBlack;
@@ -633,7 +664,68 @@
     
 }
 
+/*
+-(void)printView:(id)sender
+{
+    
+    NSDateFormatter *setDateFormat = [[NSDateFormatter alloc]init];
+    [setDateFormat setDateFormat: @"yyyy-MM-dd-HH-mm-ss-zzz"];
+    NSString *date = [setDateFormat stringFromDate:[NSDate date]];
+    NSString *filename = [NSString stringWithFormat:@"view-%@", date];
 
+    [self drawPDF:filename];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString* PDFPath = [documentsDirectory stringByAppendingPathComponent:filename];
+    
+    
+    NSData *myData = [NSData dataWithContentsOfFile:PDFPath];
+    
+    UIPrintInteractionController *pic = [UIPrintInteractionController sharedPrintController];
+    
+    if ( pic && [UIPrintInteractionController canPrintData: myData] ) {
+        pic.delegate = self;
+        
+        UIPrintInfo *printInfo = [UIPrintInfo printInfo];
+        printInfo.outputType = UIPrintInfoOutputGeneral;
+        printInfo.jobName = [PDFPath lastPathComponent];
+        printInfo.duplex = UIPrintInfoDuplexLongEdge;
+        pic.printInfo = printInfo;
+        pic.showsPageRange = YES;
+        pic.printingItem = myData;
+        
+        void (^completionHandler)(UIPrintInteractionController *, BOOL, NSError *) = ^(UIPrintInteractionController *pic, BOOL completed, NSError *error) {
+            if (!completed && error) {
+                NSLog(@"FAILED! due to error in domain %@ with error code %u", error.domain, error.code);
+            }
+        };
+        
+        if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+            [pic presentFromRect:CGRectMake(227, 0, 160, 100) inView:self.view animated:YES completionHandler:completionHandler];
+            
+        }else {
+            [pic presentAnimated:YES completionHandler:completionHandler];
+        }
+    }
+}
+
+- (void)drawPDF:(NSString *)filename{
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString* path = [documentsDirectory stringByAppendingPathComponent:filename];
+    
+    UIGraphicsBeginPDFContextToFile(path, CGRectZero, nil);
+    UIGraphicsBeginPDFPageWithInfo(CGRectMake(250, 0, 774, 768), nil);
+    CGContextRef currentContext = UIGraphicsGetCurrentContext();
+    CGContextTranslateCTM(currentContext, 0, 0);
+ 
+    [self.view.layer renderInContext:currentContext];
+    
+    UIGraphicsEndPDFContext();
+
+} */
 
 //this function moves around the content in the main view of the app
 -(void)loadUpMainTray:(id)sender

@@ -92,6 +92,7 @@
     ALog(@"Reachable %@", model.hostReachability);
     if ([model.hostReachability isReachable]) {
         ALog(@"APP came back into focus and it is reachable");
+        noConnection.alpha = 0.0;
         //check for the app on a background thread
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             [network checkForUpdate];
@@ -139,6 +140,8 @@
                 
             }
         }
+        noConnection.alpha = 1.0;
+        [model logData:@"PartnerViewController" withAction:@"No Internet Connection" withLabel:@"Came back into focus with no connection"];
     }
     
 }
@@ -156,11 +159,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    /*
-    if (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)){
-        NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeLeft];
-        [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
-    }*/
+    if ([model.hostReachability isReachableViaWiFi]) {
+        noConnection.alpha = 0.0;
+    }else{
+        noConnection.alpha = 1.0;
+        [model logData:@"PartnerViewController" withAction:@"No Internet Connection" withLabel:@"Running the app with no internet"];
+    }
 
 }
 
@@ -208,6 +212,18 @@
     customNavBar = [[UIView alloc] initWithFrame:CGRectMake(0, 20, 1024, 64)];
     [customNavBar setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:customNavBar];
+    
+    noConnection = [[UIView alloc] initWithFrame:CGRectMake(36, -17, 134, 15)];
+    noConnection.alpha = 0.0;
+    noConnection.backgroundColor = model.blue;
+    [customNavBar addSubview:noConnection];
+    
+    noConnectionLabel = [[UILabel alloc] initWithFrame:CGRectMake(2, 3, 132, 11)];
+    noConnectionLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Md" size:10.0];
+    noConnectionLabel.text = @"NO INTERNET CONNECTION";
+    noConnectionLabel.textColor = [UIColor whiteColor];
+    noConnectionLabel.backgroundColor = [UIColor clearColor];
+    [noConnection addSubview:noConnectionLabel];
     
     impressLogo = [[UIImageView alloc] initWithFrame:CGRectMake(437, 1, 151, 62)];
     [impressLogo setUserInteractionEnabled:YES];

@@ -18,10 +18,14 @@
 #import <AVFoundation/AVFoundation.h>
 #import <QuartzCore/QuartzCore.h>
 
+
 @interface CanonViewController : GAITrackedViewController <NetworkDelegate, UIScrollViewDelegate, UIAlertViewDelegate>{
     //local views
     UIImageView *homeHeader, *whatPrint, *showProducts, *logo, *impressLogo, *poster;
     UIButton *headerButton;
+    /* No Internet View/Label */
+    UIView *noConnection;
+    UILabel *noConnectionLabel;
     
     BOOL downloadInProgress;
     int imageIndex;

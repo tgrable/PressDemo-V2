@@ -379,6 +379,7 @@
 		719053DE1AF159B800F1A3CF /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 719053D31AF159B800F1A3CF /* AFURLRequestSerialization.m */; };
 		719053DF1AF159B800F1A3CF /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 719053D51AF159B800F1A3CF /* AFURLResponseSerialization.m */; };
 		719053E01AF159B800F1A3CF /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 719053D71AF159B800F1A3CF /* AFURLSessionManager.m */; };
+		719053EC1AF7C5BB00F1A3CF /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 719053EB1AF7C5BB00F1A3CF /* CoreText.framework */; };
 		719D39ED1994216F008E56EC /* ProductSeries.m in Sources */ = {isa = PBXBuildFile; fileRef = 719D39EC1994216F008E56EC /* ProductSeries.m */; };
 		719D39F9199538B7008E56EC /* LastUpdated.plist in Resources */ = {isa = PBXBuildFile; fileRef = 719D39F8199538B7008E56EC /* LastUpdated.plist */; };
 		71DBB7E1192FB60E002D7CA9 /* btn-backarrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71DBB766192FB60E002D7CA9 /* btn-backarrow@2x.png */; };
@@ -991,6 +992,7 @@
 		719053D51AF159B800F1A3CF /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLResponseSerialization.m; sourceTree = "<group>"; };
 		719053D61AF159B800F1A3CF /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLSessionManager.h; sourceTree = "<group>"; };
 		719053D71AF159B800F1A3CF /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLSessionManager.m; sourceTree = "<group>"; };
+		719053EB1AF7C5BB00F1A3CF /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		719D39EB1994216F008E56EC /* ProductSeries.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductSeries.h; sourceTree = "<group>"; };
 		719D39EC1994216F008E56EC /* ProductSeries.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductSeries.m; sourceTree = "<group>"; };
 		719D39F8199538B7008E56EC /* LastUpdated.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = LastUpdated.plist; sourceTree = "<group>"; };
@@ -1114,6 +1116,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				719053EC1AF7C5BB00F1A3CF /* CoreText.framework in Frameworks */,
 				71F497A71A704435005D0F24 /* CoreVideo.framework in Frameworks */,
 				716FD97819E8734C00200E50 /* libsqlite3.0.dylib in Frameworks */,
 				716FD97519E8707000200E50 /* CoreData.framework in Frameworks */,
@@ -1166,6 +1169,7 @@
 		30AC1135192D90D300BE1072 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				719053EB1AF7C5BB00F1A3CF /* CoreText.framework */,
 				71F497A81A70444F005D0F24 /* AudioUnit.framework */,
 				71F497A61A704435005D0F24 /* CoreVideo.framework */,
 				716FD97719E8734C00200E50 /* libsqlite3.0.dylib */,
@@ -2707,8 +2711,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Trekk Design Inc.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Trekk Design Inc.";
+				CODE_SIGN_IDENTITY = "iPhone Developer: matt eaton (D3948RZD37)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: matt eaton (D3948RZD37)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/trekkmini-1/Desktop",
@@ -2724,7 +2728,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "61855a79-5b7d-4928-8712-b955e6476b93";
+				PROVISIONING_PROFILE = "e561e00b-b458-40d0-9818-db66cd67f9ab";
 				VALID_ARCHS = "armv7s armv7 arm64";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2735,8 +2739,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Trekk Design Inc.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Trekk Design Inc.";
+				CODE_SIGN_IDENTITY = "iPhone Developer: matt eaton (D3948RZD37)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: matt eaton (D3948RZD37)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/trekkmini-1/Desktop",
@@ -2752,7 +2756,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "61855a79-5b7d-4928-8712-b955e6476b93";
+				PROVISIONING_PROFILE = "e561e00b-b458-40d0-9818-db66cd67f9ab";
 				VALID_ARCHS = "armv7s armv7 arm64";
 				WRAPPER_EXTENSION = app;
 			};

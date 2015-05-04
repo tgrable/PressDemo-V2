@@ -12,6 +12,7 @@
 
 @interface LegalViewController : UIViewController{
     UIImageView *logo, *impressLogo;
+    
 }
 @property(nonatomic, readonly)CanonModel *model;
 @property(nonatomic, strong)UIView *customNavBar;

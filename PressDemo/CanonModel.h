@@ -15,6 +15,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "Reachability.h"
 #import "SDWebImage/SDWebImageManager.h"
+#import <sys/utsname.h>
 
 @interface CanonModel : AppDataObject{
     UIColor *orange, *pink, *red, *blue, *dullBlack, *green, *purple, *gray, *yellow, *lightGray;
@@ -78,5 +79,5 @@ typedef void(^completeBlock)(BOOL);
 -(NSString *)addAccentToOCEString:(NSString *)string;
 -(NSString *)cleanseStringName:(NSString *)filename;
 -(CGFloat)widthOfString:(NSString *)string withStringSize:(float)size andFontKey:(NSString *)key;
-
+-(NSString *)deviceInformation;
 @end

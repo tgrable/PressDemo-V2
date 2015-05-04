@@ -18,7 +18,9 @@
 @interface FilterViewController : GAITrackedViewController<NetworkDelegate, UIScrollViewDelegate, UIAlertViewDelegate>{
     //local views
     UIImageView *logo, *impressLogo;
-
+    /* No Internet View/Label */
+    UIView *noConnection;
+    UILabel *noConnectionLabel;
 }
 @property(nonatomic)NetworkData *network;
 @property(nonatomic, readonly)CanonModel *model;

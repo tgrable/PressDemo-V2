@@ -84,7 +84,7 @@
 
     //make sure to check the connectivity again
     if ([model.hostReachability isReachableViaWiFi]) {
-
+        noConnection.alpha = 0.0;
         //make sure this thread runs in the background
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             [network checkForUpdate];
@@ -102,13 +102,21 @@
            [offlineImages removeAllObjects];
            model.layoutSync = YES;
         }
+    }else{
+        noConnection.alpha = 1.0;
+        [model logData:@"FilterViewController" withAction:@"No Internet Connection" withLabel:@"Came back into focus with no connection"];
     }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
+    if ([model.hostReachability isReachableViaWiFi]) {
+        noConnection.alpha = 0.0;
+    }else{
+        noConnection.alpha = 1.0;
+        [model logData:@"FilterViewController" withAction:@"No Internet Connection" withLabel:@"Running the app with no internet"];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -153,6 +161,18 @@
     customNavBar = [[UIView alloc] initWithFrame:CGRectMake(0, 20, 1024, 64)];
     [customNavBar setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:customNavBar];
+    
+    noConnection = [[UIView alloc] initWithFrame:CGRectMake(36, -17, 134, 15)];
+    noConnection.alpha = 0.0;
+    noConnection.backgroundColor = model.blue;
+    [customNavBar addSubview:noConnection];
+    
+    noConnectionLabel = [[UILabel alloc] initWithFrame:CGRectMake(2, 3, 132, 11)];
+    noConnectionLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Md" size:10.0];
+    noConnectionLabel.text = @"NO INTERNET CONNECTION";
+    noConnectionLabel.textColor = [UIColor whiteColor];
+    noConnectionLabel.backgroundColor = [UIColor clearColor];
+    [noConnection addSubview:noConnectionLabel];
     
     
     impressLogo = [[UIImageView alloc] initWithFrame:CGRectMake(437, 1, 151, 62)];

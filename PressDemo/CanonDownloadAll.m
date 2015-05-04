@@ -53,6 +53,15 @@
         //build the user interface
         [self loadUpUserInterface];
     }
+    
+    //get the data about the device
+    NSString *dimensions = @"1024x768";
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
+        ([UIScreen mainScreen].scale == 2.0)) {
+        dimensions = @"2048x1536";
+    }
+    NSString *deviceData = [NSString stringWithFormat:@"%@ - %@", [model deviceInformation], dimensions];
+    [model logData:@"CanonViewController" withAction:@"Device Name" withLabel:deviceData];
 }
 
 - (void)viewWillAppear:(BOOL)animated

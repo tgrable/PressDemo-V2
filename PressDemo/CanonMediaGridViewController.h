@@ -18,6 +18,9 @@
     
     //local views
     UIImageView *logo, *impressLogo;
+    /* No Internet View/Label */
+    UIView *noConnection;
+    UILabel *noConnectionLabel;
     
 }
 @property(nonatomic)NetworkData *network;
