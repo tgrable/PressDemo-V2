@@ -11,6 +11,7 @@
 #import "UIButton+Extensions.h"
 #import "LegalViewController.h"
 
+
 #define ResourcePath(path)[[NSBundle mainBundle] pathForResource:path ofType:nil]
 
 #define ImageWithPath(path)[UIImage imageWithContentsOfFile:path]
@@ -243,17 +244,7 @@
     navBarHomeButton.showsTouchWhenHighlighted = YES;
     navBarHomeButton.tag = 20;
     [customNavBar addSubview:navBarHomeButton];
-    
-    /*
-    printButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [printButton setFrame:CGRectMake(247, 14, 135, 36)];
-    [printButton addTarget:self action:@selector(printView:)forControlEvents:UIControlEventTouchDown];
-    printButton.showsTouchWhenHighlighted = YES;
-    [printButton setTitle:@"PRINT" forState:UIControlStateNormal];
-    [printButton setTitleColor:model.blue forState:UIControlStateNormal];
-    printButton.tag = 20;
-    [customNavBar addSubview:printButton];
-     */
+     
     
     mainView = [[UIView alloc] initWithFrame:CGRectMake(248, 84, 776, 684)];
     mainView.backgroundColor = model.dullBlack;
@@ -446,13 +437,22 @@
     [mainView addSubview:mainShortBanner];
     
     //name of the mill
-    millNameHeader = [[UILabel alloc] initWithFrame:CGRectMake(44, 9, 691, 32)];
+    millNameHeader = [[UILabel alloc] initWithFrame:CGRectMake(44, 9, 601, 32)];
     [millNameHeader setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:26.0]];
     millNameHeader.textColor = [UIColor whiteColor];
     millNameHeader.numberOfLines = 1;
     millNameHeader.adjustsFontSizeToFitWidth = YES;
     millNameHeader.backgroundColor = [UIColor clearColor];
     [mainShortBanner addSubview:millNameHeader];
+    
+    shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [shareButton setFrame:CGRectMake(662, 5, 32, 32)];
+    [shareButton addTarget:self action:@selector(shareView:)forControlEvents:UIControlEventTouchDown];
+    [shareButton setBackgroundImage:[UIImage imageNamed:@"ico-print.png"] forState:UIControlStateNormal];
+    shareButton.showsTouchWhenHighlighted = YES;
+    shareButton.tag = 20;
+    [mainShortBanner addSubview:shareButton];
+    
     
     overviewContent = [[UIScrollView alloc] initWithFrame:CGRectMake(36, 342, 712, 342)];
     overviewContent.showsHorizontalScrollIndicator = NO;
@@ -650,10 +650,12 @@
     
     paperTable = YES;
     tableEmpty = NO;
+    modalViewPresent = NO;
     tableRows = 0;
     tableColumns = 0;
     websiteKey = @"";
     contentHeight = 0;
+    emailStep = 1;
     
     [self setupLocalUserInterface:^(BOOL completeFlag){
         //GA
@@ -664,24 +666,53 @@
     
 }
 
-/*
--(void)printView:(id)sender
+
+-(void)shareView:(id)sender
 {
     
     NSDateFormatter *setDateFormat = [[NSDateFormatter alloc]init];
-    [setDateFormat setDateFormat: @"yyyy-MM-dd-HH-mm-ss-zzz"];
+    [setDateFormat setDateFormat:@"yyyy-MM-dd-hh-mm-ss"];
     NSString *date = [setDateFormat stringFromDate:[NSDate date]];
-    NSString *filename = [NSString stringWithFormat:@"view-%@", date];
-
-    [self drawPDF:filename];
+    NSString *filename = [NSString stringWithFormat:@"imPRESS %@ media%@", millNameHeader.text, date];
+   
+    [self drawPDF:filename complete:^(BOOL completeFlag){
+      
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        NSString* PDFPath = [documentsDirectory stringByAppendingPathComponent:filename];
+        
+        
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:PDFPath error:NULL];
+        NSNumber *fileSize = [fileAttributes objectForKey:NSFileSize]; // File size (bytes)
+        
+        
+        unsigned long long fileSizeLong = [fileSize unsignedLongLongValue];
+        ALog(@"file size %llu",fileSizeLong);
+        if (fileSizeLong < 15728640ull) // Check attachment size limit (15MB)
+        {
+            NSData *attachment = [NSData dataWithContentsOfFile:PDFPath];
+            ALog(@"length %d", [attachment length]);
+            if (attachment != nil) // Ensure that we have valid document file attachment data available
+            {
+                MFMailComposeViewController *mailComposer = [MFMailComposeViewController new];
+                
+                [mailComposer addAttachmentData:attachment mimeType:@"application/pdf" fileName:filename];
+                
+                [mailComposer setSubject:millNameHeader.text]; // Use the document file name for the subject
+                
+                mailComposer.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+                mailComposer.modalPresentationStyle = UIModalPresentationFormSheet;
+                
+                mailComposer.mailComposeDelegate = self; // MFMailComposeViewControllerDelegate
+                
+                [self presentViewController:mailComposer animated:YES completion:NULL];
+            }
+        }
+    }];
     
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString* PDFPath = [documentsDirectory stringByAppendingPathComponent:filename];
     
-    
-    NSData *myData = [NSData dataWithContentsOfFile:PDFPath];
-    
+    /*
     UIPrintInteractionController *pic = [UIPrintInteractionController sharedPrintController];
     
     if ( pic && [UIPrintInteractionController canPrintData: myData] ) {
@@ -707,25 +738,41 @@
         }else {
             [pic presentAnimated:YES completionHandler:completionHandler];
         }
-    }
+    }*/
 }
 
-- (void)drawPDF:(NSString *)filename{
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
+
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)drawPDF:(NSString *)filename complete:(completeBlock)completeFlag {
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString* path = [documentsDirectory stringByAppendingPathComponent:filename];
     
+    // @TODO GET EMAIL FRAME CONTEXT
+    CGRect rect = CGRectMake(0, 0, 1024, 768);
+    if (!modalViewPresent) {
+        if (emailStep == 1) {
+            rect = CGRectMake(250, 0, 774, 768);
+        } else {
+            //get the table
+        }
+    }
+    
     UIGraphicsBeginPDFContextToFile(path, CGRectZero, nil);
-    UIGraphicsBeginPDFPageWithInfo(CGRectMake(250, 0, 774, 768), nil);
+    UIGraphicsBeginPDFPageWithInfo(rect, nil);
     CGContextRef currentContext = UIGraphicsGetCurrentContext();
     CGContextTranslateCTM(currentContext, 0, 0);
  
     [self.view.layer renderInContext:currentContext];
     
     UIGraphicsEndPDFContext();
-
-} */
+    completeFlag(YES);
+} 
 
 //this function moves around the content in the main view of the app
 -(void)loadUpMainTray:(id)sender
@@ -744,6 +791,7 @@
         NSString *bannerTitle = [NSString stringWithFormat:@"All Mills Media List"];
         //the name of the mill
         millNameHeader.text = bannerTitle;
+        emailStep = 2;
         
     }else if([b.titleLabel.text isEqualToString:@"papers"]){
         //setup the initial paper data
@@ -756,6 +804,7 @@
         NSString *bannerTitle = [NSString stringWithFormat:@"%@ : Media/Papers", model.selectedMill.title];
         //the name of the mill
         millNameHeader.text = bannerTitle;
+        emailStep = 2;
         
     }else if([b.titleLabel.text isEqualToString:@"videos"]){
         NSString *bannerTitle = [NSString stringWithFormat:@"%@ : Videos", model.selectedMill.title];
@@ -763,6 +812,7 @@
         millNameHeader.text = bannerTitle;
     }else if([b.titleLabel.text isEqualToString:@"overview"]){
         millNameHeader.text = model.selectedMill.title;
+        emailStep = 1;
     }
     
     
@@ -1583,7 +1633,7 @@
         overlay.alpha = 0.7;
         globalModal.alpha = 1.0;
     }completion:^(BOOL finished) {
-        
+        modalViewPresent = YES;
     }];
     
 }
@@ -1657,6 +1707,12 @@
     basisWeight.text = [basisWeightString uppercaseString];
     [modalView addSubview:basisWeight];
     
+    UIButton *overlayShareButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [overlayShareButton setFrame:CGRectMake(850, 4, 32, 32)];
+    [overlayShareButton addTarget:self action:@selector(shareView:)forControlEvents:UIControlEventTouchDown];
+    [overlayShareButton setBackgroundImage:[UIImage imageNamed:@"ico-print.png"] forState:UIControlStateNormal];
+    overlayShareButton.showsTouchWhenHighlighted = YES;
+    [header addSubview:overlayShareButton];
     
     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [closeButton setFrame:CGRectMake(904, 0, 40, 40)];
@@ -2212,6 +2268,7 @@
         globalModal. alpha = 0.0;
     }completion:^(BOOL finished) {
         //remove the present modal box
+        modalViewPresent = NO;
         if([self.view viewWithTag:2020] != nil){
             [[self.view viewWithTag:2020] removeFromSuperview];
         }

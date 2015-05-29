@@ -149,6 +149,8 @@
 		7129483219A3FFCF00E0548D /* launch-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7129482119A3FFCF00E0548D /* launch-iPhone@2x.png */; };
 		7129483619A4061D00E0548D /* CSA-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 7129483519A4061D00E0548D /* CSA-logo.png */; };
 		7129486019ABE92600E0548D /* SavedVideos.m in Sources */ = {isa = PBXBuildFile; fileRef = 7129485F19ABE92600E0548D /* SavedVideos.m */; };
+		71346EA21B18D32000E121E1 /* ico-print@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71346EA11B18D32000E121E1 /* ico-print@2x.png */; };
+		71346EA41B18D33400E121E1 /* ico-print.png in Resources */ = {isa = PBXBuildFile; fileRef = 71346EA31B18D33400E121E1 /* ico-print.png */; };
 		714523D219DDB32D0024CCF6 /* hdr-doc-casestudy.png in Resources */ = {isa = PBXBuildFile; fileRef = 714523D019DDB32D0024CCF6 /* hdr-doc-casestudy.png */; };
 		714523D319DDB32D0024CCF6 /* hdr-doc-whitepaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 714523D119DDB32D0024CCF6 /* hdr-doc-whitepaper.png */; };
 		714523D619DDB5D60024CCF6 /* hdr-doc-casestudy@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 714523D419DDB5D60024CCF6 /* hdr-doc-casestudy@2x.png */; };
@@ -709,6 +711,8 @@
 		7129483519A4061D00E0548D /* CSA-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CSA-logo.png"; sourceTree = "<group>"; };
 		7129485E19ABE92600E0548D /* SavedVideos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SavedVideos.h; sourceTree = "<group>"; };
 		7129485F19ABE92600E0548D /* SavedVideos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SavedVideos.m; sourceTree = "<group>"; };
+		71346EA11B18D32000E121E1 /* ico-print@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ico-print@2x.png"; sourceTree = "<group>"; };
+		71346EA31B18D33400E121E1 /* ico-print.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ico-print.png"; sourceTree = "<group>"; };
 		714523D019DDB32D0024CCF6 /* hdr-doc-casestudy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hdr-doc-casestudy.png"; sourceTree = "<group>"; };
 		714523D119DDB32D0024CCF6 /* hdr-doc-whitepaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hdr-doc-whitepaper.png"; sourceTree = "<group>"; };
 		714523D419DDB5D60024CCF6 /* hdr-doc-casestudy@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hdr-doc-casestudy@2x.png"; sourceTree = "<group>"; };
@@ -1865,6 +1869,7 @@
 				71708CB71A38F8F90041F8D5 /* headers */,
 				718D21101A379A0400980FDF /* software-solutions */,
 				718D210F1A3799E500980FDF /* media */,
+				71346EA11B18D32000E121E1 /* ico-print@2x.png */,
 				71F4977B1A6EF91E005D0F24 /* launch@2x.png */,
 				71F497751A6EF8ED005D0F24 /* impress-logo@2x.png */,
 				714523D419DDB5D60024CCF6 /* hdr-doc-casestudy@2x.png */,
@@ -1948,6 +1953,7 @@
 				71708CB81A38F9040041F8D5 /* headers */,
 				718D21191A379AEC00980FDF /* media */,
 				718D21181A379AE200980FDF /* software-solutions */,
+				71346EA31B18D33400E121E1 /* ico-print.png */,
 				71F497791A6EF911005D0F24 /* launch.png */,
 				71F497771A6EF8FB005D0F24 /* impress-logo.png */,
 				714523D019DDB32D0024CCF6 /* hdr-doc-casestudy.png */,
@@ -2257,6 +2263,7 @@
 				712651851A6560EE00C91AF2 /* Reader-Thumbs@2x.png in Resources */,
 				71706C981A72ADA3002CB444 /* imPRESS-animation-screen_24@2x.png in Resources */,
 				712651801A6560EE00C91AF2 /* Reader-Mark-Y.png in Resources */,
+				71346EA21B18D32000E121E1 /* ico-print@2x.png in Resources */,
 				71708CD41A38F92C0041F8D5 /* header-yellow.png in Resources */,
 				71DBB84E192FB60E002D7CA9 /* icn-trash.png in Resources */,
 				71DBB7FA192FB60E002D7CA9 /* hero-FPO@2x.png in Resources */,
@@ -2313,6 +2320,7 @@
 				7126517D1A6560EE00C91AF2 /* Reader-Export@2x.png in Resources */,
 				7129482919A3FFCF00E0548D /* ico-29.png in Resources */,
 				718D21301A379BFB00980FDF /* icn-mill-all@2x-2.png in Resources */,
+				71346EA41B18D33400E121E1 /* ico-print.png in Resources */,
 				71DBB7EF192FB60E002D7CA9 /* header-catalogs@2x.png in Resources */,
 				718D212F1A379BFB00980FDF /* icn-mill@2x-2.png in Resources */,
 				71DBB857192FB60E002D7CA9 /* tmb-FPO-video.png in Resources */,

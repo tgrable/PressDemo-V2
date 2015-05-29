@@ -18,8 +18,9 @@
 #import "CanonTableKeyViewController.h"
 #import "UIBorderLabel.h"
 #import "CanonViewController.h"
+#import <MessageUI/MessageUI.h>
 
-@interface CanonMediaMillViewController : GAITrackedViewController<NetworkDelegate, FileDelegate, UMTableViewDelegate, UIPopoverControllerDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate, UIPrintInteractionControllerDelegate>{
+@interface CanonMediaMillViewController : GAITrackedViewController<NetworkDelegate, FileDelegate, UMTableViewDelegate, UIPopoverControllerDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate, UIPrintInteractionControllerDelegate, MFMailComposeViewControllerDelegate>{
     //objects
     NetworkData *network;
     DownloadFile *downloadFile;
@@ -27,10 +28,10 @@
     //global views
     UIImageView *topBanner, *logo, *impressLogo;
     UIView *customNavBar, *mainView, *sideBar;
-    UIButton *navBarHomeButton, *backButton, *videoButton;
+    UIButton *navBarHomeButton, *backButton, *videoButton, *shareButton;
     
     //sidebar views
-    UIButton *overview, *videos, *mediaPapers, *allMills, *printButton;
+    UIButton *overview, *videos, *mediaPapers, *allMills;
     UIImageView *sidebarIndicator, *overViewIcon, *mediaPapersIcon;
     UIImageView *allMillsIcon, *videoIcon;
     UILabel *overviewLabel, *mediaPapersLabel, *videoLabel, *allMillsLabel;
@@ -53,8 +54,8 @@
     NSMutableArray *offlineVideoRows;
     NSMutableArray *rowHeadersPaper, *rowHeadersMill, *paperData, *allPaperData, *headerLabelsPaper, *headerLabelsMill, *iconArray;
     NSString *downloadingURL, *websiteKey;
-    BOOL paperTable, tableEmpty;
-    int tableRows, tableColumns;
+    BOOL paperTable, tableEmpty, modalViewPresent;
+    int tableRows, tableColumns, emailStep;
     float contentHeight;
     
     /* No Internet View/Label */

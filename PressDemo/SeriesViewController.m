@@ -1036,6 +1036,8 @@
             if([model.hostReachability isReachableViaWiFi]){
                 NSString *videoURLString = [v.streamingURL stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
                 NSURL *videoURL = [NSURL URLWithString:videoURLString];
+                ALog(@"######### ATTEMPT TO STREAM #########");
+                ALog(@"Streaming URL %@", videoURLString );
                 MPMoviePlayerViewController *moviePlayerView = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
                 [self presentMoviePlayerViewControllerAnimated:moviePlayerView];
                 ALog(@"Streaming");
