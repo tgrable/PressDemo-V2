@@ -27,7 +27,7 @@
     
     //global views
     UIImageView *topBanner, *logo, *impressLogo;
-    UIView *customNavBar, *mainView, *sideBar;
+    UIView *customNavBar, *mainView, *sideBar, *loadingView;
     UIButton *navBarHomeButton, *backButton, *videoButton, *shareButton;
     
     //sidebar views
@@ -38,7 +38,7 @@
     
     //main area views
     UIImageView *mainShortBanner, *actualDocumentBanner, *millLogo;
-    UIView *overviewContainer, *documentContainer, *tableBackground, *tableHeaderRow, *overlay, *globalModal;
+    UIView *overviewContainer, *documentContainer, *tableBackground, *tableHeaderRow, *overlay, *globalModal, *emailTableContainer;
     UIScrollView *overviewImages, *documentScroll, *overviewContent;
     UIPageControl *overviewImageDots;
     UITextView *millDescription;
@@ -54,6 +54,8 @@
     NSMutableArray *offlineVideoRows;
     NSMutableArray *rowHeadersPaper, *rowHeadersMill, *paperData, *allPaperData, *headerLabelsPaper, *headerLabelsMill, *iconArray;
     NSString *downloadingURL, *websiteKey;
+    UIActivityIndicatorView *activityIndicator;
+    
     BOOL paperTable, tableEmpty, modalViewPresent;
     int tableRows, tableColumns, emailStep;
     float contentHeight;

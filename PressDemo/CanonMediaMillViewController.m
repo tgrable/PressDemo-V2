@@ -10,7 +10,7 @@
 #import "UIImageView+WebCache.h"
 #import "UIButton+Extensions.h"
 #import "LegalViewController.h"
-
+#import <QuartzCore/QuartzCore.h>
 
 #define ResourcePath(path)[[NSBundle mainBundle] pathForResource:path ofType:nil]
 
@@ -631,6 +631,20 @@
     overlay.userInteractionEnabled = YES;
     [self.view addSubview:overlay];
     
+    loadingView = [[UIView alloc] initWithFrame:CGRectMake(462, 334, 100, 100)];
+    [loadingView setBackgroundColor:[UIColor blackColor]];
+    loadingView.layer.cornerRadius = 5;
+    loadingView.layer.masksToBounds = YES;
+    loadingView.alpha = 0.0;
+    [self.view addSubview:loadingView];
+    
+    
+    activityIndicator = [UIActivityIndicatorView.alloc initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    activityIndicator.frame = CGRectMake(32.0, 32.0, 35.0, 35.0);
+    [activityIndicator setColor:[UIColor whiteColor]];
+    [activityIndicator startAnimating];
+    [loadingView addSubview:activityIndicator];
+    
     
     popView = [[CanonTableKeyViewController alloc] initWithNibName:@"CanonTableKeyViewController" bundle:nil];
     currentDocumentData = [[NSMutableDictionary alloc] init];
@@ -673,7 +687,7 @@
     NSDateFormatter *setDateFormat = [[NSDateFormatter alloc]init];
     [setDateFormat setDateFormat:@"yyyy-MM-dd-hh-mm-ss"];
     NSString *date = [setDateFormat stringFromDate:[NSDate date]];
-    NSString *filename = [NSString stringWithFormat:@"imPRESS %@ media%@", millNameHeader.text, date];
+    NSString *filename = [NSString stringWithFormat:@"media%@.pdf", date];
    
     [self drawPDF:filename complete:^(BOOL completeFlag){
       
@@ -693,6 +707,7 @@
         {
             NSData *attachment = [NSData dataWithContentsOfFile:PDFPath];
             ALog(@"length %d", [attachment length]);
+            
             if (attachment != nil) // Ensure that we have valid document file attachment data available
             {
                 MFMailComposeViewController *mailComposer = [MFMailComposeViewController new];
@@ -710,41 +725,13 @@
             }
         }
     }];
-    
-    
-    /*
-    UIPrintInteractionController *pic = [UIPrintInteractionController sharedPrintController];
-    
-    if ( pic && [UIPrintInteractionController canPrintData: myData] ) {
-        pic.delegate = self;
-        
-        UIPrintInfo *printInfo = [UIPrintInfo printInfo];
-        printInfo.outputType = UIPrintInfoOutputGeneral;
-        printInfo.jobName = [PDFPath lastPathComponent];
-        printInfo.duplex = UIPrintInfoDuplexLongEdge;
-        pic.printInfo = printInfo;
-        pic.showsPageRange = YES;
-        pic.printingItem = myData;
-        
-        void (^completionHandler)(UIPrintInteractionController *, BOOL, NSError *) = ^(UIPrintInteractionController *pic, BOOL completed, NSError *error) {
-            if (!completed && error) {
-                NSLog(@"FAILED! due to error in domain %@ with error code %u", error.domain, error.code);
-            }
-        };
-        
-        if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
-            [pic presentFromRect:CGRectMake(227, 0, 160, 100) inView:self.view animated:YES completionHandler:completionHandler];
-            
-        }else {
-            [pic presentAnimated:YES completionHandler:completionHandler];
-        }
-    }*/
 }
 
 
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
 
     [self dismissViewControllerAnimated:YES completion:NULL];
+    [emailTableContainer removeFromSuperview];
 }
 
 - (void)drawPDF:(NSString *)filename complete:(completeBlock)completeFlag {
@@ -754,24 +741,72 @@
     NSString* path = [documentsDirectory stringByAppendingPathComponent:filename];
     
     // @TODO GET EMAIL FRAME CONTEXT
-    CGRect rect = CGRectMake(0, 0, 1024, 768);
+    __block CGRect rect = CGRectMake(0, 0, 1024, 768);
+    __block CALayer *pdfLayer = self.view.layer;
+  
     if (!modalViewPresent) {
         if (emailStep == 1) {
             rect = CGRectMake(250, 0, 774, 768);
+            pdfLayer = self.view.layer;
+            UIGraphicsBeginPDFContextToFile(path, CGRectZero, nil);
+            UIGraphicsBeginPDFPageWithInfo(rect, nil);
+            CGContextRef currentContext = UIGraphicsGetCurrentContext();
+            CGContextTranslateCTM(currentContext, 0, 0);
+            
+            [pdfLayer renderInContext:currentContext];
+            
+            UIGraphicsEndPDFContext();
+            completeFlag(YES);
+            
         } else {
+            loadingView.alpha = 1.0;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                // Creates a mutable data object for updating with binary data, like a byte array
+                NSMutableData *pdfData = [NSMutableData data];
+                
+                // Points the pdf converter to the mutable data object and to the UIView to be converted
+                UIGraphicsBeginPDFContextToData(pdfData, (CGRect){0,0, tableView.contentSize}, nil);
+                UIGraphicsBeginPDFPage();
+                CGContextRef pdfContext = UIGraphicsGetCurrentContext();
+                
+                CGRect origSize = tableView.frame;
+                CGRect newSize = origSize;
+                newSize.size = tableView.contentSize;
+                [tableView setFrame:newSize];
+                
+                [tableView.layer renderInContext:pdfContext];
+                
+                [tableView setFrame:origSize];
+                
+                // remove PDF rendering context
+                UIGraphicsEndPDFContext();
+                
+                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                NSString *documentsDirectory = [paths objectAtIndex:0];
+                NSString* newPath = [documentsDirectory stringByAppendingPathComponent:filename];
+                
+                // instructs the mutable data object to write its context to a file on disk
+                [pdfData writeToFile:newPath atomically:YES];
+                loadingView.alpha = 0.0;
+                completeFlag(YES);
+                
+            });
             //get the table
         }
+    } else {
+        UIGraphicsBeginPDFContextToFile(path, CGRectZero, nil);
+        UIGraphicsBeginPDFPageWithInfo(rect, nil);
+        CGContextRef currentContext = UIGraphicsGetCurrentContext();
+        CGContextTranslateCTM(currentContext, 0, 0);
+        
+        [pdfLayer renderInContext:currentContext];
+        
+        UIGraphicsEndPDFContext();
+        completeFlag(YES);
     }
-    
-    UIGraphicsBeginPDFContextToFile(path, CGRectZero, nil);
-    UIGraphicsBeginPDFPageWithInfo(rect, nil);
-    CGContextRef currentContext = UIGraphicsGetCurrentContext();
-    CGContextTranslateCTM(currentContext, 0, 0);
- 
-    [self.view.layer renderInContext:currentContext];
-    
-    UIGraphicsEndPDFContext();
-    completeFlag(YES);
+
+
 } 
 
 //this function moves around the content in the main view of the app
@@ -792,6 +827,7 @@
         //the name of the mill
         millNameHeader.text = bannerTitle;
         emailStep = 2;
+        shareButton.frame = CGRectMake(676, 5, 32, 32);
         
     }else if([b.titleLabel.text isEqualToString:@"papers"]){
         //setup the initial paper data
@@ -805,6 +841,7 @@
         //the name of the mill
         millNameHeader.text = bannerTitle;
         emailStep = 2;
+        shareButton.frame = CGRectMake(662, 5, 32, 32);
         
     }else if([b.titleLabel.text isEqualToString:@"videos"]){
         NSString *bannerTitle = [NSString stringWithFormat:@"%@ : Videos", model.selectedMill.title];
@@ -813,6 +850,7 @@
     }else if([b.titleLabel.text isEqualToString:@"overview"]){
         millNameHeader.text = model.selectedMill.title;
         emailStep = 1;
+        shareButton.frame = CGRectMake(662, 5, 32, 32);
     }
     
     
