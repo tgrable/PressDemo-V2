@@ -706,7 +706,7 @@
         if (fileSizeLong < 15728640ull) // Check attachment size limit (15MB)
         {
             NSData *attachment = [NSData dataWithContentsOfFile:PDFPath];
-            ALog(@"length %d", [attachment length]);
+            ALog(@"length %lu", [attachment length]);
             
             if (attachment != nil) // Ensure that we have valid document file attachment data available
             {
