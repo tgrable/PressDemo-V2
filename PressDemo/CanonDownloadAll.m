@@ -39,6 +39,7 @@
     
     [UIApplication sharedApplication].idleTimerDisabled = YES;
     
+    
     UIImageView *loadScreen = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 1024, 768)];
     loadScreen.image = [model getImageWithName:@"/launch@2x.png"];
     [loadScreen setUserInteractionEnabled:YES];

@@ -22,7 +22,7 @@
 
 
 @implementation CanonMediaMillViewController
-@synthesize customNavBar, sideBar, mainView, videoButton;
+@synthesize customNavBar, sideBar, mainView, videoButton, searchView;
 @synthesize model, network, navBarHomeButton, offlineImages, pop, popView, contentHeight;
 
 //Here we are setting up the delegate method
@@ -208,6 +208,9 @@
     downloadFile = [[DownloadFile alloc] init];
     downloadFile.delegate = self;
     
+    searchView = [[CanonMediaMillSearchOverlay alloc] init];
+    searchView.delegate = self;
+    
     //***** Load up views to the local view controller ************//
     //the nav bar
     customNavBar = [[UIView alloc] initWithFrame:CGRectMake(0, 20, 1024, 64)];
@@ -273,6 +276,17 @@
     [tableKey setBackgroundImage:[model getImageWithName:@"/icn-key@2x.png"] forState:UIControlStateNormal];
     tableKey.backgroundColor = [UIColor clearColor];
     [tableBackground addSubview:tableKey];
+    
+    searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [searchButton setFrame:CGRectMake(620, 56, 33, 33)];
+    [searchButton addTarget:self action:@selector(searchTable:)forControlEvents:UIControlEventTouchDown];
+    searchButton.showsTouchWhenHighlighted = YES;
+    searchButton.titleLabel.text = @"Search";
+    searchButton.layer.cornerRadius = 5;
+    searchButton.clipsToBounds = YES;
+    [searchButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [searchButton setBackgroundImage:[model getImageWithName:@"/icn-search@2x.png"] forState:UIControlStateNormal];
+    [tableBackground addSubview:searchButton];
     
     //cell0, *cell1, *cell2, *cell3, *cell4, *cell5, *cell6, *cell7
     tableHeaderRow = [[UIView alloc] initWithFrame:CGRectMake(20, 110, 736, 50)];
@@ -448,7 +462,7 @@
     shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [shareButton setFrame:CGRectMake(662, 5, 32, 32)];
     [shareButton addTarget:self action:@selector(shareView:)forControlEvents:UIControlEventTouchDown];
-    [shareButton setBackgroundImage:[UIImage imageNamed:@"ico-print.png"] forState:UIControlStateNormal];
+    [shareButton setBackgroundImage:[UIImage imageNamed:@"ico-share.png"] forState:UIControlStateNormal];
     shareButton.showsTouchWhenHighlighted = YES;
     shareButton.tag = 20;
     [mainShortBanner addSubview:shareButton];
@@ -706,7 +720,7 @@
         if (fileSizeLong < 15728640ull) // Check attachment size limit (15MB)
         {
             NSData *attachment = [NSData dataWithContentsOfFile:PDFPath];
-            ALog(@"length %lu", [attachment length]);
+            ALog(@"length %lu", (unsigned long)[attachment length]);
             
             if (attachment != nil) // Ensure that we have valid document file attachment data available
             {
@@ -807,7 +821,50 @@
     }
 
 
-} 
+}
+
+-(void)searchTable:(id)sender
+{
+    ALog(@"Search table event");
+    searchView.searchBackgroundTitle.text = @"Search ALL Mill Table";
+    [self.view addSubview:searchView.background];
+    
+    [UIView animateWithDuration:0.6f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
+        searchView.background.alpha = 0.98;
+    }completion:^(BOOL finished) {
+        
+    }];
+}
+
+-(void)searchResponse
+{
+    ALog(@"SEARCH!!!!");
+    
+    
+    
+    NSMutableDictionary *searchDictionary = [[NSMutableDictionary alloc] init];
+    [searchDictionary setObject:[searchView.searchArray objectAtIndex:0] forKey:@"mill_name"];
+    [searchDictionary setObject:[searchView.searchArray objectAtIndex:1] forKey:@"title"];
+    [searchDictionary setObject:[searchView.searchArray objectAtIndex:2] forKey:@"basis_weight"];
+    [searchDictionary setObject:[searchView.searchArray objectAtIndex:3] forKey:@"brightness"];
+    [searchDictionary setObject:[searchView.searchArray objectAtIndex:4] forKey:@"coating"];
+    [searchDictionary setObject:[searchView.searchArray objectAtIndex:5] forKey:@"color_capability"];
+    [searchDictionary setObject:[searchView.searchArray objectAtIndex:6] forKey:@"category"];
+    [searchDictionary setObject:[searchView.searchArray objectAtIndex:7] forKey:@"dye_pigment"];
+    
+     
+    [model searchInitialPaperData:searchDictionary complete:^(BOOL completeFlag){
+       [self buildAllPaperData];
+    }];
+}
+-(void)closeResponse
+{
+    [UIView animateWithDuration:0.6f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
+        searchView.background.alpha = 0.0;
+    }completion:^(BOOL finished) {
+        [searchView.background removeFromSuperview];
+    }];
+}
 
 //this function moves around the content in the main view of the app
 -(void)loadUpMainTray:(id)sender
@@ -819,15 +876,44 @@
         //setup the initial paper data
         //reset the paper data
         [paperData removeAllObjects];
-        [model sortInitialPaperDataAlpha:@"mill_name" complete:^(BOOL completeFlag){
+        
+        @try {
+            [model sortInitialPaperDataAlpha:@"mill_name" complete:^(BOOL completeFlag){
+                [self buildAllPaperData];
+                
+                [model buildSearchableDataSource:model.initialSetOfPaper sourceFlag:YES complete:^(BOOL completeFlag) {
+                    [searchView buildViews];
+                }];
+                
+            }];
+        }
+        @catch (NSException *exception) {
+            ALog(@"%@", exception.reason);
+            ALog(@"%@", exception);
+        }
+        @finally {
+            
+        }
+        
+        
+        /*
+        NSMutableDictionary *searchDictionary = [[NSMutableDictionary alloc] init];
+        [searchDictionary setObject:@"Production" forKey:@"coating"];
+        [searchDictionary setObject:@"Text" forKey:@"category"];
+        
+        [searchDictionary setObject:@"Uncoated" forKey:@"coating"];
+        
+        [model searchInitialPaperData:searchDictionary complete:^(BOOL completeFlag){
             [self buildAllPaperData];
-        }];
+        }];*/
+        
         
         NSString *bannerTitle = [NSString stringWithFormat:@"All Mills Media List"];
         //the name of the mill
         millNameHeader.text = bannerTitle;
         emailStep = 2;
         shareButton.frame = CGRectMake(676, 5, 32, 32);
+        searchButton.alpha = 1.0;
         
     }else if([b.titleLabel.text isEqualToString:@"papers"]){
         //setup the initial paper data
@@ -835,6 +921,8 @@
         [paperData removeAllObjects];
         [model sortInitialPaperDataAlpha:@"title" complete:^(BOOL completeFlag){
             [self buildPaperTableData];
+            // build search overlay views
+            [searchView buildViews];
         }];
         
         NSString *bannerTitle = [NSString stringWithFormat:@"%@ : Media/Papers", model.selectedMill.title];
@@ -842,6 +930,8 @@
         millNameHeader.text = bannerTitle;
         emailStep = 2;
         shareButton.frame = CGRectMake(662, 5, 32, 32);
+        //searchButton.frame = CGRectMake(610, 56, 33, 33);
+        searchButton.alpha = 0.0;
         
     }else if([b.titleLabel.text isEqualToString:@"videos"]){
         NSString *bannerTitle = [NSString stringWithFormat:@"%@ : Videos", model.selectedMill.title];
@@ -851,7 +941,11 @@
         millNameHeader.text = model.selectedMill.title;
         emailStep = 1;
         shareButton.frame = CGRectMake(662, 5, 32, 32);
+        searchButton.frame = CGRectMake(620, 56, 33, 33);
     }
+    
+    
+    
     
     
     //switch to overview from anything
@@ -2393,6 +2487,7 @@
     //resets the table row count
     tableRows = 0;
     tableColumns = 7;
+    ALog(@"HERE1");
     //loop through the papers in the initial dataset
     for(Paper *p in model.initialSetOfPaper){
         //check to see if the paper is equal to present mills key
@@ -2424,14 +2519,14 @@
         }
         
     }
-  
+    ALog(@"HERE2");
     //if the dataset is empty, flag it for later display
     if([paperData count] == 0){
         tableEmpty = YES;
     }else{
         tableEmpty = NO;
     }
-   
+    ALog(@"HERE3");
 }
 
 //this function is more generalized and assembles all of the paper data
@@ -2474,6 +2569,7 @@
     }
 
 }
+
 
 //universal view function to display dynamic alerts
 -(void)displayMessage:(NSString *)message withTitle:(NSString *)title

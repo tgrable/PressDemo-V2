@@ -237,6 +237,8 @@
         [model logData:@"CanonViewController" withAction:@"No Internet Connection" withLabel:@"Running the app with no internet"];
     }
     
+    
+    
     if(!model.animationRun){
         
         [self setupLocalUserInterface:^(BOOL completeBlock){}];
@@ -251,7 +253,6 @@
             
         }];
     }
-    
     
 }
 

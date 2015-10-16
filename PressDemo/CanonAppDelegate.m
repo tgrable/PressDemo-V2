@@ -42,7 +42,7 @@
     // Initialize tracker.
     [[GAI sharedInstance] trackerWithTrackingId:@"UA-49102313-4"];
     
-    //[GAI sharedInstance].dryRun = YES;
+    [GAI sharedInstance].dryRun = YES;
     
     //setup NSUserDefaults for LastUpdated
     [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"LastUpdated" ofType:@"plist"]]];

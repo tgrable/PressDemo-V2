@@ -52,6 +52,7 @@
         initialSolutionData = [NSMutableArray array];
         initialSofwareData = [NSMutableArray array];
         initialBannerData = [NSMutableArray array];
+        searchableMillData = [NSMutableArray array];
         
         //initial setup of products in the first view
         localProds = [NSMutableArray array];
@@ -909,6 +910,121 @@
     
 
     completeFlag(YES);
+}
+
+-(void)searchInitialPaperData:(NSMutableDictionary *)searchTerms complete:(completeBlock)completeFlag
+{
+    NSData *paperEncodedData = [self getFileData:@"initialPapers" complete:^(BOOL completeFlag){}];
+    initialSetOfPaper = [NSKeyedUnarchiver unarchiveObjectWithData:paperEncodedData];
+   
+    ALog(@"Before Filter Count %lu", (unsigned long)[initialSetOfPaper count]);
+    
+    NSMutableArray *predicateArray = [NSMutableArray array];
+    for (id key in searchTerms) {
+        NSPredicate *p = [NSPredicate predicateWithFormat:@"%K == %@", key, [searchTerms objectForKey:key]];
+        [predicateArray addObject:p];
+    }
+    
+    if ([predicateArray count] > 0) {
+        NSPredicate *masterPred = [NSCompoundPredicate andPredicateWithSubpredicates:predicateArray];
+        ALog(@"master pred %@", masterPred);
+   
+        NSArray *newFilteredArray = [initialSetOfPaper filteredArrayUsingPredicate:masterPred];
+        ALog(@"After Filter Count %lu", (unsigned long)[newFilteredArray count]);
+        [initialSetOfPaper removeAllObjects];
+        initialSetOfPaper = [newFilteredArray mutableCopy];
+        
+        completeFlag(YES);
+    } else {
+        ALog(@"HEREE");
+        completeFlag(YES);
+    }
+}
+
+-(void)buildSearchableDataSource:(NSMutableArray *)incomingPaperData sourceFlag:(BOOL)flag complete:(completeBlock)completeFlag
+{
+    // Large Data Source
+    // Mill Name      =   0
+    // Media Name     =   1
+    // Basis Weight   =   2
+    // Brightness     =   3
+    // Coating        =   4
+    // Color          =   5
+    // Capability     =   6
+    // Inkset         =   7
+    
+    // Clear out the array
+    [searchableMillData removeAllObjects];
+    NSMutableArray *tempData = [NSMutableArray array];
+    NSMutableArray *noDups = [NSMutableArray array];
+    // build large data source
+    if (flag) {
+        // Load the array with a new array object
+        for (int i = 0; i < 8; i++) {
+            NSMutableArray *newArray = [NSMutableArray array];
+            [newArray addObject:@"- NONE -"];
+            [tempData addObject:newArray];
+        }
+
+        int i = 0;
+        for (Paper *p in incomingPaperData) {
+            if (p != nil) {
+
+                // Mill Name
+                if (p.mill_name != nil){
+                  [[tempData objectAtIndex:0] addObject:p.mill_name];
+                }
+                // Media Name
+                if (p.title != nil) {
+                    [[tempData objectAtIndex:1] addObject:p.title];
+                }
+                // Basis Weight
+                if ([p.basis_weight count] > 0) {
+                    for(NSString *weight in p.basis_weight) {
+                       [[tempData objectAtIndex:2] addObject:weight];
+                    }
+                }
+                // Brightness
+                if (p.brightness != nil) {
+                    [[tempData objectAtIndex:3] addObject:p.brightness];
+                }
+                // Coating
+                if (p.coating != nil) {
+                    [[tempData objectAtIndex:4] addObject:p.coating];
+                }
+                // Coating
+                if (p.color_capability != nil) {
+                    [[tempData objectAtIndex:5] addObject:p.color_capability];
+                }
+                // Capability
+                if (p.category != nil) {
+                    [[tempData objectAtIndex:6] addObject:p.category];
+                }
+                // Inkset
+                if (p.dye_pigment != nil && ![p.dye_pigment isEqualToString:@""]) {
+                    [[tempData objectAtIndex:7] addObject:p.dye_pigment];
+                }
+            }
+            i++;
+            if (i == [incomingPaperData count]){
+                // Reduce Duplicated
+                for (NSMutableArray *a in tempData) {
+                    NSArray *noDuplicates = [[NSSet setWithArray: a] allObjects];
+                    [noDups addObject:noDuplicates];
+                }
+            }
+
+        }
+        
+        searchableMillData = [noDups mutableCopy];
+        ALog(@"searchableMillData %@", searchableMillData);
+        completeFlag(YES);
+        
+    // build small data source
+    } else {
+        completeFlag(YES);
+    }
+    
 }
 
 

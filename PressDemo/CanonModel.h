@@ -72,6 +72,7 @@ typedef void(^completeBlock)(BOOL);
 
 /** utility functions **/
 -(void)sortInitialPaperDataAlpha:(NSString *)key complete:(completeBlock)completeFlag;
+-(void)searchInitialPaperData:(NSMutableDictionary *)searchTerms complete:(completeBlock)completeFlag;
 -(NSMutableArray *)cleanArray:(NSMutableArray *)array;
 -(NSMutableArray *)getInitialSetofPorducts;
 -(NSMutableDictionary *)getInitialBannerData;
@@ -79,5 +80,6 @@ typedef void(^completeBlock)(BOOL);
 -(NSString *)addAccentToOCEString:(NSString *)string;
 -(NSString *)cleanseStringName:(NSString *)filename;
 -(CGFloat)widthOfString:(NSString *)string withStringSize:(float)size andFontKey:(NSString *)key;
+-(void)buildSearchableDataSource:(NSMutableArray *)incomingPaperData sourceFlag:(BOOL)flag complete:(completeBlock)completeFlag;
 -(NSString *)deviceInformation;
 @end

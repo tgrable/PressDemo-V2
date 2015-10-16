@@ -19,8 +19,9 @@
 #import "UIBorderLabel.h"
 #import "CanonViewController.h"
 #import <MessageUI/MessageUI.h>
+#import "CanonMediaMillSearchOverlay.h"
 
-@interface CanonMediaMillViewController : GAITrackedViewController<NetworkDelegate, FileDelegate, UMTableViewDelegate, UIPopoverControllerDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate, UIPrintInteractionControllerDelegate, MFMailComposeViewControllerDelegate>{
+@interface CanonMediaMillViewController : GAITrackedViewController<NetworkDelegate, FileDelegate, UMTableViewDelegate, SearchOverlayDelegate, UIPopoverControllerDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate, UIPrintInteractionControllerDelegate, MFMailComposeViewControllerDelegate>{
     //objects
     NetworkData *network;
     DownloadFile *downloadFile;
@@ -44,14 +45,15 @@
     UITextView *millDescription;
     UILabel *documentLabel, *millNameHeader, *millNameOverview, *millPhone, *millAddress, *tableHeader;
     UIBorderLabel *cell0, *cell1, *cell2, *cell3, *cell4, *cell5, *cell6, *cell7;
-    UIButton *documentHeaderButton, *urlMill, *tableKey;
+    UIButton *documentHeaderButton, *urlMill, *tableKey, *searchButton;
     UMTableView *tableView;
+    CanonMediaMillSearchOverlay *searchView;
     
     //global data
     NSMutableDictionary *currentDocumentData;
     NSMutableDictionary *offlineImages;
     NSMutableDictionary *offlineVideos;
-    NSMutableArray *offlineVideoRows;
+    NSMutableArray *offlineVideoRows, *searchTerms;
     NSMutableArray *rowHeadersPaper, *rowHeadersMill, *paperData, *allPaperData, *headerLabelsPaper, *headerLabelsMill, *iconArray;
     NSString *downloadingURL, *websiteKey;
     UIActivityIndicatorView *activityIndicator;
@@ -67,6 +69,7 @@
 }
 @property(nonatomic)NetworkData *network;
 @property(nonatomic)CanonTableKeyViewController *popView;
+@property(nonatomic)CanonMediaMillSearchOverlay *searchView;
 @property(nonatomic, readonly)CanonModel *model;
 @property(nonatomic, strong)UIButton *navBarHomeButton, *videoButton;
 @property(nonatomic, strong)UIView *customNavBar, *mainView, *sideBar;

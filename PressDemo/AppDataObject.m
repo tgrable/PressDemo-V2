@@ -13,5 +13,5 @@
 @synthesize whatDoYouWantToPrint, showAll, taxonomyReadableNames, topBanners, seriesBanners;
 @synthesize lastUpdated, documentData, productData, productSeriesData, videoData, layoutSync;
 @synthesize downloadedImages, needsUpdate, millData, paperData, softwareData, initialSetOfMills, initialSetOfPaper;
-@synthesize initialSolutionData, initialPartnerData, initialSofwareData, initialFilesToDownload, initialBannerData;
+@synthesize initialSolutionData, initialPartnerData, initialSofwareData, initialFilesToDownload, initialBannerData, searchableMillData;
 @end
