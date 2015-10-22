@@ -43,9 +43,9 @@
     UIScrollView *overviewImages, *documentScroll, *overviewContent;
     UIPageControl *overviewImageDots;
     UITextView *millDescription;
-    UILabel *documentLabel, *millNameHeader, *millNameOverview, *millPhone, *millAddress, *tableHeader;
+    UILabel *documentLabel, *millNameHeader, *millNameOverview, *millPhone, *millAddress, *tableHeader, *noTableInfo;
     UIBorderLabel *cell0, *cell1, *cell2, *cell3, *cell4, *cell5, *cell6, *cell7;
-    UIButton *documentHeaderButton, *urlMill, *tableKey, *searchButton;
+    UIButton *documentHeaderButton, *urlMill, *tableKey, *searchButton, *resetTable;
     UMTableView *tableView;
     CanonMediaMillSearchOverlay *searchView;
     
@@ -54,7 +54,7 @@
     NSMutableDictionary *offlineImages;
     NSMutableDictionary *offlineVideos;
     NSMutableArray *offlineVideoRows, *searchTerms;
-    NSMutableArray *rowHeadersPaper, *rowHeadersMill, *paperData, *allPaperData, *headerLabelsPaper, *headerLabelsMill, *iconArray;
+    NSMutableArray *rowHeadersPaper, *rowHeadersMill, *paperData, *headerLabelsPaper, *headerLabelsMill, *iconArray;
     NSString *downloadingURL, *websiteKey;
     UIActivityIndicatorView *activityIndicator;
     

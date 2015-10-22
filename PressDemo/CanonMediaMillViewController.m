@@ -11,6 +11,7 @@
 #import "UIButton+Extensions.h"
 #import "LegalViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "SearchablePaper.h"
 
 #define ResourcePath(path)[[NSBundle mainBundle] pathForResource:path ofType:nil]
 
@@ -278,15 +279,27 @@
     [tableBackground addSubview:tableKey];
     
     searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [searchButton setFrame:CGRectMake(620, 56, 33, 33)];
+    [searchButton setFrame:CGRectMake(580, 56, 80, 33)];
     [searchButton addTarget:self action:@selector(searchTable:)forControlEvents:UIControlEventTouchDown];
     searchButton.showsTouchWhenHighlighted = YES;
-    searchButton.titleLabel.text = @"Search";
-    searchButton.layer.cornerRadius = 5;
-    searchButton.clipsToBounds = YES;
     [searchButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [searchButton setBackgroundImage:[model getImageWithName:@"/icn-search@2x.png"] forState:UIControlStateNormal];
+    [searchButton setBackgroundColor:model.blue];
+    searchButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [searchButton setTitle:@"Filter" forState:UIControlStateNormal];
+    [searchButton.titleLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
     [tableBackground addSubview:searchButton];
+    
+    resetTable = [UIButton buttonWithType:UIButtonTypeCustom];
+    [resetTable setFrame:CGRectMake(490, 56, 80, 33)];
+    [resetTable addTarget:self action:@selector(resetTable:)forControlEvents:UIControlEventTouchDown];
+    resetTable.showsTouchWhenHighlighted = YES;
+    resetTable.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [resetTable setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [resetTable setBackgroundColor:[UIColor blackColor]];
+    [resetTable setTitle:@"Reset" forState:UIControlStateNormal];
+    [resetTable.titleLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
+    [resetTable setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [tableBackground addSubview:resetTable];
     
     //cell0, *cell1, *cell2, *cell3, *cell4, *cell5, *cell6, *cell7
     tableHeaderRow = [[UIView alloc] initWithFrame:CGRectMake(20, 110, 736, 50)];
@@ -395,7 +408,6 @@
     notice.text = @"NOTE: All papers on this list are available in the use either from the mill directly or through distribution. Some papers may require a minimum order from the mill. Availability can and will change based on supply and demand for papers, contact your mill or distributor for the most up to date availablility. Many mills will have stocking levels incicated on their web sites with the most up to date information. Follow the links provided to access mill web sites.";
     notice.numberOfLines = 4;
     notice.backgroundColor = [UIColor clearColor];
-    //[tableBackground addSubview:notice];
     
     UILabel *noticeTwo = [[UILabel alloc] initWithFrame:CGRectMake(20, 600, 736, 50)];
     [noticeTwo setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:12.0]];
@@ -403,7 +415,15 @@
     noticeTwo.text = @"The papers listed in this document have been evaluated on Canon Solutions America and Oce production printing equipment. Canon Solutions America does not guarantee the performance or availability of any papers listed. Results may vary.This list is only to be used as a guide for selecting papers for further testing in specific applications. For more information consult your local sales represenitive It is recommended that a paper trial including linerization of the trial.";
     noticeTwo.numberOfLines = 4;
     noticeTwo.backgroundColor = [UIColor clearColor];
-    //[tableBackground addSubview:noticeTwo];
+    
+    noTableInfo = [[UILabel alloc] initWithFrame:CGRectMake(20, 220, 736, 50)];
+    [noTableInfo setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:18.0]];
+    noTableInfo.textColor = model.dullBlack;
+    noTableInfo.text = @"- NO RESULTS FOUND -";
+    noTableInfo.textAlignment = NSTextAlignmentCenter;
+    noTableInfo.backgroundColor = [UIColor clearColor];
+    noTableInfo.alpha = 0.0;
+    [tableBackground addSubview:noTableInfo];
     
     
     //########### Video Setup ####################################
@@ -823,9 +843,20 @@
 
 }
 
+#pragma mark -
+#pragma mark table filtering functions
+// Resets all table data back to normal
+-(void)resetTable:(id)sender
+{
+    [paperData removeAllObjects];
+    [self buildAllPaperData];
+    noTableInfo.alpha = 0.0;
+    [tableView refresh];
+}
+
+// Brings up the search overlay
 -(void)searchTable:(id)sender
 {
-    ALog(@"Search table event");
     searchView.searchBackgroundTitle.text = @"Search ALL Mill Table";
     [self.view addSubview:searchView.background];
     
@@ -836,11 +867,11 @@
     }];
 }
 
+#pragma mark -
+#pragma mark SearchOverlayDelegate functions
+// Search response delegate function being called from CanonMediaMillSearchOverlay filter button
 -(void)searchResponse
 {
-    ALog(@"SEARCH!!!!");
-    
-    
     
     NSMutableDictionary *searchDictionary = [[NSMutableDictionary alloc] init];
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:0] forKey:@"mill_name"];
@@ -852,11 +883,57 @@
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:6] forKey:@"category"];
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:7] forKey:@"dye_pigment"];
     
-     
+    [paperData removeAllObjects];
     [model searchInitialPaperData:searchDictionary complete:^(BOOL completeFlag){
-       [self buildAllPaperData];
+        tableRows = 0;
+        tableColumns = 8;
+        int count = [model.searchablePaperDataObjects count];
+        if (count > 0) {
+            noTableInfo.alpha = 0.0;
+            for (SearchablePaper *p in model.searchablePaperDataObjects) {
+                NSMutableArray *rowArray = [[NSMutableArray alloc] init];
+        
+                [rowArray addObject:p.mill_name];
+                
+                [rowArray addObject:p.title];
+                
+                [rowArray addObject:p.basis_weight];
+
+                [rowArray addObject:p.brightness];
+                
+                [rowArray addObject:p.coating];
+                
+                [rowArray addObject:p.color_capability];
+                
+                [rowArray addObject:p.category];
+                
+                [rowArray addObject:p.dye_pigment];
+                
+                tableRows++;
+                [paperData addObject:rowArray];
+                
+                if (tableRows == count) {
+                    [tableView refresh];
+                    [UIView animateWithDuration:0.6f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
+                        searchView.background.alpha = 0.0;
+                    }completion:^(BOOL finished) {
+                        [searchView.background removeFromSuperview];
+                    }];
+                }
+            }
+        } else {
+            noTableInfo.alpha = 1.0;
+            [tableView refresh];
+            [UIView animateWithDuration:0.6f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
+                searchView.background.alpha = 0.0;
+            }completion:^(BOOL finished) {
+                [searchView.background removeFromSuperview];
+            }];
+        }
     }];
 }
+
+// Search response delegate function being called from CanonMediaMillSearchOverlay close button
 -(void)closeResponse
 {
     [UIView animateWithDuration:0.6f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
@@ -895,25 +972,13 @@
             
         }
         
-        
-        /*
-        NSMutableDictionary *searchDictionary = [[NSMutableDictionary alloc] init];
-        [searchDictionary setObject:@"Production" forKey:@"coating"];
-        [searchDictionary setObject:@"Text" forKey:@"category"];
-        
-        [searchDictionary setObject:@"Uncoated" forKey:@"coating"];
-        
-        [model searchInitialPaperData:searchDictionary complete:^(BOOL completeFlag){
-            [self buildAllPaperData];
-        }];*/
-        
-        
         NSString *bannerTitle = [NSString stringWithFormat:@"All Mills Media List"];
         //the name of the mill
         millNameHeader.text = bannerTitle;
         emailStep = 2;
         shareButton.frame = CGRectMake(676, 5, 32, 32);
         searchButton.alpha = 1.0;
+        resetTable.alpha = 1.0;
         
     }else if([b.titleLabel.text isEqualToString:@"papers"]){
         //setup the initial paper data
@@ -930,8 +995,8 @@
         millNameHeader.text = bannerTitle;
         emailStep = 2;
         shareButton.frame = CGRectMake(662, 5, 32, 32);
-        //searchButton.frame = CGRectMake(610, 56, 33, 33);
         searchButton.alpha = 0.0;
+        resetTable.alpha = 0.0;
         
     }else if([b.titleLabel.text isEqualToString:@"videos"]){
         NSString *bannerTitle = [NSString stringWithFormat:@"%@ : Videos", model.selectedMill.title];
@@ -941,7 +1006,8 @@
         millNameHeader.text = model.selectedMill.title;
         emailStep = 1;
         shareButton.frame = CGRectMake(662, 5, 32, 32);
-        searchButton.frame = CGRectMake(620, 56, 33, 33);
+        searchButton.alpha = 0.0;
+        resetTable.alpha = 0.0;
     }
     
     
@@ -2535,6 +2601,7 @@
     
     tableRows = 0;
     tableColumns = 8;
+    
     for(Paper *p in model.initialSetOfPaper){
 
         if([p.basis_weight count] > 0){
@@ -2543,18 +2610,35 @@
                 NSMutableArray *rowArray = [[NSMutableArray alloc] init];
                 //note this array has one more column in it that the paper data did
                 //also, we are not searching for a dataset based upon a key, but selecting all
+                SearchablePaper *sp = [[SearchablePaper alloc] init];
                 
                 [rowArray addObject:p.mill_name];
+                sp.mill_name = p.mill_name;
+                
                 [rowArray addObject:p.title];
+                sp.title = p.title;
                 
                 [rowArray addObject:weight];
+                sp.basis_weight = weight;
+                
                 [rowArray addObject:p.brightness];
+                sp.brightness = p.brightness;
+                
                 [rowArray addObject:p.coating];
+                sp.coating = p.coating;
                 
                 [rowArray addObject:p.color_capability];
+                sp.color_capability = p.color_capability;
+                
                 [rowArray addObject:p.category];
+                sp.category = p.category;
+                
                 [rowArray addObject:p.dye_pigment];
+                sp.dye_pigment = p.dye_pigment;
+                
                 [rowArray addObject:p.key];
+                
+                [model.searchablePaperDataObjects addObject:sp];
                 
                 tableRows++;
                 [paperData addObject:rowArray];

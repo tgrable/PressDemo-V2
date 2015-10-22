@@ -407,7 +407,7 @@
     overviewLabel.text = @"OVERVIEW";
     [overview addSubview:overviewLabel];
     
-    sidebarObjects = [NSMutableArray arrayWithObjects:model.selectedSeries.videos, model.selectedSoftware.datasheets, model.selectedSoftware.brochures, nil];
+    sidebarObjects = [NSMutableArray arrayWithObjects:model.selectedSoftware.videos, model.selectedSoftware.datasheets, model.selectedSoftware.brochures, nil];
     sidebarNames = [NSMutableArray arrayWithObjects:@"videos", @"datasheets", @"brochures", nil];
     sidebarTextNames = [NSMutableArray arrayWithObjects:@"VIDEOS", @"DATASHEET", @"BROCHURE",  nil];
     sidebarIcons = [NSMutableArray arrayWithObjects:@"icn-video.png", @"icn-specs.png", @"icn-casestudy.png", nil];
@@ -417,7 +417,7 @@
     offlineImages = [[NSMutableDictionary alloc] init];
     offlineVideos = [[NSMutableDictionary alloc] init];
     offlineVideoRows = [NSMutableArray array];
-   
+
     //setup the sidebar with all of the icon
     [self setUpSideBarIcons];
     
@@ -433,7 +433,7 @@
 {
     int i = 0, e = 0, y = 30;
     while(i < [sidebarObjects count]){
-        
+        ALog(@"Here %d", [[sidebarObjects objectAtIndex:i] count]);
         if([[sidebarObjects objectAtIndex:i] count] > 0){
             
             //36, 96, 178, 36
@@ -905,7 +905,7 @@
     [navBarHomeButton setBackgroundImage:[UIImage imageNamed:@"icn-home.png"] forState:UIControlStateNormal];
     
     //add the small main header
-    bannerTitle.text = [model.selectedSoftware.title uppercaseString];
+    bannerTitle.text = model.selectedSoftware.title;
     
     //####################################### setup image slider in overview view ##############
     NSMutableArray *images = model.selectedSoftware.banners;

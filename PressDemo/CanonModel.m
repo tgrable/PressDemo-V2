@@ -53,6 +53,7 @@
         initialSofwareData = [NSMutableArray array];
         initialBannerData = [NSMutableArray array];
         searchableMillData = [NSMutableArray array];
+        searchablePaperDataObjects = [NSMutableArray array];
         
         //initial setup of products in the first view
         localProds = [NSMutableArray array];
@@ -914,29 +915,28 @@
 
 -(void)searchInitialPaperData:(NSMutableDictionary *)searchTerms complete:(completeBlock)completeFlag
 {
-    NSData *paperEncodedData = [self getFileData:@"initialPapers" complete:^(BOOL completeFlag){}];
-    initialSetOfPaper = [NSKeyedUnarchiver unarchiveObjectWithData:paperEncodedData];
    
-    ALog(@"Before Filter Count %lu", (unsigned long)[initialSetOfPaper count]);
+    ALog(@"########### Before Filter Count %lu", (unsigned long)[searchablePaperDataObjects count]);
     
     NSMutableArray *predicateArray = [NSMutableArray array];
     for (id key in searchTerms) {
-        NSPredicate *p = [NSPredicate predicateWithFormat:@"%K == %@", key, [searchTerms objectForKey:key]];
-        [predicateArray addObject:p];
+        if (![[searchTerms objectForKey:key] isEqualToString:@"- NONE -"]) {
+            NSPredicate *p = [NSPredicate predicateWithFormat:@"%K == %@", key, [searchTerms objectForKey:key]];
+            [predicateArray addObject:p];
+        }
     }
     
     if ([predicateArray count] > 0) {
         NSPredicate *masterPred = [NSCompoundPredicate andPredicateWithSubpredicates:predicateArray];
         ALog(@"master pred %@", masterPred);
    
-        NSArray *newFilteredArray = [initialSetOfPaper filteredArrayUsingPredicate:masterPred];
-        ALog(@"After Filter Count %lu", (unsigned long)[newFilteredArray count]);
-        [initialSetOfPaper removeAllObjects];
-        initialSetOfPaper = [newFilteredArray mutableCopy];
+        NSArray *newFilteredArray = [searchablePaperDataObjects filteredArrayUsingPredicate:masterPred];
+        ALog(@"########### After Filter Count %lu", (unsigned long)[newFilteredArray count]);
+        [searchablePaperDataObjects removeAllObjects];
+        searchablePaperDataObjects = [newFilteredArray mutableCopy];
         
         completeFlag(YES);
     } else {
-        ALog(@"HEREE");
         completeFlag(YES);
     }
 }
@@ -1017,7 +1017,6 @@
         }
         
         searchableMillData = [noDups mutableCopy];
-        ALog(@"searchableMillData %@", searchableMillData);
         completeFlag(YES);
         
     // build small data source

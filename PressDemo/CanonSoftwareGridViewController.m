@@ -286,7 +286,7 @@
         title.numberOfLines = 2;
         title.adjustsFontSizeToFitWidth = YES;
         title.backgroundColor = [UIColor whiteColor];
-        title.text = [s.title uppercaseString];
+        title.text = s.title;
         [back addSubview:title];
         
         UITextView *desc = [[UITextView alloc] initWithFrame:CGRectMake(imgX, 200, 224, 100)];
@@ -357,7 +357,7 @@
     for(Software *s in model.initialSofwareData){
         if([s.key isEqualToString:b.titleLabel.text]){
             model.selectedSoftware = s;
-            
+            ALog(@"Selected Software %@", model.selectedSoftware.videos);
             break;
             //GA
             //[model logData:@"Mill Grid View" withAction:@"Action Tracker" withLabel:m.key];

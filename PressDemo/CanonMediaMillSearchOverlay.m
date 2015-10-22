@@ -210,7 +210,7 @@
     [search setFrame:CGRectMake(15, 598, 80, 44)];
     [search addTarget:self action:@selector(searchTable:)forControlEvents:UIControlEventTouchDown];
     search.showsTouchWhenHighlighted = YES;
-    [search setTitle:@"Search" forState:UIControlStateNormal];
+    [search setTitle:@"Filter" forState:UIControlStateNormal];
     [search setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [search setBackgroundColor:model.blue];
     [background addSubview:search];

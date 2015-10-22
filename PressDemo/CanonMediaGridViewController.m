@@ -286,7 +286,7 @@
         title.numberOfLines = 2;
         title.adjustsFontSizeToFitWidth = YES;
         title.backgroundColor = [UIColor whiteColor];
-        title.text = [m.title uppercaseString];
+        title.text = m.title;
         [back addSubview:title];
         
         UITextView *desc = [[UITextView alloc] initWithFrame:CGRectMake(imgX, 200, 224, 100)];
