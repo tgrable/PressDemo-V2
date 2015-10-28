@@ -152,7 +152,7 @@
                    $solutions[] = $value . '--solution';
                 }
              }
-
+             dpm($node);
             //product series objects
             $value = array(
               'title' => $node->title,
@@ -217,6 +217,8 @@
               'description' => isset($node->field_software_description[LANGUAGE_NONE][0]['value']) ? _cannon_data_api_cleanse_string($node->field_software_description[LANGUAGE_NONE][0]['value']) : '',
               'overview' => _cannon_data_api_breakup_description($node->field_series_overview[LANGUAGE_NONE]),
               'datasheets' => isset($node->field_datasheet_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_datasheet_reference , '--datasheet') : array(),
+              'case_studies' => isset($node->field_product_case_study_referen[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_product_case_study_referen, '--case-study') : array(),
+              'white_papers' => isset($node->field_product_white_paper_refere[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_product_white_paper_refere, '--white-paper') : array(),
               'brochures' => isset($node->field_brochure_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_brochure_reference, '--brochure') : array(),
               'videos' => isset($node->field_video_reference[LANGUAGE_NONE]) ? _cannon_data_api_get_reference_key($node->field_video_reference, '--video') : array(),
             );
@@ -295,8 +297,8 @@
       }
 
       //print out the JSON
-      print json_encode(array('data'=> array($type => $data, 'last-updated' => date("Y-m-d H:i:s", _cannon_data_api_get_time_of_last_updated_node($machine_name[$type])))));
-      drupal_exit();
+      //print json_encode(array('data'=> array($type => $data, 'last-updated' => date("Y-m-d H:i:s", _cannon_data_api_get_time_of_last_updated_node($machine_name[$type])))));
+      //drupal_exit();
     }else{
       print json_encode(array('error'=>true, 'message'=>'Sorry, that is not a valid content type.'));
       drupal_exit();
