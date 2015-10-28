@@ -297,8 +297,8 @@
       }
 
       //print out the JSON
-      //print json_encode(array('data'=> array($type => $data, 'last-updated' => date("Y-m-d H:i:s", _cannon_data_api_get_time_of_last_updated_node($machine_name[$type])))));
-      //drupal_exit();
+      print json_encode(array('data'=> array($type => $data, 'last-updated' => date("Y-m-d H:i:s", _cannon_data_api_get_time_of_last_updated_node($machine_name[$type])))));
+      drupal_exit();
     }else{
       print json_encode(array('error'=>true, 'message'=>'Sorry, that is not a valid content type.'));
       drupal_exit();
