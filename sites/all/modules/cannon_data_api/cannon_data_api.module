@@ -152,7 +152,6 @@
                    $solutions[] = $value . '--solution';
                 }
              }
-             dpm($node);
             //product series objects
             $value = array(
               'title' => $node->title,
@@ -290,8 +289,6 @@
               'product_series_reference' => (strlen($product_series_key) > 0) ? $product_series_key : ''
             );
         }
-
-
         //add each node represented as JSON to the data array
         $data[] = $value;
       }
