@@ -26,8 +26,8 @@
         //The production URL
         //networkURL = "";
         //The staging URL
-        networkURL = @"http://pressdemo.trekkweb.com";
-        //networkURL = @"http://dev-pressdemo.pantheon.io";
+        //networkURL = @"http://pressdemo.trekkweb.com";
+        networkURL = @"http://dev-pressdemo.pantheon.io";
         updateURL = @"/data/update";
         threads = [[NSMutableDictionary alloc] init];
         status = 0;

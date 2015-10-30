@@ -18,6 +18,8 @@
 @synthesize description;
 @synthesize overview;
 @synthesize datasheets;
+@synthesize case_studies;
+@synthesize white_papers;
 @synthesize videos;
 @synthesize brochures;
 
@@ -35,6 +37,8 @@
         description = @"";
         overview = [[NSMutableDictionary alloc] init];
         datasheets = [NSMutableArray array];
+        case_studies = [NSMutableArray array];
+        white_papers = [NSMutableArray array];
         videos = [NSMutableArray array];
         brochures = [NSMutableArray array];
     }
@@ -52,6 +56,8 @@
     [encoder encodeObject:self.description forKey:@"description"];
     [encoder encodeObject:self.overview forKey:@"overview"];
     [encoder encodeObject:self.datasheets forKey:@"datasheets"];
+    [encoder encodeObject:self.case_studies forKey:@"case_studies"];
+    [encoder encodeObject:self.white_papers forKey:@"white_papers"];
     [encoder encodeObject:self.videos forKey:@"videos"];
     [encoder encodeObject:self.brochures forKey:@"brochures"];
 }
@@ -67,6 +73,8 @@
         self.description = [decoder decodeObjectForKey:@"description"];
         self.overview = [decoder decodeObjectForKey:@"overview"];
         self.datasheets = [decoder decodeObjectForKey:@"datasheets"];
+        self.case_studies = [decoder decodeObjectForKey:@"case_studies"];
+        self.white_papers = [decoder decodeObjectForKey:@"white_papers"];
         self.videos = [decoder decodeObjectForKey:@"videos"];
         self.brochures = [decoder decodeObjectForKey:@"brochures"];
     }

@@ -18,6 +18,8 @@
 @property(nonatomic, copy)NSString *description;
 @property(nonatomic, copy)NSMutableDictionary *overview;
 @property(nonatomic, copy)NSMutableArray *datasheets;
+@property(nonatomic, copy)NSMutableArray *case_studies;
+@property(nonatomic, copy)NSMutableArray *white_papers;
 @property(nonatomic, copy)NSMutableArray *videos;
 @property(nonatomic, copy)NSMutableArray *brochures;
 

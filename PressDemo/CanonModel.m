@@ -54,6 +54,7 @@
         initialBannerData = [NSMutableArray array];
         searchableMillData = [NSMutableArray array];
         searchablePaperDataObjects = [NSMutableArray array];
+        searchDataArray = [NSMutableArray array];
         
         //initial setup of products in the first view
         localProds = [NSMutableArray array];
@@ -71,7 +72,6 @@
         [whatDoYouWantToPrint setObject:[UIImage imageNamed:@"home-nav-catalogs.png"] forKey:@"catalogs"];
         [whatDoYouWantToPrint setObject:[UIImage imageNamed:@"home-nav-manuals.png"] forKey:@"manuals"];
         [whatDoYouWantToPrint setObject:[UIImage imageNamed:@"home-nav-specialty.png"] forKey:@"specialty"];
-        //[whatDoYouWantToPrint setObject:[UIImage imageNamed:@"home-nav-healthcare.png"] forKey:@"healthcare-eobs"];
         
         //Full on UIImages to be referenced in the ViewController by Key
         showAll = [[NSMutableDictionary alloc] init];
@@ -673,10 +673,16 @@
             i++;
         }
         
+        
         s.datasheets = [dict objectForKey:@"datasheets"];
+        s.white_papers = [dict objectForKey:@"white_papers"];
+        s.case_studies = [dict objectForKey:@"case_studies"];
         s.brochures = [dict objectForKey:@"brochures"];
         s.videos = [dict objectForKey:@"videos"];
    
+        
+        ALog(@"DICTIONARY %@", s.case_studies);
+        ALog(@"DICTIONARY %@", s.white_papers);
         [initialSofwareData addObject:s];
     }
 }
@@ -909,15 +915,12 @@
     
     initialSetOfPaper = [[initialSetOfPaper sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
     
-
     completeFlag(YES);
 }
 
 -(void)searchInitialPaperData:(NSMutableDictionary *)searchTerms complete:(completeBlock)completeFlag
 {
-   
     ALog(@"########### Before Filter Count %lu", (unsigned long)[searchablePaperDataObjects count]);
-    
     NSMutableArray *predicateArray = [NSMutableArray array];
     for (id key in searchTerms) {
         if (![[searchTerms objectForKey:key] isEqualToString:@"- NONE -"]) {
@@ -962,7 +965,6 @@
         // Load the array with a new array object
         for (int i = 0; i < 8; i++) {
             NSMutableArray *newArray = [NSMutableArray array];
-            [newArray addObject:@"- NONE -"];
             [tempData addObject:newArray];
         }
 
@@ -1009,23 +1011,25 @@
             if (i == [incomingPaperData count]){
                 // Reduce Duplicated
                 for (NSMutableArray *a in tempData) {
-                    NSArray *noDuplicates = [[NSSet setWithArray: a] allObjects];
+                    NSMutableArray *noDuplicates = [[[NSSet setWithArray: a] allObjects] mutableCopy];
                     [noDups addObject:noDuplicates];
                 }
             }
-
         }
         
         searchableMillData = [noDups mutableCopy];
+        
+        // Insert None at the all of these options
+        for (NSMutableArray *array in searchableMillData) {
+            [array insertObject:@"- NONE -" atIndex:0];
+        }
         completeFlag(YES);
         
     // build small data source
     } else {
         completeFlag(YES);
     }
-    
 }
-
 
 //This function takes a CDN Hyperlink and chops it up to extract the video file name
 //This function will be in flux as we transition asset providers and move away from Media Valet

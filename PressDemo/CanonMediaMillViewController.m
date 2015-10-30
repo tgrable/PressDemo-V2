@@ -24,7 +24,7 @@
 
 @implementation CanonMediaMillViewController
 @synthesize customNavBar, sideBar, mainView, videoButton, searchView;
-@synthesize model, network, navBarHomeButton, offlineImages, pop, popView, contentHeight;
+@synthesize model, network, navBarHomeButton, offlineImages, pop, popView, contentHeight, action, searchField;
 
 //Here we are setting up the delegate method
 - (CanonModel *) AppDataObj;
@@ -211,6 +211,7 @@
     
     searchView = [[CanonMediaMillSearchOverlay alloc] init];
     searchView.delegate = self;
+
     
     //***** Load up views to the local view controller ************//
     //the nav bar
@@ -672,13 +673,15 @@
     loadingView.alpha = 0.0;
     [self.view addSubview:loadingView];
     
+    bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, 767, 1024, 1)];
+    [bottomView setBackgroundColor:[UIColor whiteColor]];
+    [self.view addSubview:bottomView];
     
     activityIndicator = [UIActivityIndicatorView.alloc initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     activityIndicator.frame = CGRectMake(32.0, 32.0, 35.0, 35.0);
     [activityIndicator setColor:[UIColor whiteColor]];
     [activityIndicator startAnimating];
     [loadingView addSubview:activityIndicator];
-    
     
     popView = [[CanonTableKeyViewController alloc] initWithNibName:@"CanonTableKeyViewController" bundle:nil];
     currentDocumentData = [[NSMutableDictionary alloc] init];
@@ -704,6 +707,7 @@
     websiteKey = @"";
     contentHeight = 0;
     emailStep = 1;
+    searchRowIndex = 0;
     
     [self setupLocalUserInterface:^(BOOL completeFlag){
         //GA
@@ -857,6 +861,8 @@
 // Brings up the search overlay
 -(void)searchTable:(id)sender
 {
+    [self resetTable:resetTable];
+    
     searchView.searchBackgroundTitle.text = @"Search ALL Mill Table";
     [self.view addSubview:searchView.background];
     
@@ -865,6 +871,72 @@
     }completion:^(BOOL finished) {
         
     }];
+    
+}
+
+
+-(void)bringUpSearchDialog:(int)rowValue withTitle:(NSString *)title
+{
+    searchRowIndex = rowValue;
+    model.searchDataArray = [[model.searchableMillData objectAtIndex:searchRowIndex] mutableCopy];
+
+    action = [[ActionSheetPicker alloc] initWithNibName:@"ActionSheetPicker" bundle:nil];
+    if (searchRowIndex == 5) {
+        action.colorFlag = YES;
+    } else {
+        action.colorFlag = NO;
+    }
+    action.delegate = self;
+    [action.view addSubview:action.background];
+    
+    action.titleLabel.text = title;
+    
+    //set the UIPopoverController with the PopUpMenuViewController object and set the frame
+    searchField = [[UIPopoverController alloc] initWithContentViewController:action];
+    searchField.popoverContentSize = CGSizeMake(600, 220);
+    searchField.delegate = self;
+    [searchField presentPopoverFromRect:bottomView.bounds inView:bottomView permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+}
+
+-(void)closePopUpResponse
+{
+    NSMutableArray *dataRow = [model.searchableMillData objectAtIndex:searchRowIndex];
+    NSString *value = [dataRow objectAtIndex:[action.generalPickerview selectedRowInComponent:0]];
+    
+    int alteredSearchRowIndex = searchRowIndex + 1;
+
+    for (UIView *v in [searchView.background subviews]) {
+        if (v.tag == alteredSearchRowIndex) {
+            UIButton *b = (UIButton *)v;
+            
+            // color icon
+            if (alteredSearchRowIndex == 6) {
+                // Remove icon subview (if any)
+                for (UIView *nestedViews in [b subviews]) {
+                    if (nestedViews.tag == 222) {
+                        [nestedViews removeFromSuperview];
+                    }
+                }
+                // load new view or set none as the label
+                int i = [value integerValue];
+                if (i == 0) {
+                  [b setTitle:@"- NONE -" forState:UIControlStateNormal];
+                  searchView.savedColorValue = -1;
+                } else {
+                  UIView *iv = [action getColorIconSet:i];
+                  iv.frame = CGRectMake(241, 0, 88, 15);
+                  [b addSubview:iv];
+                  [b setTitle:@"" forState:UIControlStateNormal];
+                  searchView.savedColorValue = i;
+                }
+            } else {
+              [b setTitle:value forState:UIControlStateNormal];
+            }
+            break;
+        }
+    }
+    
+    [searchField dismissPopoverAnimated:NO];
 }
 
 #pragma mark -
@@ -887,7 +959,7 @@
     [model searchInitialPaperData:searchDictionary complete:^(BOOL completeFlag){
         tableRows = 0;
         tableColumns = 8;
-        int count = [model.searchablePaperDataObjects count];
+        int count = (int)[model.searchablePaperDataObjects count];
         if (count > 0) {
             noTableInfo.alpha = 0.0;
             for (SearchablePaper *p in model.searchablePaperDataObjects) {
@@ -1148,6 +1220,7 @@
         
     }
     
+    noTableInfo.alpha = 0.0;
     //animate the indicator
     [self animateSidebarIndicator:(int)b.tag];
     

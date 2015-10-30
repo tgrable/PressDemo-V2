@@ -20,8 +20,9 @@
 #import "CanonViewController.h"
 #import <MessageUI/MessageUI.h>
 #import "CanonMediaMillSearchOverlay.h"
+#import "ActionSheetPicker.h"
 
-@interface CanonMediaMillViewController : GAITrackedViewController<NetworkDelegate, FileDelegate, UMTableViewDelegate, SearchOverlayDelegate, UIPopoverControllerDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate, UIPrintInteractionControllerDelegate, MFMailComposeViewControllerDelegate>{
+@interface CanonMediaMillViewController : GAITrackedViewController<NetworkDelegate, FileDelegate, UMTableViewDelegate, SearchOverlayDelegate, UIPopoverControllerDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate, UIPrintInteractionControllerDelegate, MFMailComposeViewControllerDelegate, PopOverviewDelegate>{
     //objects
     NetworkData *network;
     DownloadFile *downloadFile;
@@ -48,6 +49,7 @@
     UIButton *documentHeaderButton, *urlMill, *tableKey, *searchButton, *resetTable;
     UMTableView *tableView;
     CanonMediaMillSearchOverlay *searchView;
+    ActionSheetPicker *action;
     
     //global data
     NSMutableDictionary *currentDocumentData;
@@ -57,9 +59,10 @@
     NSMutableArray *rowHeadersPaper, *rowHeadersMill, *paperData, *headerLabelsPaper, *headerLabelsMill, *iconArray;
     NSString *downloadingURL, *websiteKey;
     UIActivityIndicatorView *activityIndicator;
+    UIView *bottomView;
     
     BOOL paperTable, tableEmpty, modalViewPresent;
-    int tableRows, tableColumns, emailStep;
+    int tableRows, tableColumns, emailStep, searchRowIndex;
     float contentHeight;
     
     /* No Internet View/Label */
@@ -70,11 +73,12 @@
 @property(nonatomic)NetworkData *network;
 @property(nonatomic)CanonTableKeyViewController *popView;
 @property(nonatomic)CanonMediaMillSearchOverlay *searchView;
+@property(nonatomic)ActionSheetPicker *action;
 @property(nonatomic, readonly)CanonModel *model;
 @property(nonatomic, strong)UIButton *navBarHomeButton, *videoButton;
 @property(nonatomic, strong)UIView *customNavBar, *mainView, *sideBar;
 @property(nonatomic, strong)NSMutableDictionary *offlineImages;
-@property(nonatomic, strong)UIPopoverController *pop;
+@property(nonatomic, strong)UIPopoverController *pop, *searchField;
 @property float contentHeight;
 
 

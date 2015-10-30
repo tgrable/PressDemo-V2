@@ -14,8 +14,8 @@
 
 @implementation CanonMediaMillSearchOverlay
 
-@synthesize millNamePicker, mediaNamePicker, brightnessPicker, coatingPicker, colorPicker, capabilityPicker, inksetPicker;
-@synthesize basisWeightTextfield, background, model, basisWeightPicker, searchArray, searchBackgroundTitle, iconArray;
+@synthesize colorButton, savedColorValue;
+@synthesize basisWeightTextfield, background, model, searchArray, searchBackgroundTitle, searchTitles;
 
 //Here we are setting up the delegate method
 - (CanonModel *) AppDataObj;
@@ -35,13 +35,17 @@
         
         model = [self AppDataObj];
         searchArray = [NSMutableArray array];
+        savedColorValue = 0;
         
-        iconArray = [NSMutableArray array];
-        [iconArray addObject:[UIImage imageNamed:@"ico-blackwhite.png"]];
-        [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
-        [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
-        [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
-        [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
+        searchTitles = [NSMutableArray array];
+        [searchTitles addObject:@"Mill Name"];
+        [searchTitles addObject:@"Media Name"];
+        [searchTitles addObject:@"Basis Weight"];
+        [searchTitles addObject:@"Brightness"];
+        [searchTitles addObject:@"Coating"];
+        [searchTitles addObject:@"Color"];
+        [searchTitles addObject:@"Capability"];
+        [searchTitles addObject:@"Inkset"];
         
         for (int i = 0; i < 8; i++) {
             [searchArray addObject:@""];
@@ -76,14 +80,6 @@
     searchBackgroundTitle.backgroundColor = [UIColor clearColor];
     [headerBackground addSubview:searchBackgroundTitle];
     
-    
-    millNamePicker = [[UIPickerView alloc] initWithFrame:CGRectMake(15, 70, 570, 60)];
-    millNamePicker.backgroundColor = [UIColor whiteColor];
-    millNamePicker.delegate = self;
-    [millNamePicker setTintColor:[UIColor whiteColor]];
-    millNamePicker.dataSource = self;
-    [background addSubview:millNamePicker];
-    
     // Mill Label
     millLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 59, 570, 20)];
     millLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Md" size:16.0];
@@ -92,13 +88,17 @@
     millLabel.backgroundColor = [UIColor clearColor];
     [background addSubview:millLabel];
     
-    
-    mediaNamePicker = [[UIPickerView alloc] initWithFrame:CGRectMake(15, 137, 570, 60)];
-    mediaNamePicker.backgroundColor = [UIColor whiteColor];
-    mediaNamePicker.delegate = self;
-    [mediaNamePicker setTintColor:[UIColor whiteColor]];
-    mediaNamePicker.dataSource = self;
-    [background addSubview:mediaNamePicker];
+    millButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [millButton setFrame:CGRectMake(15, 82, 570, 26)];
+    [millButton addTarget:self action:@selector(bringUpSearchPicker:)forControlEvents:UIControlEventTouchDown];
+    millButton.showsTouchWhenHighlighted = YES;
+    millButton.tag = 1;
+    [[millButton layer] setBorderWidth:1.0f];
+    [[millButton layer] setBorderColor:model.dullBlack.CGColor];
+    [millButton setTitle:@"- NONE -" forState:UIControlStateNormal];
+    [millButton setTitleColor:model.dullBlack forState:UIControlStateNormal];
+    [millButton setBackgroundColor:[UIColor clearColor]];
+    [background addSubview:millButton];
     
     // Media Name Label
     mediaNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 126, 570, 20)];
@@ -108,13 +108,18 @@
     mediaNameLabel.backgroundColor = [UIColor clearColor];
     [background addSubview:mediaNameLabel];
     
-    
-    basisWeightPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(15, 204, 570, 60)];
-    basisWeightPicker.backgroundColor = [UIColor whiteColor];
-    basisWeightPicker.delegate = self;
-    [basisWeightPicker setTintColor:[UIColor whiteColor]];
-    basisWeightPicker.dataSource = self;
-    [background addSubview:basisWeightPicker];
+    //millButton, *mediaButton, *basisWeightButton, *brightnessButton, *coatingButton, *colorButton, *capabilityButton, *inksetButton
+    mediaButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [mediaButton setFrame:CGRectMake(15, 149, 570, 26)];
+    [mediaButton addTarget:self action:@selector(bringUpSearchPicker:)forControlEvents:UIControlEventTouchDown];
+    mediaButton.showsTouchWhenHighlighted = YES;
+    mediaButton.tag = 2;
+    [[mediaButton layer] setBorderWidth:1.0f];
+    [[mediaButton layer] setBorderColor:model.dullBlack.CGColor];
+    [mediaButton setTitle:@"- NONE -" forState:UIControlStateNormal];
+    [mediaButton setTitleColor:model.dullBlack forState:UIControlStateNormal];
+    [mediaButton setBackgroundColor:[UIColor clearColor]];
+    [background addSubview:mediaButton];
     
     // Basis Weight Label
     basisWeightLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 193, 570, 20)];
@@ -124,13 +129,17 @@
     basisWeightLabel.backgroundColor = [UIColor clearColor];
     [background addSubview:basisWeightLabel];
     
-    
-    brightnessPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(15, 271, 570, 60)];
-    brightnessPicker.backgroundColor = [UIColor whiteColor];
-    brightnessPicker.delegate = self;
-    [brightnessPicker setTintColor:[UIColor whiteColor]];
-    brightnessPicker.dataSource = self;
-    [background addSubview:brightnessPicker];
+    basisWeightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [basisWeightButton setFrame:CGRectMake(15, 216, 570, 26)];
+    [basisWeightButton addTarget:self action:@selector(bringUpSearchPicker:)forControlEvents:UIControlEventTouchDown];
+    basisWeightButton.showsTouchWhenHighlighted = YES;
+    basisWeightButton.tag = 3;
+    [[basisWeightButton layer] setBorderWidth:1.0f];
+    [[basisWeightButton layer] setBorderColor:model.dullBlack.CGColor];
+    [basisWeightButton setTitle:@"- NONE -" forState:UIControlStateNormal];
+    [basisWeightButton setTitleColor:model.dullBlack forState:UIControlStateNormal];
+    [basisWeightButton setBackgroundColor:[UIColor clearColor]];
+    [background addSubview:basisWeightButton];
     
     // Brightness Label
     brightnessLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 260, 570, 20)];
@@ -140,13 +149,17 @@
     brightnessLabel.backgroundColor = [UIColor clearColor];
     [background addSubview:brightnessLabel];
     
-    
-    coatingPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(15, 338, 570, 60)];
-    coatingPicker.backgroundColor = [UIColor whiteColor];
-    coatingPicker.delegate = self;
-    [coatingPicker setTintColor:[UIColor whiteColor]];
-    coatingPicker.dataSource = self;
-    [background addSubview:coatingPicker];
+    brightnessButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [brightnessButton setFrame:CGRectMake(15, 283, 570, 26)];
+    [brightnessButton addTarget:self action:@selector(bringUpSearchPicker:)forControlEvents:UIControlEventTouchDown];
+    brightnessButton.showsTouchWhenHighlighted = YES;
+    brightnessButton.tag = 4;
+    [[brightnessButton layer] setBorderWidth:1.0f];
+    [[brightnessButton layer] setBorderColor:model.dullBlack.CGColor];
+    [brightnessButton setTitle:@"- NONE -" forState:UIControlStateNormal];
+    [brightnessButton setTitleColor:model.dullBlack forState:UIControlStateNormal];
+    [brightnessButton setBackgroundColor:[UIColor clearColor]];
+    [background addSubview:brightnessButton];
     
     // Color Label
     coatingLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 327, 570, 20)];
@@ -156,14 +169,17 @@
     coatingLabel.backgroundColor = [UIColor clearColor];
     [background addSubview:coatingLabel];
     
-    
-    colorPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(15, 405, 570, 60)];
-    colorPicker.backgroundColor = [UIColor whiteColor];
-    colorPicker.delegate = self;
-    [colorPicker setTintColor:[UIColor whiteColor]];
-    colorPicker.dataSource = self;
-    [background addSubview:colorPicker];
-    [colorPicker selectRow:2 inComponent:0 animated:NO];
+    coatingButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [coatingButton setFrame:CGRectMake(15, 350, 570, 26)];
+    [coatingButton addTarget:self action:@selector(bringUpSearchPicker:)forControlEvents:UIControlEventTouchDown];
+    coatingButton.showsTouchWhenHighlighted = YES;
+    coatingButton.tag = 5;
+    [[coatingButton layer] setBorderWidth:1.0f];
+    [[coatingButton layer] setBorderColor:model.dullBlack.CGColor];
+    [coatingButton setTitle:@"- NONE -" forState:UIControlStateNormal];
+    [coatingButton setTitleColor:model.dullBlack forState:UIControlStateNormal];
+    [coatingButton setBackgroundColor:[UIColor clearColor]];
+    [background addSubview:coatingButton];
     
     // Color Label
     colorLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 394, 570, 20)];
@@ -173,13 +189,17 @@
     colorLabel.backgroundColor = [UIColor clearColor];
     [background addSubview:colorLabel];
     
-
-    capabilityPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(15, 472, 570, 60)];
-    capabilityPicker.backgroundColor = [UIColor whiteColor];
-    capabilityPicker.delegate = self;
-    [capabilityPicker setTintColor:[UIColor whiteColor]];
-    capabilityPicker.dataSource = self;
-    [background addSubview:capabilityPicker];
+    colorButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [colorButton setFrame:CGRectMake(15, 417, 570, 26)];
+    [colorButton addTarget:self action:@selector(bringUpSearchPicker:)forControlEvents:UIControlEventTouchDown];
+    colorButton.showsTouchWhenHighlighted = YES;
+    colorButton.tag = 6;
+    [[colorButton layer] setBorderWidth:1.0f];
+    [[colorButton layer] setBorderColor:model.dullBlack.CGColor];
+    [colorButton setTitle:@"- NONE -" forState:UIControlStateNormal];
+    [colorButton setTitleColor:model.dullBlack forState:UIControlStateNormal];
+    [colorButton setBackgroundColor:[UIColor clearColor]];
+    [background addSubview:colorButton];
     
     // Capability Label
     capabilityLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 461, 570, 20)];
@@ -188,14 +208,18 @@
     capabilityLabel.textColor = model.dullBlack;
     capabilityLabel.backgroundColor = [UIColor clearColor];
     [background addSubview:capabilityLabel];
-
     
-    inksetPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(15, 539, 570, 60)];
-    inksetPicker.backgroundColor = [UIColor whiteColor];
-    inksetPicker.delegate = self;
-    [inksetPicker setTintColor:[UIColor whiteColor]];
-    inksetPicker.dataSource = self;
-    [background addSubview:inksetPicker];
+    capabilityButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [capabilityButton setFrame:CGRectMake(15, 484, 570, 26)];
+    [capabilityButton addTarget:self action:@selector(bringUpSearchPicker:)forControlEvents:UIControlEventTouchDown];
+    capabilityButton.showsTouchWhenHighlighted = YES;
+    capabilityButton.tag = 7;
+    [[capabilityButton layer] setBorderWidth:1.0f];
+    [[capabilityButton layer] setBorderColor:model.dullBlack.CGColor];
+    [capabilityButton setTitle:@"- NONE -" forState:UIControlStateNormal];
+    [capabilityButton setTitleColor:model.dullBlack forState:UIControlStateNormal];
+    [capabilityButton setBackgroundColor:[UIColor clearColor]];
+    [background addSubview:capabilityButton];
     
     // Inkset Label
     inksetLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 528, 570, 20)];
@@ -204,13 +228,25 @@
     inksetLabel.textColor = model.dullBlack;
     inksetLabel.backgroundColor = [UIColor clearColor];
     [background addSubview:inksetLabel];
+    
+    inksetButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [inksetButton setFrame:CGRectMake(15, 551, 570, 26)];
+    [inksetButton addTarget:self action:@selector(bringUpSearchPicker:)forControlEvents:UIControlEventTouchDown];
+    inksetButton.showsTouchWhenHighlighted = YES;
+    inksetButton.tag = 8;
+    [[inksetButton layer] setBorderWidth:1.0f];
+    [[inksetButton layer] setBorderColor:model.dullBlack.CGColor];
+    [inksetButton setTitle:@"- NONE -" forState:UIControlStateNormal];
+    [inksetButton setTitleColor:model.dullBlack forState:UIControlStateNormal];
+    [inksetButton setBackgroundColor:[UIColor clearColor]];
+    [background addSubview:inksetButton];
 
     
     search = [UIButton buttonWithType:UIButtonTypeCustom];
     [search setFrame:CGRectMake(15, 598, 80, 44)];
-    [search addTarget:self action:@selector(searchTable:)forControlEvents:UIControlEventTouchDown];
+    [search addTarget:self action:@selector(applyFilter:)forControlEvents:UIControlEventTouchDown];
     search.showsTouchWhenHighlighted = YES;
-    [search setTitle:@"Filter" forState:UIControlStateNormal];
+    [search setTitle:@"Apply" forState:UIControlStateNormal];
     [search setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [search setBackgroundColor:model.blue];
     [background addSubview:search];
@@ -225,21 +261,24 @@
     [background addSubview:close];
 }
 
-- (void)searchTable:(id)sender
+- (void)applyFilter:(id)sender
 {
-    NSString * color = [[model.searchableMillData objectAtIndex:5] objectAtIndex:[colorPicker selectedRowInComponent:0]];
+    NSString *colorValue = @"";
+    if (savedColorValue == -1) {
+       colorValue = @"- NONE -";
+    } else {
+       colorValue = [NSString stringWithFormat:@"%d", savedColorValue];
+    }
+    [searchArray removeAllObjects];
+    [searchArray insertObject:millButton.currentTitle atIndex:0];
+    [searchArray insertObject:mediaButton.currentTitle atIndex:1];
+    [searchArray insertObject:basisWeightButton.currentTitle atIndex:2];
+    [searchArray insertObject:brightnessButton.currentTitle atIndex:3];
+    [searchArray insertObject:coatingButton.currentTitle atIndex:4];
+    [searchArray insertObject:colorValue atIndex:5];
+    [searchArray insertObject:capabilityButton.currentTitle atIndex:6];
+    [searchArray insertObject:inksetButton.currentTitle atIndex:7];
     
-    [searchArray replaceObjectAtIndex:0 withObject:[[model.searchableMillData objectAtIndex:0] objectAtIndex:[millNamePicker selectedRowInComponent:0]]];
-    [searchArray replaceObjectAtIndex:1 withObject:[[model.searchableMillData objectAtIndex:1] objectAtIndex:[mediaNamePicker selectedRowInComponent:0]]];
-    [searchArray replaceObjectAtIndex:2 withObject:[[model.searchableMillData objectAtIndex:2] objectAtIndex:[basisWeightPicker selectedRowInComponent:0]]];
-    [searchArray replaceObjectAtIndex:3 withObject:[[model.searchableMillData objectAtIndex:3] objectAtIndex:[brightnessPicker selectedRowInComponent:0]]];
-    [searchArray replaceObjectAtIndex:4 withObject:[[model.searchableMillData objectAtIndex:4] objectAtIndex:[coatingPicker selectedRowInComponent:0]]];
-    [searchArray replaceObjectAtIndex:5 withObject:color];
-    [searchArray replaceObjectAtIndex:6 withObject:[[model.searchableMillData objectAtIndex:6] objectAtIndex:[capabilityPicker selectedRowInComponent:0]]];
-    [searchArray replaceObjectAtIndex:7 withObject:[[model.searchableMillData objectAtIndex:7] objectAtIndex:[inksetPicker selectedRowInComponent:0]]];
-    
-
-    ALog(@"Search Array %@", searchArray);
     [_delegate searchResponse];
 }
 
@@ -248,181 +287,12 @@
     [_delegate closeResponse];
 }
 
--(UIView *)getColorIconSet:(int)value
+-(void)bringUpSearchPicker:(id)sender
 {
-    UIView *iconSet = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 570, 15)];
-    iconSet.backgroundColor = [UIColor clearColor];
-    iconSet.tag = value;
-    
-    int i = 0;
-    
-    //small view
-    iconSet.frame = CGRectMake(0, 0, 88, 15);
-    while(i < value){
-        int xOffset = i * 18;
-        UIImageView *icon = [[UIImageView alloc] initWithFrame:CGRectMake(xOffset, 3, 15, 15)];
-        [icon setImage:[iconArray objectAtIndex:i]];
-        
-        [iconSet addSubview:icon];
-        i++;
-    }
-    
-    return iconSet;
+    UIButton *b = (UIButton *)sender;
+    int t = (int)(b.tag - 1);
+    [_delegate bringUpSearchDialog:t withTitle:[searchTitles objectAtIndex:t]];
 }
 
-#pragma mark -
-#pragma mark PickerView DataSource
-// Called by the picker view when it needs the number of components.
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
-{
-    return 1;
-}
-
-// Called by the picker view when it needs the number of rows for a specified component.
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
-{
-    
-    if ([pickerView isEqual:millNamePicker]) {
-        return [[model.searchableMillData objectAtIndex:0] count];
-    }
-    
-    if ([pickerView isEqual:mediaNamePicker]) {
-        return [[model.searchableMillData objectAtIndex:1] count];
-    }
-    
-    if ([pickerView isEqual:basisWeightPicker]) {
-        return [[model.searchableMillData objectAtIndex:2] count];
-    }
-    
-    if ([pickerView isEqual:brightnessPicker]) {
-        return [[model.searchableMillData objectAtIndex:3] count];
-    }
-    
-    if ([pickerView isEqual:coatingPicker]) {
-        return [[model.searchableMillData objectAtIndex:4] count];
-    }
-    
-    if ([pickerView isEqual:colorPicker]) {
-        return [[model.searchableMillData objectAtIndex:5] count];
-    }
-    
-    if ([pickerView isEqual:capabilityPicker]) {
-        return [[model.searchableMillData objectAtIndex:6] count];
-    }
-    
-    if ([pickerView isEqual:inksetPicker]) {
-        return [[model.searchableMillData objectAtIndex:7] count];
-    }
-    
-    return 0;
-}
-
-// Pickerview set title
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-    
-    if ([pickerView isEqual:millNamePicker]) {
-        return [[model.searchableMillData objectAtIndex:0] objectAtIndex:row];
-    }
-    
-    if ([pickerView isEqual:mediaNamePicker]) {
-        return [[model.searchableMillData objectAtIndex:1] objectAtIndex:row];
-    }
-    
-    if ([pickerView isEqual:basisWeightPicker]) {
-        return [[model.searchableMillData objectAtIndex:2] objectAtIndex:row];
-    }
-    
-    if ([pickerView isEqual:brightnessPicker]) {
-        return [[model.searchableMillData objectAtIndex:3] objectAtIndex:row];
-    }
-    
-    if ([pickerView isEqual:coatingPicker]) {
-        return [[model.searchableMillData objectAtIndex:4] objectAtIndex:row];
-    }
-    
-    if ([pickerView isEqual:colorPicker]) {
-        return [[model.searchableMillData objectAtIndex:5] objectAtIndex:row];
-    }
-    
-    if ([pickerView isEqual:capabilityPicker]) {
-        return [[model.searchableMillData objectAtIndex:6] objectAtIndex:row];
-    }
-    
-    if ([pickerView isEqual:inksetPicker]) {
-        return [[model.searchableMillData objectAtIndex:7] objectAtIndex:row];
-    }
-    
-    return NULL;
-}
-
-- (CGFloat)pickerView:(UIPickerView * _Nonnull)pickerView rowHeightForComponent:(NSInteger)component
-{
-    return 26;
-}
-
-// Pickerview build a view for te row
-- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
-{
-    
-    UILabel* label = (UILabel*)view;
-    UIView *colorValue;
-    if (view == nil){
-        
-        label= [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 570, 26)];
-        label.textAlignment = NSTextAlignmentLeft;
-        label.textColor = model.blue;
-        label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Md" size:14.0];
-        
-        colorValue = [[UIView alloc] initWithFrame:CGRectMake(0, 2, 570, 26)];
-        colorValue.backgroundColor = [UIColor clearColor];
-        [colorValue setUserInteractionEnabled:YES];
-        [colorValue addSubview:label];
-        
-    }
-    
-    if ([pickerView isEqual:millNamePicker]) {
-        label.text = [[model.searchableMillData objectAtIndex:0] objectAtIndex:row];
-    }
-    
-    if ([pickerView isEqual:mediaNamePicker]) {
-        label.text = [[model.searchableMillData objectAtIndex:1] objectAtIndex:row];
-    }
-    
-    if ([pickerView isEqual:basisWeightPicker]) {
-        label.text = [[model.searchableMillData objectAtIndex:2] objectAtIndex:row];
-    }
-    
-    if ([pickerView isEqual:brightnessPicker]) {
-        label.text = [[model.searchableMillData objectAtIndex:3] objectAtIndex:row];
-    }
-    
-    if ([pickerView isEqual:coatingPicker]) {
-        label.text = [[model.searchableMillData objectAtIndex:4] objectAtIndex:row];
-    }
-    
-    if ([pickerView isEqual:colorPicker]) {
-        int color_value = [[[model.searchableMillData objectAtIndex:5] objectAtIndex:row] integerValue];
-        UIView *iconView = [self getColorIconSet:color_value];
-        [colorValue addSubview:iconView];
-        
-    }
-    
-    if ([pickerView isEqual:capabilityPicker]) {
-        label.text = [[model.searchableMillData objectAtIndex:6] objectAtIndex:row];
-    }
-    
-    if ([pickerView isEqual:inksetPicker]) {
-        label.text = [[model.searchableMillData objectAtIndex:7] objectAtIndex:row];
-    }
-    return colorValue;
-}
-
-
-// The cancel function the camera or the photo picker
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
-{
-    [picker dismissViewControllerAnimated:YES completion:NULL];
-}
 
 @end

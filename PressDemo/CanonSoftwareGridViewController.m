@@ -357,7 +357,7 @@
     for(Software *s in model.initialSofwareData){
         if([s.key isEqualToString:b.titleLabel.text]){
             model.selectedSoftware = s;
-            ALog(@"Selected Software %@", model.selectedSoftware.videos);
+            ALog(@"Selected Software %@", model.selectedSoftware.white_papers);
             break;
             //GA
             //[model logData:@"Mill Grid View" withAction:@"Action Tracker" withLabel:m.key];

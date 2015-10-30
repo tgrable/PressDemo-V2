@@ -407,11 +407,15 @@
     overviewLabel.text = @"OVERVIEW";
     [overview addSubview:overviewLabel];
     
-    sidebarObjects = [NSMutableArray arrayWithObjects:model.selectedSoftware.videos, model.selectedSoftware.datasheets, model.selectedSoftware.brochures, nil];
-    sidebarNames = [NSMutableArray arrayWithObjects:@"videos", @"datasheets", @"brochures", nil];
-    sidebarTextNames = [NSMutableArray arrayWithObjects:@"VIDEOS", @"DATASHEET", @"BROCHURE",  nil];
-    sidebarIcons = [NSMutableArray arrayWithObjects:@"icn-video.png", @"icn-specs.png", @"icn-casestudy.png", nil];
-    sidebarLabelWidths = [NSMutableArray arrayWithObjects:@(125), @(125), @(125), nil];
+    sidebarObjects = [NSMutableArray arrayWithObjects:model.selectedSoftware.videos,
+                                                      model.selectedSoftware.datasheets,
+                                                      model.selectedSoftware.white_papers,
+                                                      model.selectedSoftware.case_studies,
+                                                      model.selectedSoftware.brochures, nil];
+    sidebarNames = [NSMutableArray arrayWithObjects:@"videos", @"datasheets", @"white_papers", @"case_studies", @"brochures", nil];
+    sidebarTextNames = [NSMutableArray arrayWithObjects:@"VIDEOS", @"DATASHEET", @"WHITE PAPERS", @"CASE STUDIES", @"BROCHURE",  nil];
+    sidebarIcons = [NSMutableArray arrayWithObjects:@"icn-video.png", @"icn-specs.png", @"icn-whitepaper.png", @"icn-casestudy.png", @"icn-casestudy.png", nil];
+    sidebarLabelWidths = [NSMutableArray arrayWithObjects:@(125), @(125), @(125), @(125), @(125), nil];
     
     currentDocumentData = [[NSMutableDictionary alloc] init];
     offlineImages = [[NSMutableDictionary alloc] init];
@@ -431,9 +435,11 @@
 
 -(void)setUpSideBarIcons
 {
+    
+
     int i = 0, e = 0, y = 30;
     while(i < [sidebarObjects count]){
-        ALog(@"Here %d", [[sidebarObjects objectAtIndex:i] count]);
+
         if([[sidebarObjects objectAtIndex:i] count] > 0){
             
             //36, 96, 178, 36
@@ -819,7 +825,7 @@
             [self displayMessage:@"The file you are looking for was not found on the device" withTitle:@"Alert"];
         }
 
-        //**************type of video***********************
+    //**************type of video***********************
     }else{
         
         Video *v = [currentDocumentData objectForKey: b.titleLabel.text];
