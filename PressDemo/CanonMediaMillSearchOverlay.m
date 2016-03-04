@@ -264,7 +264,7 @@
 - (void)applyFilter:(id)sender
 {
     NSString *colorValue = @"";
-    if (savedColorValue == -1) {
+    if (savedColorValue == -1 || savedColorValue == 0) {
        colorValue = @"- NONE -";
     } else {
        colorValue = [NSString stringWithFormat:@"%d", savedColorValue];

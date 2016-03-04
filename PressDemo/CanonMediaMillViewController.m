@@ -918,7 +918,7 @@
                     }
                 }
                 // load new view or set none as the label
-                int i = [value integerValue];
+                int i = (int)[value integerValue];
                 if (i == 0) {
                   [b setTitle:@"- NONE -" forState:UIControlStateNormal];
                   searchView.savedColorValue = -1;
