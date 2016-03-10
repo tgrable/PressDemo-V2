@@ -1846,7 +1846,6 @@
 			children = (
 				4C7548CF1C91D6CE00EF230C /* AllMillsViewController.h */,
 				4C7548D01C91D6CE00EF230C /* AllMillsViewController.m */,
-				4C7548D11C91D6CE00EF230C /* AllMillsViewController.xib */,
 				71708CB21A38E35E0041F8D5 /* CanonMediaGridViewController.h */,
 				71708CB31A38E35E0041F8D5 /* CanonMediaGridViewController.m */,
 				71708CF11A38FE490041F8D5 /* CanonMediaMillViewController.h */,
@@ -1857,6 +1856,7 @@
 				7113DE251BCED88000FE086E /* CanonMediaMillSearchOverlay.m */,
 				7183A5E21BDE7A820014228C /* ActionSheetPicker.h */,
 				7183A5E31BDE7A820014228C /* ActionSheetPicker.m */,
+				4C7548D11C91D6CE00EF230C /* AllMillsViewController.xib */,
 				711E554A1BDE8F0E00CC920B /* ActionSheetPicker.xib */,
 				71708D061A39FC430041F8D5 /* CanonTableKeyViewController.xib */,
 				71708CF31A38FE490041F8D5 /* CanonMediaMillViewController.xib */,

@@ -14,7 +14,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "GAITrackedViewController.h"
 #import "UMTableView.h"
-#import "DownloadFile.h"
+//#import "DownloadFile.h"
 #import "CanonTableKeyViewController.h"
 #import "UIBorderLabel.h"
 #import "CanonViewController.h"
@@ -23,7 +23,7 @@
 #import "ActionSheetPicker.h"
 #import "ProductScroll.h"
 
-@interface AllMillsViewController : GAITrackedViewController<NetworkDelegate, FileDelegate, UMTableViewDelegate, SearchOverlayDelegate, UIPopoverControllerDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate, UIPrintInteractionControllerDelegate, MFMailComposeViewControllerDelegate, PopOverviewDelegate>{
+@interface AllMillsViewController : GAITrackedViewController<NetworkDelegate, /*FileDelegate,*/ UMTableViewDelegate, SearchOverlayDelegate, UIPopoverControllerDelegate, UIScrollViewDelegate, MPMediaPickerControllerDelegate, UIAlertViewDelegate, UIPrintInteractionControllerDelegate, MFMailComposeViewControllerDelegate, PopOverviewDelegate>{
     
     //local views
     UIImageView *logo, *impressLogo;
@@ -59,6 +59,9 @@
     UIBorderLabel *cell0, *cell1, *cell2, *cell3, *cell4, *cell5, *cell6, *cell7;
     
     NSString *downloadingURL, *websiteKey;
+    
+    UIView *bottomView;
+    UIPageControl *overviewImageDots;
     
 }
 

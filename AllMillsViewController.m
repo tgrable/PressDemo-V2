@@ -9,8 +9,9 @@
 #import "AllMillsViewController.h"
 #import "UIImageView+WebCache.h"
 #import "SearchablePaper.h"
-// check - is this where the data is being parsed?
 #import "CanonMediaGridViewController.h"
+#import <QuartzCore/QuartzCore.h>
+#import "SearchablePaper.h"
 
 #define ResourcePath(path)[[NSBundle mainBundle] pathForResource:path ofType:nil]
 
@@ -19,9 +20,7 @@
 //this is a local macro that sets up a class wide logging scheme
 #define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 
-//@interface AllMillsViewController ()
-//
-//@end
+
 
 @implementation AllMillsViewController
 @synthesize topBanner, customNavBar, model,mainView;
@@ -81,7 +80,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+//    NSString *millKey = model.selectedMill.key;
+//    NSLog(@"%@", millKey);
+//    NSLog(@"%@", model.initialSetOfMills);
     
+    
+    self.screenName = @"Mill View";
     
     network = [[NetworkData alloc] init];
     network.delegate = self;
@@ -117,8 +121,6 @@
         
         NSData *millData = [model getFileData:@"initialMills" complete:^(BOOL completeFlag){}];
         model.initialSetOfMills = [NSKeyedUnarchiver unarchiveObjectWithData:millData];
-        NSLog(@"Initial set of mills");
-        NSLog(@"%@",model.initialSetOfMills);
     }
     
     
@@ -162,11 +164,6 @@
     [logo setUserInteractionEnabled:YES];
     [logo setImage:[UIImage imageNamed:@"csa-logo.png"]];
     [customNavBar addSubview:logo];
-    
-    //    navBarHomeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    //    [navBarHomeButton setFrame:CGRectMake(36, 14, 35, 35)];
-    //     [navBarHomeButton setBackgroundImage:[UIImage imageNamed:@"icn-home.png"] forState:UIControlStateNormal];
-    //    [navBarHomeButton addTarget:self action:@selector(triggerHome:)forControlEvents:UIControlEventTouchDown];
     
     backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton setFrame:CGRectMake(36, 9, 105, 44)];
@@ -232,7 +229,7 @@
     [self.view addSubview:overlay];
     
     //    mainView = [[UIView alloc] initWithFrame:CGRectMake(248, 84, 776, 684)]; /*x:284*/
-    NSLog(@"Table Views Built");
+//    NSLog(@"Table Views Built");
     mainView = [[UIView alloc] initWithFrame:CGRectMake(0, topBanner.frame.origin.y + 60, 1024, 684)];
     mainView.backgroundColor = model.dullBlack;
     //    mainView.alpha = 0.5;
@@ -263,7 +260,7 @@
     [tableBackground addSubview:tableKey];
     
     searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [searchButton setFrame:CGRectMake(750, 20, 80, 33)];
+    [searchButton setFrame:CGRectMake(850, 20, 80, 33)];
     [searchButton addTarget:self action:@selector(searchTable:)forControlEvents:UIControlEventTouchDown];
     searchButton.showsTouchWhenHighlighted = YES;
     [searchButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -274,7 +271,7 @@
     [tableBackground addSubview:searchButton];
     
     resetTable = [UIButton buttonWithType:UIButtonTypeCustom];
-    [resetTable setFrame:CGRectMake(850, 20, 80, 33)];
+    [resetTable setFrame:CGRectMake(750, 20, 80, 33)];
     [resetTable addTarget:self action:@selector(resetTable:)forControlEvents:UIControlEventTouchDown];
     resetTable.showsTouchWhenHighlighted = YES;
     resetTable.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -398,6 +395,45 @@
     
     [tableBackground addSubview:tableView];
     
+    popView = [[CanonTableKeyViewController alloc] initWithNibName:@"CanonTableKeyViewController" bundle:nil];
+//    currentDocumentData = [[NSMutableDictionary alloc] init];
+//    offlineImages = [[NSMutableDictionary alloc] init];
+//    offlineVideos = [[NSMutableDictionary alloc] init];
+//    offlineVideoRows = [NSMutableArray array];
+    
+    loadingView = [[UIView alloc] initWithFrame:CGRectMake(462, 334, 100, 100)];
+    [loadingView setBackgroundColor:[UIColor blackColor]];
+    loadingView.layer.cornerRadius = 5;
+    loadingView.layer.masksToBounds = YES;
+    loadingView.alpha = 0.0;
+    [self.view addSubview:loadingView];
+    
+    bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, 767, 1024, 1)];
+    [bottomView setBackgroundColor: [UIColor blackColor]];
+    [self.view addSubview:bottomView];
+    
+    paperData = [NSMutableArray array];
+    rowHeadersPaper = [NSMutableArray arrayWithObjects:[model.selectedMill.title uppercaseString], @"BASIS WEIGHT", @"BRIGHTNESS", @"COATING", @"COLOR", @"CAPABILITY", @"INKSET", nil];
+    rowHeadersMill = [NSMutableArray arrayWithObjects:@"MILL NAME", @"MEDIA NAME", @"BASIS WEIGHT", @"BRIGHTNESS", @"COATING", @"COLOR", @"CAPABILITY", @"INKSET", nil];
+    
+    iconArray = [NSMutableArray array];
+    [iconArray addObject:[UIImage imageNamed:@"ico-blackwhite.png"]];
+    [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
+    [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
+    [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
+    [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
+    
+    paperTable = YES;
+    tableEmpty = NO;
+    modalViewPresent = NO;
+    tableRows = 0;
+    tableColumns = 0;
+    websiteKey = @"";
+    contentHeight = 0;
+    emailStep = 1;
+    searchRowIndex = 0;
+
+    
     
 }
 
@@ -409,12 +445,13 @@
         
         //get the data for this row
         NSMutableArray *rowArray = [paperData objectAtIndex:row];
-        
-        cellView.backgroundColor = [UIColor clearColor];
+        // all cellviews except color int
+        cellView.backgroundColor = [UIColor whiteColor]; /*clear*/
         cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:12.0];
+        /*12*/
         cellView.label.textColor = [UIColor blackColor];
         
-        
+//        NSLog(@"%@",paperData);
         //if we are not dealing with the last column, load text
         if(paperTable){
             //just mill specific paper
@@ -426,7 +463,7 @@
                 UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue];
                 [cellView addSubview:iconView];
             }else if(column == 5){
-                cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:11.0];
+                cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:11.0]; /*11*/
                 cellView.label.text = [rowArray objectAtIndex:column];
             }else{
                 //all other text
@@ -436,14 +473,14 @@
             //all paper table
             if(column == 5){
                 //color capability
-                int x = 8;
+                int x = 8; /*8*/
                 int dyeValue = [[rowArray objectAtIndex:column] intValue];
                 if(dyeValue == 5) x = -4;
                 UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue];
                 [cellView addSubview:iconView];
                 
             }else if(column == 6){
-                cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:11.0];
+                cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:11.0]; /*11*/
                 cellView.label.text = [rowArray objectAtIndex:column];
             }else{
                 //all other text
@@ -453,9 +490,9 @@
         
         
         // This will center the label horizontally
-        cellView.label.textAlignment = NSTextAlignmentLeft;
+        cellView.label.textAlignment = NSTextAlignmentLeft; /*left*/
         cellView.label.numberOfLines = 3;
-        cellView.label.adjustsFontSizeToFitWidth = YES;
+        cellView.label.adjustsFontSizeToFitWidth = YES; /*YES*/
         
         float widthCell = cellView.frame.size.width;
         float heightCell = cellView.frame.size.height;
@@ -693,6 +730,16 @@
     [self addNoticeToTable:self.contentHeight andView:tableView];
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    
+    CGFloat pageWidth = scrollView.bounds.size.width;
+    //display the appropriate dot when scrolled
+    NSInteger pageNumber = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+    overviewImageDots.currentPage = pageNumber;
+    
+}
+
+
 -(void)addNoticeToTable:(float)offset andView:(UMTableView *)view
 {
     
@@ -723,12 +770,12 @@
 //this function is more generalized and assembles all of the paper data
 -(void)buildAllPaperData
 {
-    NSLog(@"buildAllPaperData called");
+//    NSLog(@"buildAllPaperData called");
     tableRows = 0;
     tableColumns = 8;
     
     for(Paper *p in model.initialSetOfPaper){
-        NSLog(@"%@",paperData);
+//        NSLog(@"%@",paperData);
         if([p.basis_weight count] > 0){
             //create a new row for each basis weight
             for(NSString *weight in p.basis_weight){
@@ -1071,7 +1118,7 @@
     int colorValue = [obj.color_capability intValue], xValue = 406;
     if(colorValue > 3) xValue = 390;
     
-    UIView *colorIconSet = [self getColorIconSet:NO withXValue:xValue andYValue:10 withColorValue:[obj.color_capability intValue]];
+    UIView *colorIconSet = [self getColorIconSet:NO /*NO*/ withXValue:xValue andYValue:10 withColorValue:[obj.color_capability intValue]];
     [rowTwo addSubview:colorIconSet];
     
     UILabel *weightsAvailableValue = [[UILabel alloc] initWithFrame:CGRectMake(550, 10, 122, 20)];
@@ -1440,6 +1487,239 @@
         websiteKey = @"";
     }
 }
+
+//button where url is selected
+-(void)urlSelected:(id)sender
+{
+    //this is triggered by the single paper table
+    if([websiteKey isEqualToString:@""]){
+        //go out to the website of the selectd mill
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:model.selectedMill.website]];
+        
+        //this is triggered by the overlay where there could be any number of mills urls
+    }else{
+        for(Mill *m in model.initialSetOfMills){
+            if([websiteKey isEqualToString:m.key]){
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:m.website]];
+                return;
+            }
+        }
+    }
+}
+
+//network delegate function called when a response is sent back to the main thread
+//this response will let the view and the user know that there is an update available
+-(void)updateResponse:(CanonModel *)obj withFlag:(BOOL)flag{
+    
+    //update available, ask the user if they want to update the app
+    if(flag){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Update App"
+                                                        message:@"There is an update available, do you wish to download now?"
+                                                       delegate:self cancelButtonTitle:@"No"
+                                              otherButtonTitles:@"Yes", nil];
+        [alert show];
+    }
+}
+
+//function to delegate interaction with the user about whether or not they want to update
+//the application data
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    //dismiss
+    if(buttonIndex == 0){
+        [alertView dismissWithClickedButtonIndex:0 animated:YES];
+    }
+    //download
+    if (buttonIndex == 1){
+        
+        if([model.hostReachability isReachableViaWiFi]){
+            //we have now loaded
+            model.needsUpdate = YES;
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        }else{
+            [self displayMessage:@"Please connect to the internet to update the application" withTitle:@"Alert"];
+        }
+    }
+}
+
+//universal view function to display dynamic alerts
+-(void)displayMessage:(NSString *)message withTitle:(NSString *)title
+{
+    UIAlertView *error = [[UIAlertView alloc] initWithTitle:title message: message
+                                                   delegate: self cancelButtonTitle: @"Ok" otherButtonTitles: nil];
+    [error show];
+}
+
+
+
+// Only certain columns have a fixed size, the other columns share the remainder
+- (int) fixedWidthForColumn: (int) columnIndex {
+    
+    //if we are dealing with column 0 or 1 make sure the width is set to 120
+    if (columnIndex == 0) {
+        return 120;
+    }else if(columnIndex == 1){
+        return 120;
+    }else {
+        return 0;
+    }
+    
+}
+
+// variable columns with a fixed size
+- (Boolean) hasColumnFixedWidth: (int) columnIndex {
+    //based upon which table we are dealing with, return the column that has a set width
+    if(paperTable)
+        return columnIndex == 0;
+    else
+        return columnIndex == 1;
+}
+
+- (UIColor*) borderColor {
+    return [UIColor blackColor];
+}
+
+-(void)closePopUpResponse
+{
+    NSMutableArray *dataRow = [model.searchableMillData objectAtIndex:searchRowIndex];
+    NSString *value = [dataRow objectAtIndex:[action.generalPickerview selectedRowInComponent:0]];
+    
+    int alteredSearchRowIndex = searchRowIndex + 1;
+    
+    for (UIView *v in [searchView.background subviews]) {
+        if (v.tag == alteredSearchRowIndex) {
+            UIButton *b = (UIButton *)v;
+            
+            // color icon
+            if (alteredSearchRowIndex == 6) {
+                // Remove icon subview (if any)
+                for (UIView *nestedViews in [b subviews]) {
+                    if (nestedViews.tag == 222) {
+                        [nestedViews removeFromSuperview];
+                    }
+                }
+                // load new view or set none as the label
+                int i = (int)[value integerValue];
+                if (i == 0) {
+                    [b setTitle:@"- NONE -" forState:UIControlStateNormal];
+                    searchView.savedColorValue = -1;
+                } else {
+                    UIView *iv = [action getColorIconSet:i];
+                    iv.frame = CGRectMake(241, 0, 88, 15);
+                    [b addSubview:iv];
+                    [b setTitle:@"" forState:UIControlStateNormal];
+                    searchView.savedColorValue = i;
+                }
+            } else {
+                [b setTitle:value forState:UIControlStateNormal];
+            }
+            break;
+        }
+    }
+    
+    [searchField dismissPopoverAnimated:NO];
+}
+
+// Search response delegate function being called from CanonMediaMillSearchOverlay filter button
+-(void)searchResponse
+{
+    
+    NSMutableDictionary *searchDictionary = [[NSMutableDictionary alloc] init];
+    [searchDictionary setObject:[searchView.searchArray objectAtIndex:0] forKey:@"mill_name"];
+    [searchDictionary setObject:[searchView.searchArray objectAtIndex:1] forKey:@"title"];
+    [searchDictionary setObject:[searchView.searchArray objectAtIndex:2] forKey:@"basis_weight"];
+    [searchDictionary setObject:[searchView.searchArray objectAtIndex:3] forKey:@"brightness"];
+    [searchDictionary setObject:[searchView.searchArray objectAtIndex:4] forKey:@"coating"];
+    [searchDictionary setObject:[searchView.searchArray objectAtIndex:5] forKey:@"color_capability"];
+    [searchDictionary setObject:[searchView.searchArray objectAtIndex:6] forKey:@"category"];
+    [searchDictionary setObject:[searchView.searchArray objectAtIndex:7] forKey:@"dye_pigment"];
+    
+    [paperData removeAllObjects];
+    [model searchInitialPaperData:searchDictionary complete:^(BOOL completeFlag){
+        tableRows = 0;
+        tableColumns = 8;
+        int count = (int)[model.searchablePaperDataObjects count];
+        if (count > 0) {
+            noTableInfo.alpha = 0.0;
+            for (SearchablePaper *p in model.searchablePaperDataObjects) {
+                NSMutableArray *rowArray = [[NSMutableArray alloc] init];
+                
+                [rowArray addObject:p.mill_name];
+                
+                [rowArray addObject:p.title];
+                
+                [rowArray addObject:p.basis_weight];
+                
+                [rowArray addObject:p.brightness];
+                
+                [rowArray addObject:p.coating];
+                
+                [rowArray addObject:p.color_capability];
+                
+                [rowArray addObject:p.category];
+                
+                [rowArray addObject:p.dye_pigment];
+                
+                tableRows++;
+                [paperData addObject:rowArray];
+                
+                if (tableRows == count) {
+                    [tableView refresh];
+                    [UIView animateWithDuration:0.6f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
+                        searchView.background.alpha = 0.0;
+                    }completion:^(BOOL finished) {
+                        [searchView.background removeFromSuperview];
+                    }];
+                }
+            }
+        } else {
+            noTableInfo.alpha = 1.0;
+            [tableView refresh];
+            [UIView animateWithDuration:0.6f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
+                searchView.background.alpha = 0.0;
+            }completion:^(BOOL finished) {
+                [searchView.background removeFromSuperview];
+            }];
+        }
+    }];
+}
+
+// Search response delegate function being called from CanonMediaMillSearchOverlay close button
+-(void)closeResponse
+{
+    [UIView animateWithDuration:0.6f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
+        searchView.background.alpha = 0.0;
+    }completion:^(BOOL finished) {
+        [searchView.background removeFromSuperview];
+    }];
+}
+
+-(void)bringUpSearchDialog:(int)rowValue withTitle:(NSString *)title
+{
+    searchRowIndex = rowValue;
+    model.searchDataArray = [[model.searchableMillData objectAtIndex:searchRowIndex] mutableCopy];
+    
+    action = [[ActionSheetPicker alloc] initWithNibName:@"ActionSheetPicker" bundle:nil];
+    if (searchRowIndex == 5) {
+        action.colorFlag = YES;
+    } else {
+        action.colorFlag = NO;
+    }
+    action.delegate = self;
+    [action.view addSubview:action.background];
+    
+    action.titleLabel.text = title;
+    
+    //set the UIPopoverController with the PopUpMenuViewController object and set the frame
+    searchField = [[UIPopoverController alloc] initWithContentViewController:action];
+    searchField.popoverContentSize = CGSizeMake(600, 220);
+    searchField.delegate = self;
+    [searchField presentPopoverFromRect:bottomView.bounds inView:bottomView permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+}
+
+
+
+
 
 
 

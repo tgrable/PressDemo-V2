@@ -223,14 +223,12 @@
     viewLabel.text = @"MEDIA";
     [topBanner addSubview:viewLabel];
     
-    UIButton *allMillsButton = [[UIButton alloc] initWithFrame:CGRectMake(850, 10, 150, 40)];
+    UIButton *allMillsButton = [[UIButton alloc] initWithFrame:CGRectMake(893, 12, 100, 35)];
     allMillsButton.backgroundColor = [UIColor whiteColor];
-
-
     [allMillsButton setTitle:@"All Mills" forState:UIControlStateNormal];
     [allMillsButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     allMillsButton.showsTouchWhenHighlighted = YES;
-    allMillsButton.titleLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Md" size:26.0];
+    allMillsButton.titleLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Md" size:18.0];
     [allMillsButton addTarget:self action:@selector(moveToAllMillsView)forControlEvents:UIControlEventTouchUpInside];
     [topBanner addSubview:allMillsButton];
     
@@ -253,6 +251,7 @@
 //this function loads up the products associated with the current filter
 -(void)loadupProducts
 {
+    NSLog(@"Products loaded");
     //a generic set of data to detect formatting the UI
     //cycle through the data and load up a grid of products
     NSArray *ends = [NSArray arrayWithObjects:@"0",@"3",@"4",@"7",@"8",@"11",@"12",@"15",@"16",@"19",@"20",@"23", nil];
