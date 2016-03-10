@@ -68,6 +68,8 @@
 		30E9460F19A00E2C002A996C /* overviewPlaceholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30E9460E19A00E2C002A996C /* overviewPlaceholder@2x.png */; };
 		30E9461119A14497002A996C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30E9461019A14497002A996C /* AVFoundation.framework */; };
 		30E9461319A1453E002A996C /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30E9461219A1453E002A996C /* MediaPlayer.framework */; };
+		4C7548D21C91D6CE00EF230C /* AllMillsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7548D01C91D6CE00EF230C /* AllMillsViewController.m */; };
+		4C7548D31C91D6CE00EF230C /* AllMillsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C7548D11C91D6CE00EF230C /* AllMillsViewController.xib */; };
 		7113DE211BCE9C0B00FE086E /* icn-search@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7113DE201BCE9C0B00FE086E /* icn-search@2x.png */; };
 		7113DE231BCE9C3300FE086E /* icn-search.png in Resources */ = {isa = PBXBuildFile; fileRef = 7113DE221BCE9C3300FE086E /* icn-search.png */; };
 		7113DE261BCED88000FE086E /* CanonMediaMillSearchOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 7113DE251BCED88000FE086E /* CanonMediaMillSearchOverlay.m */; };
@@ -608,6 +610,9 @@
 		30E9460E19A00E2C002A996C /* overviewPlaceholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "overviewPlaceholder@2x.png"; sourceTree = "<group>"; };
 		30E9461019A14497002A996C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		30E9461219A1453E002A996C /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		4C7548CF1C91D6CE00EF230C /* AllMillsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AllMillsViewController.h; path = ../AllMillsViewController.h; sourceTree = "<group>"; };
+		4C7548D01C91D6CE00EF230C /* AllMillsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AllMillsViewController.m; path = ../AllMillsViewController.m; sourceTree = "<group>"; };
+		4C7548D11C91D6CE00EF230C /* AllMillsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AllMillsViewController.xib; path = ../AllMillsViewController.xib; sourceTree = "<group>"; };
 		7113DE201BCE9C0B00FE086E /* icn-search@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icn-search@2x.png"; sourceTree = "<group>"; };
 		7113DE221BCE9C3300FE086E /* icn-search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icn-search.png"; sourceTree = "<group>"; };
 		7113DE241BCED88000FE086E /* CanonMediaMillSearchOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CanonMediaMillSearchOverlay.h; sourceTree = "<group>"; };
@@ -1839,6 +1844,9 @@
 		718D21381A379E1500980FDF /* Media */ = {
 			isa = PBXGroup;
 			children = (
+				4C7548CF1C91D6CE00EF230C /* AllMillsViewController.h */,
+				4C7548D01C91D6CE00EF230C /* AllMillsViewController.m */,
+				4C7548D11C91D6CE00EF230C /* AllMillsViewController.xib */,
 				71708CB21A38E35E0041F8D5 /* CanonMediaGridViewController.h */,
 				71708CB31A38E35E0041F8D5 /* CanonMediaGridViewController.m */,
 				71708CF11A38FE490041F8D5 /* CanonMediaMillViewController.h */,
@@ -2122,7 +2130,7 @@
 				ORGANIZATIONNAME = Trekk;
 				TargetAttributes = {
 					30AC1132192D90D300BE1072 = {
-						DevelopmentTeam = 477HKM2JBJ;
+						DevelopmentTeam = 64783LG3JR;
 					};
 					30AC1153192D90D300BE1072 = {
 						TestTargetID = 30AC1132192D90D300BE1072;
@@ -2305,6 +2313,7 @@
 				71708CD41A38F92C0041F8D5 /* header-yellow.png in Resources */,
 				71DBB84E192FB60E002D7CA9 /* icn-trash.png in Resources */,
 				71DBB7FA192FB60E002D7CA9 /* hero-FPO@2x.png in Resources */,
+				4C7548D31C91D6CE00EF230C /* AllMillsViewController.xib in Resources */,
 				71DBB7EB192FB60E002D7CA9 /* hdr-short-prisma@2x.png in Resources */,
 				71708CEA1A38F9450041F8D5 /* header-blue@2x.png in Resources */,
 				718E3165199D39620000A5EB /* icn-download@2x.png in Resources */,
@@ -2640,6 +2649,7 @@
 				7126513F1A6560A800C91AF2 /* ReaderContentView.m in Sources */,
 				717C52BF1BBB166F00ECA0FF /* AFHTTPSessionManager.m in Sources */,
 				30AC11A4192D92B900BE1072 /* SBJsonStreamParserAccumulator.m in Sources */,
+				4C7548D21C91D6CE00EF230C /* AllMillsViewController.m in Sources */,
 				71708D031A39DC810041F8D5 /* UMTableViewController.m in Sources */,
 				7189A9291A813B1900A594AF /* SDWebImageDownloaderOperation.m in Sources */,
 				71708D001A39DC810041F8D5 /* UMCellView.m in Sources */,
@@ -2766,8 +2776,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Trekk Design Inc.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Trekk Design Inc.";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2785,7 +2795,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = canon.dev.com;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "04684fc4-1c49-4597-92ed-989938bc7e82";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7s armv7 arm64";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2796,8 +2806,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Trekk Design Inc.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Trekk Design Inc.";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2815,7 +2825,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = canon.dev.com;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "04684fc4-1c49-4597-92ed-989938bc7e82";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7s armv7 arm64";
 				WRAPPER_EXTENSION = app;
 			};

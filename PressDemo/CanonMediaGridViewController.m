@@ -9,6 +9,7 @@
 #import "CanonMediaGridViewController.h"
 #import "UIImageView+WebCache.h"
 #import "CanonMediaMillViewController.h"
+#import "AllMillsViewController.h"
 
 #define ResourcePath(path)[[NSBundle mainBundle] pathForResource:path ofType:nil]
 
@@ -222,6 +223,20 @@
     viewLabel.text = @"MEDIA";
     [topBanner addSubview:viewLabel];
     
+    UIButton *allMillsButton = [[UIButton alloc] initWithFrame:CGRectMake(850, 10, 150, 40)];
+    allMillsButton.backgroundColor = [UIColor whiteColor];
+
+
+    [allMillsButton setTitle:@"All Mills" forState:UIControlStateNormal];
+    [allMillsButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    allMillsButton.showsTouchWhenHighlighted = YES;
+    allMillsButton.titleLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Md" size:26.0];
+    [allMillsButton addTarget:self action:@selector(moveToAllMillsView)forControlEvents:UIControlEventTouchUpInside];
+    [topBanner addSubview:allMillsButton];
+    
+    
+    
+    
     //save the offline images
     offlineImages = [[NSMutableDictionary alloc] init];
     
@@ -345,6 +360,11 @@
     if(mod >= 1) add += 344;
     [productScroll setContentSize:CGSizeMake(952, ((multi * 300) + add + 10))];
     
+}
+
+-(void)moveToAllMillsView{
+    AllMillsViewController *allMillsView = [[AllMillsViewController alloc] initWithNibName:@"AllMillsViewController" bundle:nil];
+    [self.navigationController pushViewController:allMillsView animated:YES];
 }
 
 
