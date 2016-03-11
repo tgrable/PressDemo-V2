@@ -199,6 +199,10 @@
 {
     [super viewDidLoad];
     
+
+    
+
+    
     self.screenName = @"Mill View";
     
     network = [[NetworkData alloc] init];
@@ -1528,6 +1532,7 @@
     }
 }
 
+
 //this function performs the animation to run the sidebar indicator up and down
 -(void)animateSidebarIndicator:(int)yValue
 {
@@ -1549,6 +1554,8 @@
     }];
     
 }
+
+
 //this function sends the user back one view
 -(void)triggerBack:(id)sender
 {

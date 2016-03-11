@@ -63,6 +63,8 @@
     UIView *bottomView;
     UIPageControl *overviewImageDots;
     
+    UIActivityIndicatorView *activityIndicator;
+    
 }
 
 @property(nonatomic)NetworkData *network;

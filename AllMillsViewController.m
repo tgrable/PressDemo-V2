@@ -84,7 +84,9 @@
 //    NSLog(@"%@", millKey);
 //    NSLog(@"%@", model.initialSetOfMills);
     
+
     
+
     self.screenName = @"Mill View";
     
     network = [[NetworkData alloc] init];
@@ -98,6 +100,8 @@
     // Header build methods
     [self buildHeaderView];
     [self buildTableView];
+    
+    
     
     @try {
         [model sortInitialPaperDataAlpha:@"mill_name" complete:^(BOOL completeFlag){
@@ -132,7 +136,10 @@
 /* decided if the app needs to be loaded up again when it comes back to focus */
 
 
-
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    UITouch *touch = [touches anyObject];
+    NSLog(@"%@",touch.view);
+}
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -222,7 +229,7 @@
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(overlayTapped:)];
     
     overlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1024, 768)];
-    overlay.backgroundColor = [UIColor blackColor];
+    overlay.backgroundColor = [UIColor whiteColor];
     overlay.alpha = 0.0;
     [overlay addGestureRecognizer:tapGesture];
     overlay.userInteractionEnabled = YES;
@@ -230,8 +237,8 @@
     
     //    mainView = [[UIView alloc] initWithFrame:CGRectMake(248, 84, 776, 684)]; /*x:284*/
 //    NSLog(@"Table Views Built");
-    mainView = [[UIView alloc] initWithFrame:CGRectMake(0, topBanner.frame.origin.y + 60, 1024, 684)];
-    mainView.backgroundColor = model.dullBlack;
+    mainView = [[UIView alloc] initWithFrame:CGRectMake(0, topBanner.frame.origin.y + 60 /*60*/, 1024, 684)];
+    mainView.backgroundColor = [UIColor whiteColor];
     //    mainView.alpha = 0.5;
     mainView.layer.borderColor = model.red.CGColor;
     //    mainView.userInteractionEnabled = YES;
@@ -393,7 +400,8 @@
     tableView.borderMode = UMTableViewBordersRows;
     tableView.outlineMode = UMTableViewOutlineNone;
     
-    [tableBackground addSubview:tableView];
+//    [tableBackground addSubview:tableView];
+    [mainView addSubview:tableView];
     
     popView = [[CanonTableKeyViewController alloc] initWithNibName:@"CanonTableKeyViewController" bundle:nil];
 //    currentDocumentData = [[NSMutableDictionary alloc] init];
@@ -408,8 +416,8 @@
     loadingView.alpha = 0.0;
     [self.view addSubview:loadingView];
     
-    bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, 767, 1024, 1)];
-    [bottomView setBackgroundColor: [UIColor blackColor]];
+    bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, 764, 1024, 1)];
+    [bottomView setBackgroundColor: [UIColor whiteColor]];
     [self.view addSubview:bottomView];
     
     paperData = [NSMutableArray array];
@@ -607,7 +615,8 @@
                 
                 [mailComposer addAttachmentData:attachment mimeType:@"application/pdf" fileName:filename];
                 
-                [mailComposer setSubject:millNameHeader.text]; // Use the document file name for the subject
+//                [mailComposer setSubject:millNameHeader.text]; // Use the document file name for the subject
+                [mailComposer setSubject:@"All Available Paper Mills"];
                 
                 mailComposer.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
                 mailComposer.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -745,7 +754,7 @@
     
     if([view viewWithTag:3] == nil){
         
-        UIView *tableNotice = [[UIView alloc] initWithFrame:CGRectMake(0, (offset + 20), 736, 120)];
+        UIView *tableNotice = [[UIView alloc] initWithFrame:CGRectMake(35, (offset + 20), 736, 120)];
         tableNotice.tag = 3;
         [view addSubview:tableNotice];
         
