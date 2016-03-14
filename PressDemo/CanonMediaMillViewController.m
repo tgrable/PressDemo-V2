@@ -1873,9 +1873,10 @@
             if(i == 0){
                 l.frame = CGRectMake(0, 0, 90, 50);
             }else if(i == 1){
+//                l.frame = CGRectMake(90, 0, 120, 50);
                 l.frame = CGRectMake(90, 0, 120, 50);
             }else if(i == 2){
-                l.frame = CGRectMake(205, 0, 87.6, 50);
+                l.frame = CGRectMake(/*205*/205, 0, 87.6, 50);
             }else{
                 int offset = 210 + ((i -2) * 87.6);
                 l.frame = CGRectMake(offset, 0, 87.6, 50);

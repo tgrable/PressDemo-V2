@@ -80,12 +80,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-//    NSString *millKey = model.selectedMill.key;
-//    NSLog(@"%@", millKey);
-//    NSLog(@"%@", model.initialSetOfMills);
+    rowHeadersMill = [NSMutableArray arrayWithObjects:@"MILL NAME", @"MEDIA NAME", @"BASIS WEIGHT", @"BRIGHTNESS", @"COATING", @"COLOR", @"CAPABILITY", @"INKSET", nil];
     
-
-    
+    headerLabelsMill = [NSMutableArray array];
 
     self.screenName = @"Mill View";
     
@@ -110,7 +107,8 @@
             [model buildSearchableDataSource:model.initialSetOfPaper sourceFlag:YES complete:^(BOOL completeFlag) {
                 [searchView buildViews];
             }];
-            
+
+
         }];
     }
     @catch (NSException *exception) {
@@ -126,20 +124,12 @@
         NSData *millData = [model getFileData:@"initialMills" complete:^(BOOL completeFlag){}];
         model.initialSetOfMills = [NSKeyedUnarchiver unarchiveObjectWithData:millData];
     }
-    
-    
-    
-    
+
+    [self setupTableHeaders];
 }
 
 
 /* decided if the app needs to be loaded up again when it comes back to focus */
-
-
--(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-    UITouch *touch = [touches anyObject];
-    NSLog(@"%@",touch.view);
-}
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -147,8 +137,6 @@
         noConnection.alpha = 0.0;
     }else{
         noConnection.alpha = 1.0;
-        
-        //        [model logData:@"CanonMediaGridViewController" withAction:@"No Internet Connection" withLabel:@"Running the app with no internet"];
     }
 }
 
@@ -235,16 +223,13 @@
     overlay.userInteractionEnabled = YES;
     [self.view addSubview:overlay];
     
-    //    mainView = [[UIView alloc] initWithFrame:CGRectMake(248, 84, 776, 684)]; /*x:284*/
-//    NSLog(@"Table Views Built");
+
     mainView = [[UIView alloc] initWithFrame:CGRectMake(0, topBanner.frame.origin.y + 60 /*60*/, 1024, 684)];
     mainView.backgroundColor = [UIColor whiteColor];
-    //    mainView.alpha = 0.5;
     mainView.layer.borderColor = model.red.CGColor;
-    //    mainView.userInteractionEnabled = YES;
     [self.view addSubview:mainView];
     
-    //    tableBackground = [[UIView alloc] initWithFrame:CGRectMake(0, 884, 776, 684)];
+
     tableBackground = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1024, 125)];
     tableBackground.backgroundColor = [UIColor whiteColor];
     tableBackground.userInteractionEnabled = YES;
@@ -296,14 +281,13 @@
     tableHeaderRow.backgroundColor = [UIColor blackColor];
     [tableBackground addSubview:tableHeaderRow];
     
-    cell0 =  [[UIBorderLabel alloc] initWithFrame:CGRectMake(0, 0, 150, 50)];
+    cell0 =  [[UIBorderLabel alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
     cell0.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:12.0];
     cell0.textColor = [UIColor whiteColor];
     cell0.numberOfLines = 2;
     cell0.textAlignment = NSTextAlignmentLeft;
     cell0.backgroundColor = model.pink;
     cell0.leftInset = 35;
-    cell0.text = @"MILL NAME";
     [tableHeaderRow addSubview:cell0];
     [headerLabelsPaper addObject:cell0];
     [headerLabelsMill addObject:cell0];
@@ -315,7 +299,6 @@
     cell1.textAlignment = NSTextAlignmentCenter;
     cell1.leftInset = 20;
     cell1.backgroundColor = [UIColor blackColor];
-    cell1.text = @"MEDIA NAME";
     [tableHeaderRow addSubview:cell1];
     [headerLabelsPaper addObject:cell1];
     [headerLabelsMill addObject:cell1];
@@ -327,7 +310,6 @@
     cell2.textAlignment = NSTextAlignmentLeft;
     cell2.backgroundColor = [UIColor blackColor];
     cell2.leftInset = 8;
-    cell2.text = @"BASS WEIGHT";
     [tableHeaderRow addSubview:cell2];
     [headerLabelsPaper addObject:cell2];
     [headerLabelsMill addObject:cell2];
@@ -339,7 +321,6 @@
     cell3.textAlignment = NSTextAlignmentLeft;
     cell3.leftInset = 8;
     cell3.backgroundColor = [UIColor blackColor];
-    cell3.text = @"BRIGHTNESS";
     [tableHeaderRow addSubview:cell3];
     [headerLabelsPaper addObject:cell3];
     [headerLabelsMill addObject:cell3];
@@ -351,7 +332,6 @@
     cell4.textAlignment = NSTextAlignmentLeft;
     cell4.leftInset = 8;
     cell4.backgroundColor = [UIColor blackColor];
-    cell4.text = @"COATING";
     [tableHeaderRow addSubview:cell4];
     [headerLabelsPaper addObject:cell4];
     [headerLabelsMill addObject:cell4];
@@ -363,7 +343,6 @@
     cell5.textAlignment = NSTextAlignmentLeft;
     cell5.backgroundColor = [UIColor blackColor];
     cell5.leftInset = 8;
-    cell5.text = @"COLOR";
     [tableHeaderRow addSubview:cell5];
     [headerLabelsPaper addObject:cell5];
     [headerLabelsMill addObject:cell5];
@@ -375,7 +354,6 @@
     cell6.textAlignment = NSTextAlignmentLeft;
     cell6.backgroundColor = [UIColor blackColor];
     cell6.leftInset = 20;
-    cell6.text = @"CAPABILITY";
     [tableHeaderRow addSubview:cell6];
     [headerLabelsPaper addObject:cell6];
     [headerLabelsMill addObject:cell6];
@@ -387,12 +365,11 @@
     cell7.textAlignment = NSTextAlignmentLeft;
     cell7.backgroundColor = [UIColor blackColor];
     cell7.leftInset = 20;
-    cell7.text = @"INKSET";
     [tableHeaderRow addSubview:cell7];
     [headerLabelsPaper addObject:cell7];
     [headerLabelsMill addObject:cell7];
     
-    CGRect frm = CGRectMake(0, tableBackground.frame.origin.y + 125, 1024, 500);
+    CGRect frm = CGRectMake(0, tableBackground.frame.origin.y + 125, 1074, 500);
     tableView = [[UMTableView alloc] initWithFrame: frm];
     tableView.tableViewDelegate = self;
     tableView.tag = 130;
@@ -400,14 +377,9 @@
     tableView.borderMode = UMTableViewBordersRows;
     tableView.outlineMode = UMTableViewOutlineNone;
     
-//    [tableBackground addSubview:tableView];
     [mainView addSubview:tableView];
     
     popView = [[CanonTableKeyViewController alloc] initWithNibName:@"CanonTableKeyViewController" bundle:nil];
-//    currentDocumentData = [[NSMutableDictionary alloc] init];
-//    offlineImages = [[NSMutableDictionary alloc] init];
-//    offlineVideos = [[NSMutableDictionary alloc] init];
-//    offlineVideoRows = [NSMutableArray array];
     
     loadingView = [[UIView alloc] initWithFrame:CGRectMake(462, 334, 100, 100)];
     [loadingView setBackgroundColor:[UIColor blackColor]];
@@ -421,8 +393,6 @@
     [self.view addSubview:bottomView];
     
     paperData = [NSMutableArray array];
-    rowHeadersPaper = [NSMutableArray arrayWithObjects:[model.selectedMill.title uppercaseString], @"BASIS WEIGHT", @"BRIGHTNESS", @"COATING", @"COLOR", @"CAPABILITY", @"INKSET", nil];
-    rowHeadersMill = [NSMutableArray arrayWithObjects:@"MILL NAME", @"MEDIA NAME", @"BASIS WEIGHT", @"BRIGHTNESS", @"COATING", @"COLOR", @"CAPABILITY", @"INKSET", nil];
     
     iconArray = [NSMutableArray array];
     [iconArray addObject:[UIImage imageNamed:@"ico-blackwhite.png"]];
@@ -431,7 +401,7 @@
     [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
     [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
     
-    paperTable = YES;
+    paperTable = NO;
     tableEmpty = NO;
     modalViewPresent = NO;
     tableRows = 0;
@@ -454,12 +424,10 @@
         //get the data for this row
         NSMutableArray *rowArray = [paperData objectAtIndex:row];
         // all cellviews except color int
-        cellView.backgroundColor = [UIColor whiteColor]; /*clear*/
-        cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:12.0];
-        /*12*/
-        cellView.label.textColor = [UIColor blackColor];
+        cellView.backgroundColor = [UIColor clearColor]; /*clear*/
+        cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:12.0];// Changes the text size of ALL cellviews within the table: default 12.0
+        cellView.label.textColor = [UIColor blackColor]; // Changes the color of ALL cellViews with the table. default blackColor
         
-//        NSLog(@"%@",paperData);
         //if we are not dealing with the last column, load text
         if(paperTable){
             //just mill specific paper
@@ -470,6 +438,7 @@
                 if(dyeValue == 5) x = -4;
                 UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue];
                 [cellView addSubview:iconView];
+                [tableHeaderRow addSubview:iconView];
             }else if(column == 5){
                 cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:11.0]; /*11*/
                 cellView.label.text = [rowArray objectAtIndex:column];
@@ -478,6 +447,7 @@
                 cellView.label.text = [rowArray objectAtIndex:column];
             }
         }else{
+          
             //all paper table
             if(column == 5){
                 //color capability
@@ -486,9 +456,8 @@
                 if(dyeValue == 5) x = -4;
                 UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue];
                 [cellView addSubview:iconView];
-                
             }else if(column == 6){
-                cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:11.0]; /*11*/
+                cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size: 11.0]; /*11*/
                 cellView.label.text = [rowArray objectAtIndex:column];
             }else{
                 //all other text
@@ -577,9 +546,6 @@
     }];
     
 }
-
-
-
 
 
 -(void)shareView:(id)sender
@@ -775,6 +741,59 @@
         [tableNotice addSubview:noticeTwo];
     }
 }
+
+-(void)buildPaperTableData
+{
+    
+    //get the mill key from the selected mill we are on
+    NSString *millKey = model.selectedMill.key;
+    
+    
+    //resets the table row count
+    tableRows = 0;
+    tableColumns = 7;
+    ALog(@"HERE1");
+    //loop through the papers in the initial dataset
+    for(Paper *p in model.initialSetOfPaper){
+        //check to see if the paper is equal to present mills key
+        if([millKey isEqualToString:p.mill]){
+            
+            //the client asked us to create new row for eacy basis weight
+            if([p.basis_weight count] > 0){
+                //create a new row for each basis weight
+                for(NSString *weight in p.basis_weight){
+                    NSMutableArray *rowArray = [[NSMutableArray alloc] init];
+                    
+                    [rowArray addObject:p.title];
+                    
+                    [rowArray addObject:weight];
+                    [rowArray addObject:p.brightness];
+                    [rowArray addObject:p.coating];
+                    
+                    [rowArray addObject:p.color_capability];
+                    [rowArray addObject:p.category];
+                    [rowArray addObject:p.dye_pigment];
+                    [rowArray addObject:p.key];
+                    
+                    tableRows++;
+                    [paperData addObject:rowArray];
+                }
+            }else{
+                
+            }
+        }
+        
+    }
+    ALog(@"HERE2");
+    //if the dataset is empty, flag it for later display
+    if([paperData count] == 0){
+        tableEmpty = YES;
+    }else{
+        tableEmpty = NO;
+    }
+    ALog(@"HERE3");
+}
+
 
 //this function is more generalized and assembles all of the paper data
 -(void)buildAllPaperData
@@ -1726,31 +1745,51 @@
     [searchField presentPopoverFromRect:bottomView.bounds inView:bottomView permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
 }
 
+-(void)setupTableHeaders
+{
 
+    int i = 0;
 
+    //setup heders for the mill table
 
+    while(i < 8){
+        UILabel *l = [headerLabelsMill objectAtIndex:i];
+        l.text = [rowHeadersMill objectAtIndex:i];
 
+        //setup the first two columns based upon the second columns dynamic width
+        //the rest of the columns are setup based upon the width of 77
+        if (i == 0){
+            l.frame = CGRectMake(-10, 0, 200, 50);
+        }else if (i == 1){
 
+            l.frame = CGRectMake(115, 0, 120, 50);
+        }else if (i == 2){
+            l.frame = CGRectMake(250, 0, 87.6, 50);
+        }else if (i == 3){
+            int offset = 210 + ((i - 2) * 163);
+            l.frame = CGRectMake(offset, 0, 87.6, 50);
+        }else if (i == 4) {
+            int offset = 210 + ((i - 2) * 160);
+            l.frame = CGRectMake(offset, 0, 87.6, 50);
+        }else if (i == 5){
+            int offset = 210 + ((i - 2) * 151);
+            l.frame = CGRectMake(offset, 0, 87.6, 50);
+        }else{
+            int offset = 210 + ((i - 2) * 144);
+            l.frame = CGRectMake(offset, 0, 87.6, 50);
+        }
+        i++;
+    }
+
+}
 
 #pragma mark - navigation methods
-//-(void)triggerHome:(id)sender
-//{
-//    [[self navigationController] popViewControllerAnimated:YES];
-//}
+
 
 -(void)triggerBack:(id)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
 
 @end

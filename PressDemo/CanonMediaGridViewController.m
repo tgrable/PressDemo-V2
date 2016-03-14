@@ -248,10 +248,11 @@
 
 
 
+
 //this function loads up the products associated with the current filter
 -(void)loadupProducts
 {
-    NSLog(@"Products loaded");
+
     //a generic set of data to detect formatting the UI
     //cycle through the data and load up a grid of products
     NSArray *ends = [NSArray arrayWithObjects:@"0",@"3",@"4",@"7",@"8",@"11",@"12",@"15",@"16",@"19",@"20",@"23", nil];
