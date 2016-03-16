@@ -94,7 +94,7 @@
     searchView = [[CanonMediaMillSearchOverlay alloc] init];
     searchView.delegate = self;
     
-    // Header build methods
+    // Header build methods - Don't mix up the order. 
     [self buildHeaderView];
     [self buildTableView];
     
