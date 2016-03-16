@@ -244,7 +244,7 @@
     [tableBackground addSubview:tableHeader];
     
     tableKey = [UIButton buttonWithType:UIButtonTypeCustom];
-    [tableKey setFrame:CGRectMake(948, 20, 33, 33)];
+    [tableKey setFrame:CGRectMake(948, 22, 33, 33)];
     [tableKey addTarget:self action:@selector(tableKeySelected:)forControlEvents:UIControlEventTouchDown];
     tableKey.showsTouchWhenHighlighted = YES;
     [tableKey setBackgroundImage:[model getImageWithName:@"/icn-key@2x.png"] forState:UIControlStateNormal];
@@ -252,7 +252,7 @@
     [tableBackground addSubview:tableKey];
     
     searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [searchButton setFrame:CGRectMake(850, 20, 80, 33)];
+    [searchButton setFrame:CGRectMake(850, 22, 80, 33)];
     [searchButton addTarget:self action:@selector(searchTable:)forControlEvents:UIControlEventTouchDown];
     searchButton.showsTouchWhenHighlighted = YES;
     [searchButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -263,7 +263,7 @@
     [tableBackground addSubview:searchButton];
     
     resetTable = [UIButton buttonWithType:UIButtonTypeCustom];
-    [resetTable setFrame:CGRectMake(750, 20, 80, 33)];
+    [resetTable setFrame:CGRectMake(750, 22, 80, 33)];
     [resetTable addTarget:self action:@selector(resetTable:)forControlEvents:UIControlEventTouchDown];
     resetTable.showsTouchWhenHighlighted = YES;
     resetTable.titleLabel.textAlignment = NSTextAlignmentCenter;

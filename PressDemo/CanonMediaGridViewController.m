@@ -223,14 +223,29 @@
     viewLabel.text = @"MEDIA";
     [topBanner addSubview:viewLabel];
     
-    UIButton *allMillsButton = [[UIButton alloc] initWithFrame:CGRectMake(893, 12, 100, 35)];
-    allMillsButton.backgroundColor = [UIColor whiteColor];
-    [allMillsButton setTitle:@"All Mills" forState:UIControlStateNormal];
+    UIView *allMillsBackgroundButtonView = [[UIView alloc] initWithFrame:CGRectMake(893, 15, 100, 30)];
+    allMillsBackgroundButtonView.backgroundColor = [UIColor whiteColor];
+    [topBanner addSubview: allMillsBackgroundButtonView];
+    
+//    UILabel *allMillsTextView = [[UILabel alloc] initWithFrame:CGRectMake(893, 17, 100, 30)];
+//    allMillsTextView.backgroundColor = [UIColor clearColor];
+//    allMillsTextView.text = @"All Mills";
+//    allMillsTextView.textAlignment = NSTextAlignmentCenter;
+//    allMillsTextView.textColor = [UIColor blackColor];
+//    allMillsTextView.font = [UIFont fontWithName:@"ITCAvantGardeStd-Md" size:18.0];
+//
+//    [allMillsBackgroundButtonView addSubview:allMillsTextView];
+
+    
+    UIButton *allMillsButton = [[UIButton alloc] initWithFrame:CGRectMake(893, 15, 100, 30)];
+    allMillsButton.backgroundColor = [UIColor clearColor];
     [allMillsButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     allMillsButton.showsTouchWhenHighlighted = YES;
-    allMillsButton.titleLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Md" size:18.0];
     [allMillsButton addTarget:self action:@selector(moveToAllMillsView)forControlEvents:UIControlEventTouchUpInside];
+    [allMillsButton setTitle:@"All Mills" forState:UIControlStateNormal];
     [topBanner addSubview:allMillsButton];
+    
+    
     
     
     
