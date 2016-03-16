@@ -60,8 +60,7 @@
  Function to dispense the reachability notifications
  -(void)reachabilityDidChange:(NSNotification *)notification
  
- -------------------------------------------------------*/
-
+ ------------------------------------------------------*/
 - (void)reachabilityDidChange:(NSNotification *)notification {
     //reachability object
     Reachability *reachability = (Reachability *)[notification object];
@@ -74,8 +73,6 @@
         ALog(@"NOT REACHABLE");
     }
 }
-
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -98,8 +95,6 @@
     [self buildHeaderView];
     [self buildTableView];
     
-    
-    
     @try {
         [model sortInitialPaperDataAlpha:@"mill_name" complete:^(BOOL completeFlag){
             [self buildAllPaperData];
@@ -120,7 +115,6 @@
     }
     
     if([model.initialSetOfMills count] == 0){
-        
         NSData *millData = [model getFileData:@"initialMills" complete:^(BOOL completeFlag){}];
         model.initialSetOfMills = [NSKeyedUnarchiver unarchiveObjectWithData:millData];
     }
@@ -130,7 +124,6 @@
 
 
 /* decided if the app needs to be loaded up again when it comes back to focus */
-
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     if ([model.hostReachability isReachableViaWiFi]) {
@@ -145,7 +138,8 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void)buildHeaderView{
+-(void)buildHeaderView {
+    
     customNavBar = [[UIView alloc] initWithFrame:CGRectMake(0, 20, 1024, 64)];
     [customNavBar setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:customNavBar];
@@ -182,7 +176,6 @@
     viewLabel.text = @"All Mills Media List";
     [topBanner addSubview:viewLabel];
     
-    
     noConnection = [[UIView alloc] initWithFrame:CGRectMake(36, -17, 134, 15)];
     noConnection.alpha = 0.0;
     noConnection.backgroundColor = model.blue;
@@ -212,7 +205,7 @@
     
 }
 
--(void)buildTableView{
+-(void)buildTableView {
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(overlayTapped:)];
     
@@ -411,8 +404,6 @@
     emailStep = 1;
     searchRowIndex = 0;
 
-    
-    
 }
 
 // Customize cells and provide data content
@@ -521,14 +512,12 @@
 {
     UIButton *b = (UIButton *)sender;
     
-    
     Paper *selectedPaper;
     for(Paper *p in model.initialSetOfPaper){
         if([p.key isEqualToString:b.titleLabel.text]){
             selectedPaper = p;
         }
     }
-    
     
     //bring the overlay to the front
     [self.view bringSubviewToFront:overlay];
@@ -581,7 +570,6 @@
                 
                 [mailComposer addAttachmentData:attachment mimeType:@"application/pdf" fileName:filename];
                 
-//                [mailComposer setSubject:millNameHeader.text]; // Use the document file name for the subject
                 [mailComposer setSubject:@"All Available Paper Mills"];
                 
                 mailComposer.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
@@ -673,12 +661,7 @@
         UIGraphicsEndPDFContext();
         completeFlag(YES);
     }
-    
-    
 }
-
-
-
 
 /*********************************************************************************************************************
  *
@@ -742,68 +725,15 @@
     }
 }
 
--(void)buildPaperTableData
-{
-    
-    //get the mill key from the selected mill we are on
-    NSString *millKey = model.selectedMill.key;
-    
-    
-    //resets the table row count
-    tableRows = 0;
-    tableColumns = 7;
-    ALog(@"HERE1");
-    //loop through the papers in the initial dataset
-    for(Paper *p in model.initialSetOfPaper){
-        //check to see if the paper is equal to present mills key
-        if([millKey isEqualToString:p.mill]){
-            
-            //the client asked us to create new row for eacy basis weight
-            if([p.basis_weight count] > 0){
-                //create a new row for each basis weight
-                for(NSString *weight in p.basis_weight){
-                    NSMutableArray *rowArray = [[NSMutableArray alloc] init];
-                    
-                    [rowArray addObject:p.title];
-                    
-                    [rowArray addObject:weight];
-                    [rowArray addObject:p.brightness];
-                    [rowArray addObject:p.coating];
-                    
-                    [rowArray addObject:p.color_capability];
-                    [rowArray addObject:p.category];
-                    [rowArray addObject:p.dye_pigment];
-                    [rowArray addObject:p.key];
-                    
-                    tableRows++;
-                    [paperData addObject:rowArray];
-                }
-            }else{
-                
-            }
-        }
-        
-    }
-    ALog(@"HERE2");
-    //if the dataset is empty, flag it for later display
-    if([paperData count] == 0){
-        tableEmpty = YES;
-    }else{
-        tableEmpty = NO;
-    }
-    ALog(@"HERE3");
-}
-
 
 //this function is more generalized and assembles all of the paper data
 -(void)buildAllPaperData
 {
-//    NSLog(@"buildAllPaperData called");
     tableRows = 0;
     tableColumns = 8;
     
     for(Paper *p in model.initialSetOfPaper){
-//        NSLog(@"%@",paperData);
+
         if([p.basis_weight count] > 0){
             //create a new row for each basis weight
             for(NSString *weight in p.basis_weight){
