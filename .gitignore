@@ -30,7 +30,8 @@
 ######################
 .DS_Store*
 ehthumbs.db
-Icon
+Icon
+
 Thumbs.db
 ._*
 
@@ -41,3 +42,24 @@ Thumbs.db
 # SASS #
 ##########
 .sass-cache
+
+# PHP Storm #
+.idea/
+.idea/*
+
+# Readme and contributing #
+###########################
+CONTRIBUTING.md
+README.md
+CHANGELOG_DRUPAL.txt
+COPYRIGHT_DRUPAL.txt
+INSTALL_DRUPAL.txt
+LICENSE_DRUPAL.txt
+MAINTAINERS_DRUPAL.txt
+README_DRUPAL.txt
+UPGRADE_DRUPAL.txt
+
+# Other PHP and Config Files Ignored #
+######################################
+install.php
+web.config

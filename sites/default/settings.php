@@ -215,9 +215,9 @@ $databases = array (
   array (
     'default' =>
     array (
-      'database' => 'drupal_7_28_cannon',
+      'database' => 'drupal_7_pressdemo',
       'username' => 'root',
-      'password' => '',
+      'password' => 'password',
       'host' => 'localhost',
       'port' => '',
       'driver' => 'mysql',
