@@ -188,6 +188,7 @@
               'weights_available' => $node->field_weights_available[LANGUAGE_NONE][0]['value'],
               'boost_sample' => $node->field_boost_sample_available[LANGUAGE_NONE][0]['value'],
               'house_paper' => $node->field_house_paper[LANGUAGE_NONE][0]['value'],
+              'press' => isset($node->field_press[LANGUAGE_NONE][0]['value']) ? $node->field_press[LANGUAGE_NONE][0]['value'] : '',
            );
         }else if($type == 'mill'){
 
