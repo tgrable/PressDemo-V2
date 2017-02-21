@@ -66,7 +66,7 @@
     UIActivityIndicatorView *activityIndicator;
     
 }
-
+@property(nonatomic)CanonMediaMillSearchOverlay *searchView;
 @property(nonatomic)NetworkData *network;
 @property(nonatomic, readonly)CanonModel *model;
 @property(nonatomic, strong)UIImageView *topBanner;

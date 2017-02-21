@@ -27,4 +27,5 @@
 @property(nonatomic, strong) UILabel *productionLabel, *productionValue;
 @property(nonatomic, strong) UILabel *productionPlusLabel, *productionPlusValue;
 @property(nonatomic, strong) UILabel *premiumLabel, *premiumPlusValue;
+@property(nonatomic, strong) UILabel *coloredDesc, *colorLabel ;
 @end

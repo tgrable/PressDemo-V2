@@ -26,6 +26,7 @@
 @synthesize topBanner, customNavBar, model,mainView;
 @synthesize productScroll, contentHeight ;
 @synthesize network, pop, popView, action, searchField;
+@synthesize searchView;
 
 //Here we are setting up the delegate method
 - (CanonModel *) AppDataObj;
@@ -414,6 +415,7 @@
         
         //get the data for this row
         NSMutableArray *rowArray = [paperData objectAtIndex:row];
+        NSLog(@"TIM SUCKS GOAT I HAVE PROOF: %lu",(unsigned long)paperData.count);
         // all cellviews except color int
         cellView.backgroundColor = [UIColor clearColor]; /*clear*/
         cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:12.0];// Changes the text size of ALL cellviews within the table: default 12.0
@@ -423,13 +425,16 @@
         if(paperTable){
             //just mill specific paper
             if(column == 4){
+                
+                // MARK: This sets the column icon sets
+
                 //color capability
-                int x = 8;
-                int dyeValue = [[rowArray objectAtIndex:column] intValue];
-                if(dyeValue == 5) x = -4;
-                UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue];
-                [cellView addSubview:iconView];
-                [tableHeaderRow addSubview:iconView];
+//                int x = 8;
+//                int dyeValue = [[rowArray objectAtIndex:column] intValue];
+//                if(dyeValue == 5) x = -4;
+//                UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue];
+//                [cellView addSubview:iconView];
+//                [tableHeaderRow addSubview:iconView];
             }else if(column == 5){
                 cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:11.0]; /*11*/
                 cellView.label.text = [rowArray objectAtIndex:column];
@@ -442,11 +447,41 @@
             //all paper table
             if(column == 5){
                 //color capability
-                int x = 8; /*8*/
-                int dyeValue = [[rowArray objectAtIndex:column] intValue];
-                if(dyeValue == 5) x = -4;
-                UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue];
-                [cellView addSubview:iconView];
+//                int x = 8; /*8*/
+//                int dyeValue = [[rowArray objectAtIndex:column] intValue];
+//                if(dyeValue == 5) x = -4;
+//                UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue];
+//                [cellView addSubview:iconView];
+                
+                if ([[rowArray objectAtIndex:column] intValue] == 99){
+                    ALog(@"GREEN PAPER FOUND");
+                    int x = 8; /*8*/
+                    int dyeValue = [[rowArray objectAtIndex:column] intValue];
+                    if(dyeValue == 5) x = -4;
+//                    UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue];
+                    // TODO: Check this on the live strema
+                    // This detects the rogue paper type and gives it a custom image.
+                    
+                    UIView *iconSet = [[UIView alloc] initWithFrame:CGRectMake(8, 10, 120, 21)];
+                    iconSet.backgroundColor = [UIColor clearColor];
+                    iconSet.frame = CGRectMake(x, 10, 88, 15);
+                    UIImageView *icon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 10, 15, 15)];
+//                    [icon setImage:[iconArray objectAtIndex:4]];
+                    [icon setImage:[UIImage imageNamed:@"k.png"]];
+                    [iconSet addSubview:icon];
+//                    [rowTwo addSubview:icon];
+                    ALog(@"GREEN PAPER FOUND");
+                    
+                    [cellView addSubview:iconSet];
+
+                }else{
+                    int x = 8; /*8*/
+                    int dyeValue = [[rowArray objectAtIndex:column] intValue];
+                    if(dyeValue == 5) x = -4;
+                    UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue];
+                    [cellView addSubview:iconView];
+                }
+                
             }else if(column == 6){
                 cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size: 11.0]; /*11*/
                 cellView.label.text = [rowArray objectAtIndex:column];
@@ -466,6 +501,8 @@
         float heightCell = cellView.frame.size.height;
         int intCount = (int)([rowArray count] - 1);
         
+        NSLog(@"TimGrable intCount: %d", intCount);
+        NSLog(@"TimGrable rowArray.count: %lu", (unsigned long)rowArray.count);
         UIButton *maskButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [maskButton setFrame:CGRectMake(0, 0, widthCell, heightCell)];
         [maskButton addTarget:self action:@selector(infoButtonForPaper:)forControlEvents:UIControlEventTouchUpInside];
@@ -501,6 +538,16 @@
             [icon setImage:[iconArray objectAtIndex:i]];
             [iconSet addSubview:icon];
             i++;
+            
+//            UIView *iconSet = [[UIView alloc] initWithFrame:CGRectMake(8, 10, 120, 21)];
+//            iconSet.backgroundColor = [UIColor clearColor];
+//            iconSet.frame = CGRectMake(x, 10, 88, 15);
+//            UIImageView *icon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 10, 15, 15)];
+//            //                    [icon setImage:[iconArray objectAtIndex:4]];
+//            [icon setImage:[UIImage imageNamed:@"k.png"]];
+//            [iconSet addSubview:icon];
+//            //                    [rowTwo addSubview:icon];
+//            ALog(@"GREEN PAPER FOUND");
         }
         
     }
@@ -511,18 +558,24 @@
 -(void)infoButtonForPaper:(id)sender
 {
     UIButton *b = (UIButton *)sender;
+    NSLog(@"TimGrable b.titleLabel.text: %@", b.titleLabel.text);
     
+    // MARK: Model view is built here on initial view and search
     Paper *selectedPaper;
+    ALog(@"SELECTED PAPER, %@",selectedPaper);
+
     for(Paper *p in model.initialSetOfPaper){
+        NSLog(@"TimGrable p: %@", p);
+        NSLog(@"TimGrable p.key: %@", p.key);
         if([p.key isEqualToString:b.titleLabel.text]){
             selectedPaper = p;
+           
         }
     }
     
     //bring the overlay to the front
     [self.view bringSubviewToFront:overlay];
-    
-    //get the new modal window
+       //get the new modal window
     globalModal = [self assembleModalView:selectedPaper];
     [self.view addSubview:globalModal];
     
@@ -577,7 +630,9 @@
                 
                 mailComposer.mailComposeDelegate = self; // MFMailComposeViewControllerDelegate
                 
+                 if (MFMailComposeViewController.canSendMail){ // This check must be included or else a client device with no configured email will crash the app.
                 [self presentViewController:mailComposer animated:YES completion:NULL];
+                 }
             }
         }
     }];
@@ -729,11 +784,12 @@
 //this function is more generalized and assembles all of the paper data
 -(void)buildAllPaperData
 {
+    NSLog(@"TimGrable: buildAllPaperData");
     tableRows = 0;
     tableColumns = 8;
+    [model.searchablePaperDataObjects removeAllObjects];
     
     for(Paper *p in model.initialSetOfPaper){
-
         if([p.basis_weight count] > 0){
             //create a new row for each basis weight
             for(NSString *weight in p.basis_weight){
@@ -804,9 +860,16 @@
     header.userInteractionEnabled = YES;
     [modalView addSubview:header];
     
+    //FIXME: Check out this later, search results view is built here - obj comes back empty after search 
+    
     
     float millWidth = [model widthOfString:[obj.mill_name uppercaseString] withStringSize:16.0 andFontKey:@"ITCAvantGardeStd-Md"];
     float paperWidth = [model widthOfString:[obj.title uppercaseString] withStringSize:16.0 andFontKey:@"ITCAvantGardeStd-Md"];
+    
+    ALog(@"%@", obj.mill_name);
+  
+//    float millWidth = 18.0;
+//    float paperWidth = 19.0;
     
     UILabel *paperMill = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, millWidth, 20)];
     [paperMill setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:16.0]];
@@ -1075,10 +1138,28 @@
     //color capability
     int colorValue = [obj.color_capability intValue], xValue = 406;
     if(colorValue > 3) xValue = 390;
+    // TODO: This is for the popup window view
+    if ([obj.color_capability intValue] == 99){
+        UIView *iconSet = [[UIView alloc] initWithFrame:CGRectMake(8, 10, 88, 15)];
+        iconSet.backgroundColor = [UIColor clearColor];
+        iconSet.frame = CGRectMake(xValue, 10, 88, 15);
+        
+        UIImageView *icon = [[UIImageView alloc] initWithFrame:CGRectMake(15, 0, 15, 15)];
+//        [icon setImage:[iconArray objectAtIndex:4]];
+        [icon setImage:[UIImage imageNamed:@"k.png"]];
+        [iconSet addSubview:icon];
+        [rowTwo addSubview:iconSet];
+
+        
+    }else{
+        UIView *colorIconSet = [self getColorIconSet:NO /*NO*/ withXValue:xValue andYValue:10 withColorValue:[obj.color_capability intValue]];
+        [rowTwo addSubview:colorIconSet];
+    }
     
-    UIView *colorIconSet = [self getColorIconSet:NO /*NO*/ withXValue:xValue andYValue:10 withColorValue:[obj.color_capability intValue]];
-    [rowTwo addSubview:colorIconSet];
     
+    
+    
+   
     UILabel *weightsAvailableValue = [[UILabel alloc] initWithFrame:CGRectMake(550, 10, 122, 20)];
     [weightsAvailableValue setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:13.0]];
     weightsAvailableValue.textColor = [UIColor blackColor];
@@ -1275,6 +1356,28 @@
     [colorFourPremium setImage:[UIImage imageNamed:@"ico-color.png"]];
     [modalView addSubview:colorFourPremium];
     
+    UILabel *roguePaperType = [[UILabel alloc] initWithFrame:CGRectMake(73, 474, 190, 20)];
+    [roguePaperType setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:15.0]];
+    roguePaperType.textColor = [UIColor blackColor];
+    roguePaperType.numberOfLines = 1;
+    roguePaperType.backgroundColor = [UIColor clearColor];
+    roguePaperType.text = @"COLORED";
+    [modalView addSubview:roguePaperType];
+    
+    UILabel *roguePaperTypeDesc = [[UILabel alloc] initWithFrame:CGRectMake(253, 474, 290, 20)];
+    [roguePaperTypeDesc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:15.0]];
+    roguePaperTypeDesc.textColor = model.dullBlack;
+    roguePaperTypeDesc.numberOfLines = 1;
+    roguePaperTypeDesc.backgroundColor = [UIColor clearColor];
+    roguePaperTypeDesc.text = @"OTHER COLORS AVAILABLE";
+    [modalView addSubview:roguePaperTypeDesc];
+    
+    UIImageView *roguePaperTypeIcon = [[UIImageView alloc] initWithFrame:CGRectMake(513, 474, 15, 15)];
+    [roguePaperTypeIcon setImage:[UIImage imageNamed:@"k.png"]];
+    [modalView addSubview:roguePaperTypeIcon];
+    
+    
+    
     /************************************ price range info *******************************************/
     
     UILabel *priceTitle = [[UILabel alloc] initWithFrame:CGRectMake(660, 346, 300, 30)];
@@ -1409,7 +1512,7 @@
     
     //set the UIPopoverController with the PopUpMenuViewController object and set the frame
     pop = [[UIPopoverController alloc] initWithContentViewController:popView];
-    pop.popoverContentSize = CGSizeMake(650, 220);
+    pop.popoverContentSize = CGSizeMake(650, 245);
     pop.delegate = self;
     [pop presentPopoverFromRect:((UIButton *)sender).bounds inView:sender permittedArrowDirections:UIPopoverArrowDirectionRight animated:YES];
 }
@@ -1578,9 +1681,12 @@
     [searchField dismissPopoverAnimated:NO];
 }
 
-// Search response delegate function being called from CanonMediaMillSearchOverlay filter button
+// Search response delegate function being called from AllMillsViewController filter button
+
+//TODO: RENABLE THIS TOO
 -(void)searchResponse
 {
+    NSLog(@"ALL MILLS MEDIA CONTROLLER CALLED");
     
     NSMutableDictionary *searchDictionary = [[NSMutableDictionary alloc] init];
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:0] forKey:@"mill_name"];

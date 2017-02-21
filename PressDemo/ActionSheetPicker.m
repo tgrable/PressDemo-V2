@@ -36,6 +36,7 @@
     [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
     [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
     [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
+    [iconArray addObject:[UIImage imageNamed:@"k.png"]];
     
     self.view.frame = CGRectMake(0, 0, 600, 220);
     

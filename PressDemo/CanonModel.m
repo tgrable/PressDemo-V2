@@ -1057,6 +1057,12 @@
 {
     UIFont *font = [UIFont fontWithName:key size:size];
     NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
+//    if (string != nil){
+//    return [[[NSAttributedString alloc] initWithString:string attributes:attributes] size].width;
+//    }else{
+//        return 1.0;
+//    }
+    
     return [[[NSAttributedString alloc] initWithString:string attributes:attributes] size].width;
 }
 
