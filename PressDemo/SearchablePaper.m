@@ -18,6 +18,7 @@
 @synthesize category;
 @synthesize dye_pigment;
 @synthesize color_capability;
+@synthesize key;
 
 -(id)init
 {
@@ -33,6 +34,7 @@
         color_capability = @"";
         category = @"";
         dye_pigment = @"";
+        key = @"";
     }
     return self;
 }
@@ -47,6 +49,7 @@
     [encoder encodeObject:self.color_capability forKey:@"color_capability"];
     [encoder encodeObject:self.category forKey:@"category"];
     [encoder encodeObject:self.dye_pigment forKey:@"dye_pigment"];
+    [encoder encodeObject:self.key forKey:@"key"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
@@ -61,6 +64,7 @@
         self.color_capability = [decoder decodeObjectForKey:@"color_capability"];
         self.category = [decoder decodeObjectForKey:@"category"];
         self.dye_pigment = [decoder decodeObjectForKey:@"dye_pigment"];
+        self.key = [decoder decodeObjectForKey:@"key"];
     }
     return self;
 }

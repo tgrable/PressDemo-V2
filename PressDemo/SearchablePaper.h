@@ -18,4 +18,5 @@
 @property(nonatomic, copy)NSString *color_capability;
 @property(nonatomic, copy)NSString *category;
 @property(nonatomic, copy)NSString *dye_pigment;
+@property(nonatomic, copy)NSString *key;
 @end

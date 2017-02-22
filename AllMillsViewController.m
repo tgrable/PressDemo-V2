@@ -415,7 +415,13 @@
         
         //get the data for this row
         NSMutableArray *rowArray = [paperData objectAtIndex:row];
-        NSLog(@"TIM SUCKS GOAT I HAVE PROOF: %lu",(unsigned long)paperData.count);
+        NSLog(@"TimGrable 14 A: %lu",(unsigned long)paperData.count);
+        
+        for (id r in rowArray) {
+            NSLog(@"TimGrable 15 r: %@", r);
+        }
+        NSLog(@"TimGrable 14 A rowArray: %@", rowArray);
+        
         // all cellviews except color int
         cellView.backgroundColor = [UIColor clearColor]; /*clear*/
         cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:12.0];// Changes the text size of ALL cellviews within the table: default 12.0
@@ -423,8 +429,10 @@
         
         //if we are not dealing with the last column, load text
         if(paperTable){
+            NSLog(@"TimGrable 1: if(paperTable)");
             //just mill specific paper
             if(column == 4){
+                NSLog(@"TimGrable 2: if(column == 4)");
                 
                 // MARK: This sets the column icon sets
 
@@ -436,16 +444,19 @@
 //                [cellView addSubview:iconView];
 //                [tableHeaderRow addSubview:iconView];
             }else if(column == 5){
+                NSLog(@"TimGrable 3: if(column == 5)");
                 cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:11.0]; /*11*/
                 cellView.label.text = [rowArray objectAtIndex:column];
             }else{
                 //all other text
+                NSLog(@"TimGrable 4: else");
                 cellView.label.text = [rowArray objectAtIndex:column];
             }
         }else{
-          
+          NSLog(@"TimGrable 5: else");
             //all paper table
             if(column == 5){
+                NSLog(@"TimGrable 6: if(column == 5)");
                 //color capability
 //                int x = 8; /*8*/
 //                int dyeValue = [[rowArray objectAtIndex:column] intValue];
@@ -454,6 +465,7 @@
 //                [cellView addSubview:iconView];
                 
                 if ([[rowArray objectAtIndex:column] intValue] == 99){
+                    NSLog(@"TimGrable 7: GREEN PAPER FOUND");
                     ALog(@"GREEN PAPER FOUND");
                     int x = 8; /*8*/
                     int dyeValue = [[rowArray objectAtIndex:column] intValue];
@@ -475,6 +487,7 @@
                     [cellView addSubview:iconSet];
 
                 }else{
+                    NSLog(@"TimGrable 8: else");
                     int x = 8; /*8*/
                     int dyeValue = [[rowArray objectAtIndex:column] intValue];
                     if(dyeValue == 5) x = -4;
@@ -483,10 +496,14 @@
                 }
                 
             }else if(column == 6){
+                NSLog(@"TimGrable 9: if(column == 6)");
                 cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size: 11.0]; /*11*/
                 cellView.label.text = [rowArray objectAtIndex:column];
             }else{
                 //all other text
+                NSLog(@"TimGrable 10: else");
+                NSLog(@"TimGrable 10: column %d", column);
+                NSLog(@"TimGrable 10: [rowArray objectAtIndex:column] %@", [rowArray objectAtIndex:column]);
                 cellView.label.text = [rowArray objectAtIndex:column];
             }
         }
@@ -501,8 +518,6 @@
         float heightCell = cellView.frame.size.height;
         int intCount = (int)([rowArray count] - 1);
         
-        NSLog(@"TimGrable intCount: %d", intCount);
-        NSLog(@"TimGrable rowArray.count: %lu", (unsigned long)rowArray.count);
         UIButton *maskButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [maskButton setFrame:CGRectMake(0, 0, widthCell, heightCell)];
         [maskButton addTarget:self action:@selector(infoButtonForPaper:)forControlEvents:UIControlEventTouchUpInside];
@@ -510,7 +525,7 @@
         maskButton.titleLabel.text = [rowArray objectAtIndex:intCount];
         maskButton.backgroundColor = [UIColor clearColor];
         [cellView addSubview:maskButton];
-        
+        NSLog(@"TimGrable 15: [rowArray objectAtIndex:intCount]: %@", [rowArray objectAtIndex:intCount]);
     }
     
 }
@@ -555,8 +570,10 @@
 }
 
 //this function is used assemble and pop open the overlay for table
--(void)infoButtonForPaper:(id)sender
+-(void)infoButtonForPaper:(UIButton *)sender
 {
+    NSLog(@"TimGrable sender.titleLabel.text: %@", sender.titleLabel.text);
+    
     UIButton *b = (UIButton *)sender;
     NSLog(@"TimGrable b.titleLabel.text: %@", b.titleLabel.text);
     
@@ -565,9 +582,10 @@
     ALog(@"SELECTED PAPER, %@",selectedPaper);
 
     for(Paper *p in model.initialSetOfPaper){
-        NSLog(@"TimGrable p: %@", p);
-        NSLog(@"TimGrable p.key: %@", p.key);
         if([p.key isEqualToString:b.titleLabel.text]){
+            NSLog(@"TimGrable p: %@", p);
+            NSLog(@"TimGrable p.key: %@", p.key);
+            
             selectedPaper = p;
            
         }
@@ -823,6 +841,7 @@
                 sp.dye_pigment = p.dye_pigment;
                 
                 [rowArray addObject:p.key];
+                sp.key = p.key;
                 
                 [model.searchablePaperDataObjects addObject:sp];
                 
@@ -1686,7 +1705,7 @@
 //TODO: RENABLE THIS TOO
 -(void)searchResponse
 {
-    NSLog(@"ALL MILLS MEDIA CONTROLLER CALLED");
+    NSLog(@"TimGrable 14: JUSTINS ALL MILLS MEDIA CONTROLLER CALLED");
     
     NSMutableDictionary *searchDictionary = [[NSMutableDictionary alloc] init];
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:0] forKey:@"mill_name"];
@@ -1697,6 +1716,7 @@
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:5] forKey:@"color_capability"];
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:6] forKey:@"category"];
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:7] forKey:@"dye_pigment"];
+    [searchDictionary setObject:[searchView.searchArray objectAtIndex:8] forKey:@"key"];
     
     [paperData removeAllObjects];
     [model searchInitialPaperData:searchDictionary complete:^(BOOL completeFlag){
@@ -1724,6 +1744,8 @@
                 
                 [rowArray addObject:p.dye_pigment];
                 
+                [rowArray addObject:p.key];
+                
                 tableRows++;
                 [paperData addObject:rowArray];
                 
@@ -1736,6 +1758,9 @@
                     }];
                 }
             }
+            
+            NSLog(@"TimGrable 14 B: %lu",(unsigned long)paperData.count);
+            
         } else {
             noTableInfo.alpha = 1.0;
             [tableView refresh];

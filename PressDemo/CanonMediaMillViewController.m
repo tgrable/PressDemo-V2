@@ -950,7 +950,8 @@
 // Search response delegate function being called from CanonMediaMillSearchOverlay filter button
 -(void)searchResponse
 {
-    NSLog(@"TIM does not SUCK. ");    NSMutableDictionary *searchDictionary = [[NSMutableDictionary alloc] init];
+    NSLog(@"TimGrable 13: MATTS ALL MILLS MEDIA CONTROLLER CALLED");
+    NSMutableDictionary *searchDictionary = [[NSMutableDictionary alloc] init];
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:0] forKey:@"mill_name"];
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:1] forKey:@"title"];
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:2] forKey:@"basis_weight"];
