@@ -49,7 +49,7 @@
     
     CanonMediaMillSearchOverlay *searchView;
     
-    NSMutableArray *rowHeadersPaper, *rowHeadersMill, *paperData, *headerLabelsPaper, *headerLabelsMill, *iconArray;
+    NSMutableArray *rowHeadersPaper, *rowHeadersMill, *paperDataTwo, *headerLabelsPaper, *headerLabelsMill, *iconArray;
     
     float contentHeight;
     

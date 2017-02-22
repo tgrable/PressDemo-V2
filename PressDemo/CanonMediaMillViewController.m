@@ -868,7 +868,7 @@
 -(void)searchTable:(id)sender
 {
     [self resetTable:resetTable];
-    
+//    [paperData removeAllObjects];
     searchView.searchBackgroundTitle.text = @"Search ALL Mill Table";
     [self.view addSubview:searchView.background];
     
@@ -950,6 +950,7 @@
 // Search response delegate function being called from CanonMediaMillSearchOverlay filter button
 -(void)searchResponse
 {
+    
     NSLog(@"TimGrable 13: MATTS ALL MILLS MEDIA CONTROLLER CALLED");
     NSMutableDictionary *searchDictionary = [[NSMutableDictionary alloc] init];
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:0] forKey:@"mill_name"];
@@ -960,23 +961,25 @@
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:5] forKey:@"color_capability"];
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:6] forKey:@"category"];
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:7] forKey:@"dye_pigment"];
+    [searchDictionary setObject:[searchView.searchArray objectAtIndex:8] forKey:@"key"];
     
     [paperData removeAllObjects];
     [model searchInitialPaperData:searchDictionary complete:^(BOOL completeFlag){
         tableRows = 0;
         tableColumns = 8;
         int count = (int)[model.searchablePaperDataObjects count];
+        ALog(@"JustinDavis: TOTAL COUNT: %i", count);
         if (count > 0) {
             noTableInfo.alpha = 0.0;
             for (SearchablePaper *p in model.searchablePaperDataObjects) {
                 NSMutableArray *rowArray = [[NSMutableArray alloc] init];
-        
+                
                 [rowArray addObject:p.mill_name];
                 
                 [rowArray addObject:p.title];
                 
                 [rowArray addObject:p.basis_weight];
-
+                
                 [rowArray addObject:p.brightness];
                 
                 [rowArray addObject:p.coating];
@@ -987,11 +990,11 @@
                 
                 [rowArray addObject:p.dye_pigment];
                 
+                [rowArray addObject:p.key];
+                
                 tableRows++;
                 [paperData addObject:rowArray];
                 
-                
-                NSLog(@"TIM SUCKS. ");
                 if (tableRows == count) {
                     [tableView refresh];
                     [UIView animateWithDuration:0.6f delay:0.0f options:UIViewAnimationOptionAllowAnimatedContent animations:^{
@@ -1010,6 +1013,8 @@
                 [searchView.background removeFromSuperview];
             }];
         }
+        
+          ALog(@"FINAL PAPER COUNT: %lu", (unsigned long)paperData.count);
     }];
 }
 
@@ -2828,7 +2833,7 @@
     ALog(@"JustinDavis#1 buildAllPaperData CanonMedia");
     tableRows = 0;
     tableColumns = 8;
-
+    [paperData removeAllObjects];
     for(Paper *p in model.initialSetOfPaper){
 
         if([p.basis_weight count] > 0){
@@ -2864,6 +2869,9 @@
                 sp.dye_pigment = p.dye_pigment;
                 
                 [rowArray addObject:p.key];
+                
+                sp.key = p.key;
+                
                 
                 [model.searchablePaperDataObjects addObject:sp];
                 
