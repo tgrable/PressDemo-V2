@@ -950,8 +950,6 @@
 // Search response delegate function being called from CanonMediaMillSearchOverlay filter button
 -(void)searchResponse
 {
-    
-    NSLog(@"TimGrable 13: MATTS ALL MILLS MEDIA CONTROLLER CALLED");
     NSMutableDictionary *searchDictionary = [[NSMutableDictionary alloc] init];
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:0] forKey:@"mill_name"];
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:1] forKey:@"title"];
@@ -2833,7 +2831,7 @@
     ALog(@"JustinDavis#1 buildAllPaperData CanonMedia");
     tableRows = 0;
     tableColumns = 8;
-    [paperData removeAllObjects];
+    [model.searchablePaperDataObjects removeAllObjects];
     for(Paper *p in model.initialSetOfPaper){
 
         if([p.basis_weight count] > 0){
