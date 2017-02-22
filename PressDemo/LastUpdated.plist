@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>mill</key>
+	<string></string>
+	<key>partner</key>
+	<string></string>
+	<key>software</key>
+	<string></string>
+	<key>datasheet</key>
+	<string></string>
+	<key>brochure</key>
+	<string></string>
+	<key>solution</key>
+	<string></string>
+	<key>banner</key>
+	<string></string>
+	<key>paper</key>
+	<string></string>
+	<key>case-study</key>
+	<string></string>
+	<key>white-paper</key>
+	<string></string>
+	<key>product-spec</key>
+	<string></string>
+	<key>product</key>
+	<string></string>
+	<key>product-series</key>
+	<string></string>
+	<key>video</key>
+	<string></string>
+</dict>
+</plist>
