@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0B3AC1FF1E37C1FB005DAE26 /* k@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B3AC1FE1E37C1FB005DAE26 /* k@2x.png */; };
 		0B3AC2011E37C206005DAE26 /* k.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B3AC2001E37C206005DAE26 /* k.png */; };
+		2C16E96F1E5F86BC000304A6 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C16E96D1E5F86BC000304A6 /* Fabric.framework */; };
+		2C16E9701E5F86BC000304A6 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C16E96E1E5F86BC000304A6 /* Crashlytics.framework */; };
 		30AC1137192D90D300BE1072 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AC1136192D90D300BE1072 /* Foundation.framework */; };
 		30AC1139192D90D300BE1072 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AC1138192D90D300BE1072 /* CoreGraphics.framework */; };
 		30AC113B192D90D300BE1072 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AC113A192D90D300BE1072 /* UIKit.framework */; };
@@ -522,6 +524,8 @@
 /* Begin PBXFileReference section */
 		0B3AC1FE1E37C1FB005DAE26 /* k@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "k@2x.png"; sourceTree = "<group>"; };
 		0B3AC2001E37C206005DAE26 /* k.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = k.png; sourceTree = "<group>"; };
+		2C16E96D1E5F86BC000304A6 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		2C16E96E1E5F86BC000304A6 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		30AC1133192D90D300BE1072 /* PressDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PressDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30AC1136192D90D300BE1072 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		30AC1138192D90D300BE1072 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1162,11 +1166,13 @@
 				30E9461119A14497002A996C /* AVFoundation.framework in Frameworks */,
 				30AC11EB192D947400BE1072 /* QuartzCore.framework in Frameworks */,
 				30AC11E9192D946B00BE1072 /* ImageIO.framework in Frameworks */,
+				2C16E9701E5F86BC000304A6 /* Crashlytics.framework in Frameworks */,
 				30AC11E7192D946200BE1072 /* MessageUI.framework in Frameworks */,
 				717C52C71BBB178200ECA0FF /* libGoogleAnalyticsServices.a in Frameworks */,
 				30AC11E5192D945400BE1072 /* SystemConfiguration.framework in Frameworks */,
 				30AC1139192D90D300BE1072 /* CoreGraphics.framework in Frameworks */,
 				30AC113B192D90D300BE1072 /* UIKit.framework in Frameworks */,
+				2C16E96F1E5F86BC000304A6 /* Fabric.framework in Frameworks */,
 				30AC1137192D90D300BE1072 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1205,6 +1211,8 @@
 		30AC1135192D90D300BE1072 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2C16E96D1E5F86BC000304A6 /* Fabric.framework */,
+				2C16E96E1E5F86BC000304A6 /* Crashlytics.framework */,
 				717C52A81BBB0D3600ECA0FF /* libsqlite3.tbd */,
 				717C52A61BBB0D3000ECA0FF /* libz.tbd */,
 				719053EB1AF7C5BB00F1A3CF /* CoreText.framework */,
@@ -2098,6 +2106,7 @@
 				30AC1130192D90D300BE1072 /* Frameworks */,
 				30AC1131192D90D300BE1072 /* Resources */,
 				0B2C35AD1E38EF780008DAAD /* ShellScript */,
+				2C16E96C1E5F868B000304A6 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -2569,6 +2578,19 @@
 			shellPath = /bin/sh;
 			shellScript = "TAGS=\"TODO:|FIXME:|MARK:\"\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\"";
 		};
+		2C16E96C1E5F868B000304A6 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run e5dbfb078f14b5275fab841aae4db0f20e63681d dc39886d0923a7d9ba80be8f649edac63602de5aa761619132ab71d0e3ebd1e3";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -2817,6 +2839,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/trekkmini-1/Desktop",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PressDemo/PressDemo-Prefix.pch";
@@ -2847,6 +2870,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/trekkmini-1/Desktop",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PressDemo/PressDemo-Prefix.pch";
