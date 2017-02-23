@@ -702,6 +702,7 @@
     [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
     [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
     [iconArray addObject:[UIImage imageNamed:@"ico-color.png"]];
+    [iconArray addObject:[UIImage imageNamed:@"k.png"]];
     
     paperTable = YES;
     tableEmpty = NO;
@@ -762,8 +763,9 @@
                 mailComposer.modalPresentationStyle = UIModalPresentationFormSheet;
                 
                 mailComposer.mailComposeDelegate = self; // MFMailComposeViewControllerDelegate
-                
+                if (MFMailComposeViewController.canSendMail){
                 [self presentViewController:mailComposer animated:YES completion:NULL];
+                }
             }
         }
     }];
@@ -866,7 +868,7 @@
 -(void)searchTable:(id)sender
 {
     [self resetTable:resetTable];
-    
+//    [paperData removeAllObjects];
     searchView.searchBackgroundTitle.text = @"Search ALL Mill Table";
     [self.view addSubview:searchView.background];
     
@@ -948,7 +950,6 @@
 // Search response delegate function being called from CanonMediaMillSearchOverlay filter button
 -(void)searchResponse
 {
-    
     NSMutableDictionary *searchDictionary = [[NSMutableDictionary alloc] init];
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:0] forKey:@"mill_name"];
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:1] forKey:@"title"];
@@ -958,23 +959,25 @@
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:5] forKey:@"color_capability"];
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:6] forKey:@"category"];
     [searchDictionary setObject:[searchView.searchArray objectAtIndex:7] forKey:@"dye_pigment"];
+    [searchDictionary setObject:[searchView.searchArray objectAtIndex:8] forKey:@"key"];
     
     [paperData removeAllObjects];
     [model searchInitialPaperData:searchDictionary complete:^(BOOL completeFlag){
         tableRows = 0;
         tableColumns = 8;
         int count = (int)[model.searchablePaperDataObjects count];
+        ALog(@"JustinDavis: TOTAL COUNT: %i", count);
         if (count > 0) {
             noTableInfo.alpha = 0.0;
             for (SearchablePaper *p in model.searchablePaperDataObjects) {
                 NSMutableArray *rowArray = [[NSMutableArray alloc] init];
-        
+                
                 [rowArray addObject:p.mill_name];
                 
                 [rowArray addObject:p.title];
                 
                 [rowArray addObject:p.basis_weight];
-
+                
                 [rowArray addObject:p.brightness];
                 
                 [rowArray addObject:p.coating];
@@ -984,6 +987,8 @@
                 [rowArray addObject:p.category];
                 
                 [rowArray addObject:p.dye_pigment];
+                
+                [rowArray addObject:p.key];
                 
                 tableRows++;
                 [paperData addObject:rowArray];
@@ -1006,6 +1011,8 @@
                 [searchView.background removeFromSuperview];
             }];
         }
+        
+          ALog(@"FINAL PAPER COUNT: %lu", (unsigned long)paperData.count);
     }];
 }
 
@@ -1432,7 +1439,7 @@
                 //setup the table headers based upon the current table we are using
                 [self setupTableHeaders];
                 
-                CGRect frm = CGRectMake(20, 160, 736, 500);
+                CGRect frm = CGRectMake(20, 175, 736, 500);
                 tableView = [[UMTableView alloc] initWithFrame: frm];
                 tableView.tableViewDelegate = self;
                 tableView.tag = 130;
@@ -1749,18 +1756,60 @@
         cellView.backgroundColor = [UIColor clearColor];
         cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:12.0];
         cellView.label.textColor = [UIColor blackColor];
-        
-        
+     
         //if we are not dealing with the last column, load text
         if(paperTable){
             //just mill specific paper
             if(column == 4){
                 //color capability
-                int x = 8;
-                int dyeValue = [[rowArray objectAtIndex:column] intValue];
-                if(dyeValue == 5) x = -4;
-                UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue];
-                [cellView addSubview:iconView];
+                
+                //TODO: This draws the color capability objects in column marked "COLOR"
+                
+//                if ([[rowArray objectAtIndex:column] intValue] == 99){
+//                    ALog(@"GREEN PAPER FOUND"); 
+//                    
+//                    // This doesn't current get hit in the production feed.
+//                }
+                
+// MARK:: Original values for paper icons
+//                int x = 8;
+//                int dyeValue = [[rowArray objectAtIndex:column] intValue];
+//                if(dyeValue == 5) x = -4;
+//                UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue]; // This fucker. This fucker right here. 
+//                [cellView addSubview:iconView];
+                
+                
+                //MARK:: Experimental fix
+                if ([[rowArray objectAtIndex:column] intValue] == 99){
+                    ALog(@"GREEN PAPER FOUND");
+                    int x = 8; /*8*/
+                    int dyeValue = [[rowArray objectAtIndex:column] intValue];
+                    if(dyeValue == 5) x = -4;
+                    //                    UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue];
+                    // TODO: Check this on the live strema
+                    // This detects the rogue paper type and gives it a custom image.
+                    
+                    UIView *iconSet = [[UIView alloc] initWithFrame:CGRectMake(8, 10, 120, 21)];
+                    iconSet.backgroundColor = [UIColor clearColor];
+                    iconSet.frame = CGRectMake(x, 10, 88, 15);
+                    UIImageView *icon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 10, 15, 15)];
+                    //                    [icon setImage:[iconArray objectAtIndex:4]];
+                    [icon setImage:[UIImage imageNamed:@"k.png"]];
+                    [iconSet addSubview:icon];
+                    //                    [rowTwo addSubview:icon];
+                    ALog(@"GREEN PAPER FOUND");
+                    
+                    [cellView addSubview:iconSet];
+                    
+                }else{
+                    int x = 8; /*8*/
+                    int dyeValue = [[rowArray objectAtIndex:column] intValue];
+                    if(dyeValue == 5) x = -4;
+                    UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue];
+                    [cellView addSubview:iconView];
+                }
+                
+                // -end- Experimental fix
             }else if(column == 5){
                 cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:11.0];
                 cellView.label.text = [rowArray objectAtIndex:column];
@@ -1772,11 +1821,45 @@
             //all paper table
             if(column == 5){
                 //color capability
-                int x = 8;
-                int dyeValue = [[rowArray objectAtIndex:column] intValue];
-                if(dyeValue == 5) x = -4;
-                UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue];
-                [cellView addSubview:iconView];
+                
+                //MARK: Original table content
+//                int x = 8;
+//                int dyeValue = [[rowArray objectAtIndex:column] intValue];
+//                if(dyeValue == 5) x = -4;
+//                UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue];
+//                [cellView addSubview:iconView];
+                
+                
+                if ([[rowArray objectAtIndex:column] intValue] == 99){
+                    ALog(@"GREEN PAPER FOUND");
+                    int x = 8; /*8*/
+                    int dyeValue = [[rowArray objectAtIndex:column] intValue];
+                    if(dyeValue == 5) x = -4;
+                    //                    UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue];
+                    // TODO: Check this on the live strema
+                    // This detects the rogue paper type and gives it a custom image.
+                    
+                    UIView *iconSet = [[UIView alloc] initWithFrame:CGRectMake(8, 10, 120, 21)];
+                    iconSet.backgroundColor = [UIColor clearColor];
+                    iconSet.frame = CGRectMake(x, 10, 88, 15);
+                    UIImageView *icon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 10, 15, 15)];
+                    //                    [icon setImage:[iconArray objectAtIndex:4]];
+                    [icon setImage:[UIImage imageNamed:@"k.png"]];
+                    [iconSet addSubview:icon];
+                    //                    [rowTwo addSubview:icon];
+                    ALog(@"GREEN PAPER FOUND");
+                    
+                    [cellView addSubview:iconSet];
+                    
+                }else{
+                    int x = 8;
+                    int dyeValue = [[rowArray objectAtIndex:column] intValue];
+                    if(dyeValue == 5) x = -4;
+                    UIView *iconView = [self getColorIconSet:YES withXValue:x andYValue:16 withColorValue:dyeValue];
+                    [cellView addSubview:iconView];
+
+                }
+                
             
             }else if(column == 6){
                 cellView.label.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:11.0];
@@ -1817,10 +1900,29 @@
     if(flag){
         //small view
         iconSet.frame = CGRectMake(x, y, 88, 15);
+//        int count = 0;
         while(i < value){
+            
+            
             int xOffset = i * 18;
             UIImageView *icon = [[UIImageView alloc] initWithFrame:CGRectMake(xOffset, 0, 15, 15)];
-            [icon setImage:[iconArray objectAtIndex:i]];
+            
+//            if (i < 5){
+                  [icon setImage:[iconArray objectAtIndex:i]];
+//            }else if (i == 5){
+//                count++;
+//                ALog(@"%i",count);
+////                ALog(@"GREEN PAPER FOUND");
+////                [icon setImage:[iconArray objectAtIndex:5]];
+//                if (value == 99){
+//                    [icon setImage:[UIImage imageNamed:@"k.png"]];
+//                }
+//             
+//            
+//            }
+//        
+            
+            
             [iconSet addSubview:icon];
             i++;
         }
@@ -1925,7 +2027,7 @@
     
     //set the UIPopoverController with the PopUpMenuViewController object and set the frame
     pop = [[UIPopoverController alloc] initWithContentViewController:popView];
-    pop.popoverContentSize = CGSizeMake(650, 220);
+    pop.popoverContentSize = CGSizeMake(650, 245);
     pop.delegate = self;
     [pop presentPopoverFromRect:((UIButton *)sender).bounds inView:sender permittedArrowDirections:UIPopoverArrowDirectionRight animated:YES];
 }
@@ -1953,9 +2055,16 @@
     header.userInteractionEnabled = YES;
     [modalView addSubview:header];
     
+//    if (obj.mill_name != nil){
     
-    float millWidth = [model widthOfString:[obj.mill_name uppercaseString] withStringSize:16.0 andFontKey:@"ITCAvantGardeStd-Md"];
-    float paperWidth = [model widthOfString:[obj.title uppercaseString] withStringSize:16.0 andFontKey:@"ITCAvantGardeStd-Md"];
+    
+        float millWidth = [model widthOfString:[obj.mill_name uppercaseString] withStringSize:16.0 andFontKey:@"ITCAvantGardeStd-Md"];
+        float paperWidth = [model widthOfString:[obj.title uppercaseString] withStringSize:16.0 andFontKey:@"ITCAvantGardeStd-Md"];
+
+    
+    
+//    float millWidth = [model widthOfString:[obj.mill_name uppercaseString] withStringSize:16.0 andFontKey:@"ITCAvantGardeStd-Md"];
+//    float paperWidth = [model widthOfString:[obj.title uppercaseString] withStringSize:16.0 andFontKey:@"ITCAvantGardeStd-Md"];
     
     UILabel *paperMill = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, millWidth, 20)];
     [paperMill setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:16.0]];
@@ -2224,9 +2333,24 @@
     //color capability
     int colorValue = [obj.color_capability intValue], xValue = 406;
     if(colorValue > 3) xValue = 390;
+    // MARK: This corrects the model view popup 
+    if ([obj.color_capability intValue] == 99){
+//        UIView *iconSet = [[UIView alloc] initWithFrame:CGRectMake(xValue, 10, 120, 21)];
+//        iconSet.backgroundColor = [UIColor clearColor];
+//        iconSet.frame = CGRectMake(xValue, 10, 88, 15);
+        UIImageView *icon = [[UIImageView alloc] initWithFrame:CGRectMake(405, 10, 15, 15)];
+        [icon setImage:[iconArray objectAtIndex:5]];
+        [rowTwo addSubview:icon]; 
+        ALog(@"GREEN PAPER FOUND");
+        
+        // MARK: This doesn't current get hit in the production feed.
+    }else{
+        UIView *colorIconSet = [self getColorIconSet:NO withXValue:xValue andYValue:10 withColorValue:[obj.color_capability intValue]];
+        [rowTwo addSubview:colorIconSet];
+        ALog(@"NO GREEN PAPER FOUND");
+    }
     
-    UIView *colorIconSet = [self getColorIconSet:NO withXValue:xValue andYValue:10 withColorValue:[obj.color_capability intValue]];
-    [rowTwo addSubview:colorIconSet];
+
     
     UILabel *weightsAvailableValue = [[UILabel alloc] initWithFrame:CGRectMake(550, 10, 122, 20)];
     [weightsAvailableValue setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:13.0]];
@@ -2403,6 +2527,31 @@
     premiumPlusValue.backgroundColor = [UIColor clearColor];
     premiumPlusValue.text = @"COATED PREMIUM QUALITY 4/C";
     [modalView addSubview:premiumPlusValue];
+    
+    // Insert special paper type info here:
+    
+    UILabel *roguePaperType = [[UILabel alloc] initWithFrame:CGRectMake(73, 474, 190, 20)];
+    [roguePaperType setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:15.0]];
+    roguePaperType.textColor = [UIColor blackColor];
+    roguePaperType.numberOfLines = 1;
+    roguePaperType.backgroundColor = [UIColor clearColor];
+    roguePaperType.text = @"COLORED";
+    [modalView addSubview:roguePaperType];
+    
+    UILabel *roguePaperTypeDesc = [[UILabel alloc] initWithFrame:CGRectMake(253, 474, 290, 20)];
+    [roguePaperTypeDesc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:15.0]];
+    roguePaperTypeDesc.textColor = model.dullBlack;
+    roguePaperTypeDesc.numberOfLines = 1;
+    roguePaperTypeDesc.backgroundColor = [UIColor clearColor];
+    roguePaperTypeDesc.text = @"OTHER COLORS AVAILABLE";
+    [modalView addSubview:roguePaperTypeDesc];
+    
+    UIImageView *roguePaperTypeIcon = [[UIImageView alloc] initWithFrame:CGRectMake(513, 474, 15, 15)];
+    [roguePaperTypeIcon setImage:[UIImage imageNamed:@"k.png"]];
+    [modalView addSubview:roguePaperTypeIcon];
+    
+    
+    // end special paper type 
     
     UIImageView *bwPremium = [[UIImageView alloc] initWithFrame:CGRectMake(513, 454, 15, 15)];
     [bwPremium setImage:[UIImage imageNamed:@"ico-blackwhite.png"]];
@@ -2679,10 +2828,10 @@
 //this function is more generalized and assembles all of the paper data
 -(void)buildAllPaperData
 {
-    
+    ALog(@"JustinDavis#1 buildAllPaperData CanonMedia");
     tableRows = 0;
     tableColumns = 8;
-    
+    [model.searchablePaperDataObjects removeAllObjects];
     for(Paper *p in model.initialSetOfPaper){
 
         if([p.basis_weight count] > 0){
@@ -2718,6 +2867,9 @@
                 sp.dye_pigment = p.dye_pigment;
                 
                 [rowArray addObject:p.key];
+                
+                sp.key = p.key;
+                
                 
                 [model.searchablePaperDataObjects addObject:sp];
                 

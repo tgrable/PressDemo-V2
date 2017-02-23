@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B3AC1FF1E37C1FB005DAE26 /* k@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B3AC1FE1E37C1FB005DAE26 /* k@2x.png */; };
+		0B3AC2011E37C206005DAE26 /* k.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B3AC2001E37C206005DAE26 /* k.png */; };
+		2C16E96F1E5F86BC000304A6 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C16E96D1E5F86BC000304A6 /* Fabric.framework */; };
+		2C16E9701E5F86BC000304A6 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C16E96E1E5F86BC000304A6 /* Crashlytics.framework */; };
 		30AC1137192D90D300BE1072 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AC1136192D90D300BE1072 /* Foundation.framework */; };
 		30AC1139192D90D300BE1072 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AC1138192D90D300BE1072 /* CoreGraphics.framework */; };
 		30AC113B192D90D300BE1072 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AC113A192D90D300BE1072 /* UIKit.framework */; };
@@ -518,6 +522,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0B3AC1FE1E37C1FB005DAE26 /* k@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "k@2x.png"; sourceTree = "<group>"; };
+		0B3AC2001E37C206005DAE26 /* k.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = k.png; sourceTree = "<group>"; };
+		2C16E96D1E5F86BC000304A6 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		2C16E96E1E5F86BC000304A6 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		30AC1133192D90D300BE1072 /* PressDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PressDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30AC1136192D90D300BE1072 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		30AC1138192D90D300BE1072 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1158,11 +1166,13 @@
 				30E9461119A14497002A996C /* AVFoundation.framework in Frameworks */,
 				30AC11EB192D947400BE1072 /* QuartzCore.framework in Frameworks */,
 				30AC11E9192D946B00BE1072 /* ImageIO.framework in Frameworks */,
+				2C16E9701E5F86BC000304A6 /* Crashlytics.framework in Frameworks */,
 				30AC11E7192D946200BE1072 /* MessageUI.framework in Frameworks */,
 				717C52C71BBB178200ECA0FF /* libGoogleAnalyticsServices.a in Frameworks */,
 				30AC11E5192D945400BE1072 /* SystemConfiguration.framework in Frameworks */,
 				30AC1139192D90D300BE1072 /* CoreGraphics.framework in Frameworks */,
 				30AC113B192D90D300BE1072 /* UIKit.framework in Frameworks */,
+				2C16E96F1E5F86BC000304A6 /* Fabric.framework in Frameworks */,
 				30AC1137192D90D300BE1072 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1201,6 +1211,8 @@
 		30AC1135192D90D300BE1072 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2C16E96D1E5F86BC000304A6 /* Fabric.framework */,
+				2C16E96E1E5F86BC000304A6 /* Crashlytics.framework */,
 				717C52A81BBB0D3600ECA0FF /* libsqlite3.tbd */,
 				717C52A61BBB0D3000ECA0FF /* libz.tbd */,
 				719053EB1AF7C5BB00F1A3CF /* CoreText.framework */,
@@ -1406,6 +1418,7 @@
 		30AC1171192D918300BE1072 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				0B3AC2001E37C206005DAE26 /* k.png */,
 				30AC11EE192D96B100BE1072 /* sample.png */,
 				30E9460A19A00D19002A996C /* sample@2x.png */,
 				30E9460E19A00E2C002A996C /* overviewPlaceholder@2x.png */,
@@ -1792,6 +1805,7 @@
 		718D210F1A3799E500980FDF /* media */ = {
 			isa = PBXGroup;
 			children = (
+				0B3AC1FE1E37C1FB005DAE26 /* k@2x.png */,
 				711FC3341A430909005BEDE7 /* ico-blackwhite@2x.png */,
 				711FC3321A430903005BEDE7 /* ico-color@2x.png */,
 				71708D091A3A4AC10041F8D5 /* icn-info-blue@2x.png */,
@@ -2091,6 +2105,8 @@
 				30AC112F192D90D300BE1072 /* Sources */,
 				30AC1130192D90D300BE1072 /* Frameworks */,
 				30AC1131192D90D300BE1072 /* Resources */,
+				0B2C35AD1E38EF780008DAAD /* ShellScript */,
+				2C16E96C1E5F868B000304A6 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -2126,7 +2142,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = Canon;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = Trekk;
 				TargetAttributes = {
 					30AC1132192D90D300BE1072 = {
@@ -2458,6 +2474,7 @@
 				71706CE21A72ADA3002CB444 /* imPRESS-animation-screen_98@2x.png in Resources */,
 				71706C9F1A72ADA3002CB444 /* imPRESS-animation-screen_31@2x.png in Resources */,
 				7113DE211BCE9C0B00FE086E /* icn-search@2x.png in Resources */,
+				0B3AC2011E37C206005DAE26 /* k.png in Resources */,
 				71706CA11A72ADA3002CB444 /* imPRESS-animation-screen_33@2x.png in Resources */,
 				718D21211A379B5300980FDF /* icn-info.png in Resources */,
 				71706CA91A72ADA3002CB444 /* imPRESS-animation-screen_41@2x.png in Resources */,
@@ -2474,6 +2491,7 @@
 				71DBB823192FB60E002D7CA9 /* hdr-short-imagepress.png in Resources */,
 				71708CCC1A38F92C0041F8D5 /* hdr-short-purple.png in Resources */,
 				71706CDF1A72ADA3002CB444 /* imPRESS-animation-screen_95@2x.png in Resources */,
+				0B3AC1FF1E37C1FB005DAE26 /* k@2x.png in Resources */,
 				71706CC31A72ADA3002CB444 /* imPRESS-animation-screen_67@2x.png in Resources */,
 				71706CA21A72ADA3002CB444 /* imPRESS-animation-screen_34@2x.png in Resources */,
 				71DBB826192FB60E002D7CA9 /* hdr-short-niagara.png in Resources */,
@@ -2545,6 +2563,35 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0B2C35AD1E38EF780008DAAD /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "TAGS=\"TODO:|FIXME:|MARK:\"\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\"";
+		};
+		2C16E96C1E5F868B000304A6 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run e5dbfb078f14b5275fab841aae4db0f20e63681d dc39886d0923a7d9ba80be8f649edac63602de5aa761619132ab71d0e3ebd1e3";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		30AC112F192D90D300BE1072 /* Sources */ = {
@@ -2711,14 +2758,19 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -2731,7 +2783,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
@@ -2751,20 +2803,25 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
@@ -2776,17 +2833,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/trekkmini-1/Desktop",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PressDemo/PressDemo-Prefix.pch";
 				INFOPLIST_FILE = "PressDemo/PressDemo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/PressDemo",
@@ -2806,17 +2864,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/trekkmini-1/Desktop",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PressDemo/PressDemo-Prefix.pch";
 				INFOPLIST_FILE = "PressDemo/PressDemo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/PressDemo",

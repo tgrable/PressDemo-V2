@@ -11,7 +11,8 @@
 #import "Reachability.h"
 #import "GAI.h"
 
-
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
 
 @implementation CanonAppDelegate
 @synthesize AppDataObj;
@@ -68,6 +69,7 @@
     [self.window setRootViewController: navController];
     [self.window makeKeyAndVisible];
     
+    [Fabric with:@[[Crashlytics class]]];
  
     return YES;
     

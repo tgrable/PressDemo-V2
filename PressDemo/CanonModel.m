@@ -923,9 +923,11 @@
     ALog(@"########### Before Filter Count %lu", (unsigned long)[searchablePaperDataObjects count]);
     NSMutableArray *predicateArray = [NSMutableArray array];
     for (id key in searchTerms) {
-        if (![[searchTerms objectForKey:key] isEqualToString:@"- NONE -"]) {
-            NSPredicate *p = [NSPredicate predicateWithFormat:@"%K == %@", key, [searchTerms objectForKey:key]];
-            [predicateArray addObject:p];
+        if (![[searchTerms objectForKey:key] isEqualToString:@"- NONE -"] ) {
+            if (![[searchTerms objectForKey:key] isEqualToString:@"key"]) {
+                NSPredicate *p = [NSPredicate predicateWithFormat:@"%K == %@", key, [searchTerms objectForKey:key]];
+                [predicateArray addObject:p];
+            }
         }
     }
     
@@ -1057,6 +1059,12 @@
 {
     UIFont *font = [UIFont fontWithName:key size:size];
     NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
+//    if (string != nil){
+//    return [[[NSAttributedString alloc] initWithString:string attributes:attributes] size].width;
+//    }else{
+//        return 1.0;
+//    }
+    
     return [[[NSAttributedString alloc] initWithString:string attributes:attributes] size].width;
 }
 

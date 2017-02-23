@@ -13,7 +13,7 @@
 @implementation CanonTableKeyViewController
 @synthesize keyTitle, textLabel, textValue, textPlusLabel, textPlusValue;
 @synthesize productionLabel, productionValue, productionPlusLabel, productionPlusValue;
-@synthesize premiumLabel, premiumPlusValue, model;
+@synthesize premiumLabel, premiumPlusValue,colorLabel, coloredDesc, model;
 
 //Here we are setting up the delegate method
 - (CanonModel *) AppDataObj;
@@ -177,6 +177,27 @@
     UIImageView *colorFourPremium = [[UIImageView alloc] initWithFrame:CGRectMake(605, 173, 21, 21)];
     [colorFourPremium setImage:[UIImage imageNamed:@"ico-color.png"]];
     [self.view addSubview:colorFourPremium];
+    
+    colorLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 200, 190, 30)];
+    [colorLabel setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:16.0]];
+    colorLabel.textColor = [UIColor blackColor];
+    colorLabel.numberOfLines = 1;
+    colorLabel.backgroundColor = [UIColor clearColor];
+    colorLabel.text = @"COLORED";
+    [self.view addSubview:colorLabel];
+    
+    coloredDesc = [[UILabel alloc] initWithFrame:CGRectMake(205, 200, 270, 30)];
+    [coloredDesc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:16.0]];
+    coloredDesc.textColor = model.dullBlack;
+    coloredDesc.numberOfLines = 1;
+    coloredDesc.backgroundColor = [UIColor clearColor];
+    coloredDesc.text = @"OTHER COLORS AVAILABLE";
+    [self.view addSubview:coloredDesc];
+    
+    UIImageView *kIcon = [[UIImageView alloc] initWithFrame:CGRectMake(485, 200, 21, 21)];
+    [kIcon setImage:[UIImage imageNamed:@"k.png"]];
+    [self.view addSubview:kIcon];
+
 
     
 }

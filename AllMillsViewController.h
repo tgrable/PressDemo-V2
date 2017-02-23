@@ -49,7 +49,7 @@
     
     CanonMediaMillSearchOverlay *searchView;
     
-    NSMutableArray *rowHeadersPaper, *rowHeadersMill, *paperData, *headerLabelsPaper, *headerLabelsMill, *iconArray;
+    NSMutableArray *rowHeadersPaper, *rowHeadersMill, *paperDataTwo, *headerLabelsPaper, *headerLabelsMill, *iconArray;
     
     float contentHeight;
     
@@ -66,7 +66,7 @@
     UIActivityIndicatorView *activityIndicator;
     
 }
-
+@property(nonatomic)CanonMediaMillSearchOverlay *searchView;
 @property(nonatomic)NetworkData *network;
 @property(nonatomic, readonly)CanonModel *model;
 @property(nonatomic, strong)UIImageView *topBanner;

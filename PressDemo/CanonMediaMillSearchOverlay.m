@@ -278,6 +278,7 @@
     [searchArray insertObject:colorValue atIndex:5];
     [searchArray insertObject:capabilityButton.currentTitle atIndex:6];
     [searchArray insertObject:inksetButton.currentTitle atIndex:7];
+    [searchArray insertObject:@"key" atIndex:8];
     
     [_delegate searchResponse];
 }
