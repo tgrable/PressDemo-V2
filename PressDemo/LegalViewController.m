@@ -57,7 +57,6 @@
     [divider setImage:[UIImage imageNamed:@"img-div-shdw.png"]];
     [self.view addSubview:divider];
 
-    
     UITextView *legalText = [[UITextView alloc] initWithFrame:CGRectMake(36, 120, 952, 150)];
     [legalText setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:13.0]];
     legalText.textColor = [UIColor blackColor];
@@ -68,6 +67,16 @@
     legalText.text = @"Canon and imagePRESS are registered trademarks of Canon Inc. in the US and elsewhere. Océ ColorStream, Océ ImageStream, Océ JetStream, Océ PRISMA, OcePRISMAaccess, Océ PRISMAprepare, Océ PRISMAproduction, Océ TrueProof, Océ VarioPrint, Océ VarioStream, and Océ are either registered trademarks or trademarks of Océ-Technologies B.V. in the US and elsewhere. All other referenced product names and marks are trademarks of their respective owners and are hereby acknowledged.\n\n© 2015 Canon Solutions America, Inc. All rights reserved.";
     [self.view addSubview:legalText];
     
+    NSLog(@"self.view.bounds.size.height: %f - self.view.bounds.size.width: %f: ", self.view.bounds.size.height, self.view.bounds.size.width );
+    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    NSString *build = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey];
+    UILabel *versionNumber = [[UILabel alloc] initWithFrame:CGRectMake(0, 720, 1024, 50)];
+    [versionNumber setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:13.0]];
+    versionNumber.textColor = [UIColor blackColor];
+    [versionNumber setTextAlignment:NSTextAlignmentCenter];
+    versionNumber.text = [NSString stringWithFormat:@"%@ - %@", version, build];
+    [versionNumber setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:versionNumber];
 }
 
 -(void)closeTapped:(id)sender

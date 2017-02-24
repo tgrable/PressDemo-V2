@@ -69,6 +69,7 @@
     [self.window setRootViewController: navController];
     [self.window makeKeyAndVisible];
     
+    [[Fabric sharedSDK] setDebug:NO];
     [Fabric with:@[[Crashlytics class]]];
  
     return YES;

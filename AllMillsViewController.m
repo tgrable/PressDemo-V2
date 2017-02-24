@@ -121,6 +121,9 @@
     }
 
     [self setupTableHeaders];
+    
+    
+    NSLog(@"self.view.bounds.size.height: %f - self.view.bounds.size.width: %f: ", self.view.bounds.size.height, self.view.bounds.size.width );
 }
 
 
