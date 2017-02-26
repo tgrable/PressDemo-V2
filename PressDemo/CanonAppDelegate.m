@@ -73,7 +73,6 @@
     [Fabric with:@[[Crashlytics class]]];
  
     return YES;
-    
 }
 
 # pragma mark - Rotation

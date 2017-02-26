@@ -12,7 +12,7 @@
 #define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 
 @implementation CanonDownloadAll
-@synthesize model, network;
+@synthesize model, network, okAction, userStatus;
 
 //Here we are setting up the delegate method
 - (CanonModel *) AppDataObj;
@@ -37,32 +37,54 @@
     download = [[DownloadFile alloc] init];
     download.delegate = self;
     
-    [UIApplication sharedApplication].idleTimerDisabled = YES;
+    userStatus = [[VerifyUserStatus alloc] init];
+    userStatus.delegate = self;
     
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
     
     UIImageView *loadScreen = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 1024, 768)];
     loadScreen.image = [model getImageWithName:@"/launch@2x.png"];
     [loadScreen setUserInteractionEnabled:YES];
     [self.view addSubview:loadScreen];
     
-    //if we have made the initial download, push the user to the home screen
-    if([[NSUserDefaults standardUserDefaults] boolForKey:@"initialDownload"]){
-        //send the user to the first view after the build
-        CanonViewController *vc = [[CanonViewController alloc] initWithNibName:@"CanonViewController" bundle:nil];
-        [self.navigationController pushViewController:vc animated:NO];
-    }else{
-        //build the user interface
-        [self loadUpUserInterface];
-    }
+//    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userEmail"];
+
+//    //if we can reach the internet
+//    Reachability *reachability = [Reachability sharedReachability];
+//    NSLog(@"1");
+//    if ([reachability isReachable]) {
+//        NSLog(@"2");
+//        if ([self getUserEmailFromDefaults].length <= 0) {
+//            NSLog(@"3");
+//            [self collectAndValidateEmail];
+//        }
+//        else {
+//            NSLog(@"4");
+//            //TODO: Call Justin's class to validate the user
+//            //  -(void)verifyUser:(NSString *)userEmail;
+//        }
+//        
+//    } else {
+//        NSLog(@"5");
+//        //set UI error
+//        if ([self getUserEmailFromDefaults].length <= 0) {
+//            NSLog(@"6");
+//            [self collectAndValidateEmail];
+//        }
+//        else {
+//            NSLog(@"7");
+//            [self continueLoadingApp];
+//        }
+//    }
     
-    //get the data about the device
-    NSString *dimensions = @"1024x768";
-    if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
-        ([UIScreen mainScreen].scale == 2.0)) {
-        dimensions = @"2048x1536";
+    
+    if ([self getUserEmailFromDefaults].length <= 0) {
+        [self collectAndValidateEmail];
     }
-    NSString *deviceData = [NSString stringWithFormat:@"%@ - %@", [model deviceInformation], dimensions];
-    [model logData:@"CanonViewController" withAction:@"Device Name" withLabel:deviceData];
+    else {
+        //TODO: Call Justin's class to validate the user
+        [userStatus verifyUser:[self getUserEmailFromDefaults]];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -268,10 +290,127 @@
     }
 }
 
+-(void)continueLoadingApp {
+    NSLog(@"When do I run?");
+    //if we have made the initial download, push the user to the home screen
+    if([[NSUserDefaults standardUserDefaults] boolForKey:@"initialDownload"]){
+        //send the user to the first view after the build
+        CanonViewController *vc = [[CanonViewController alloc] initWithNibName:@"CanonViewController" bundle:nil];
+        [self.navigationController pushViewController:vc animated:NO];  // FIXME: This is causing a crash
+    }else{
+        //build the user interface
+        [self loadUpUserInterface];
+    }
+    
+    //get the data about the device
+    NSString *dimensions = @"1024x768";
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
+        ([UIScreen mainScreen].scale == 2.0)) {
+        dimensions = @"2048x1536";
+    }
+    NSString *deviceData = [NSString stringWithFormat:@"%@ - %@", [model deviceInformation], dimensions];
+    [model logData:@"CanonViewController" withAction:@"Device Name" withLabel:deviceData];
+
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
+#pragma -
+#pragma - Collect and Validate Email
+-(void)collectAndValidateEmail {
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"imPRESS"
+                                                                   message:@"Please enter your email address."
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    
+    okAction = [UIAlertAction actionWithTitle:@"OK"
+                                        style:UIAlertActionStyleDefault
+                                      handler:^(UIAlertAction *action) {
+                                            UITextField *textField = [alert.textFields firstObject];
+                                            if ([self validateEmailWithString:textField.text]) {
+                                                //TODO: Call Justin's class to validate the user
+                                                //  -(void)verifyUser:(NSString *)userEmail;
+                                                currentEmail = textField.text;
+                                                [userStatus verifyUser:currentEmail];
+                                                //if we can reach the internet
+//                                                if ([reachability isReachable]) {
+//                                                    [userStatus verifyUser:currentEmail];
+//                                                }
+//                                                else {
+//                                                    [[NSUserDefaults standardUserDefaults] setObject:currentEmail forKey:@"userEmail"];
+//                                                    [[NSUserDefaults standardUserDefaults] synchronize];
+//                                                    [self continueLoadingApp];
+//                                                }
+                                                
+                                            }
+                                        }];
+    okAction.enabled = NO;
+    
+    
+    [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        // optionally configure the text field
+        textField.keyboardType = UIKeyboardTypeAlphabet;
+        textField.delegate = self;
+    }];
+    
+    [alert addAction:okAction];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (BOOL)validateEmailWithString:(NSString*)email
+{
+    NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+    return [emailTest evaluateWithObject:email];
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    NSLog(@"text entered");
+    NSString *finalString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    [self.okAction setEnabled:([self validateEmailWithString:finalString])];
+    return YES;
+}
+
+#pragma -
+#pragma - Justins Delegate Method
+
+-(void)authorizationStatusWasReturned:(int)isCurrentlyAuthorized userURL:(NSString *)currentURL message:(NSString *)currentMsg {
+    // 0 = yes
+    // 1 = no
+    // 2 = error
+    
+    NSLog(@"BOOM!!!!!!");
+    
+    switch (isCurrentlyAuthorized) {
+        case 0:
+            if ([self getUserEmailFromDefaults].length <= 0) {
+                [[NSUserDefaults standardUserDefaults] setObject:currentEmail forKey:@"userEmail"];
+            }
+            
+            NSLog(@"currentURL: %@", currentURL);
+            [[NSUserDefaults standardUserDefaults] setObject:currentURL forKey:@"userDownloadUrl"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            [self continueLoadingApp];
+            break;
+        case 1:
+            [self displayMessage:@"You are no longer authorized to use this app." withTitle:@"imPRESS"];
+            break;
+        case 2:
+            // TODO: Display msg to alert the user there was an error
+            [self displayMessage:currentMsg withTitle:@"Error"];
+            break;
+        default:
+            break;
+    }
+}
+
+- (NSString *)getUserEmailFromDefaults {
+    return [[NSUserDefaults standardUserDefaults] stringForKey:@"userEmail"];
+}
 
 @end
