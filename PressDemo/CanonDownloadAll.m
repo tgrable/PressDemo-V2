@@ -53,7 +53,7 @@
     //if we can reach the internet
     if ([self connected]) {
         if ([self getUserEmailFromDefaults].length <= 0) {
-            [self collectAndValidateEmail];
+            [self collectAndValidateEmail:@"imPRESS" andMessage:@"Please enter your email address."];
         }
         else {
             [userStatus verifyUser:[self getUserEmailFromDefaults]];
@@ -62,7 +62,7 @@
     } else {
         //set UI error
         if ([self getUserEmailFromDefaults].length <= 0) {
-            [self collectAndValidateEmail];
+            [self collectAndValidateEmail:@"imPRESS" andMessage:@"Please enter your email address."];
         }
         else {
             [self continueLoadingApp];
@@ -342,10 +342,10 @@
 
 #pragma -
 #pragma - Collect and Validate Email
--(void)collectAndValidateEmail {
+-(void)collectAndValidateEmail:(NSString *)title andMessage:(NSString *)msg {
     
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"imPRESS"
-                                                                   message:@"Please enter your email address."
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                   message:msg
                                                             preferredStyle:UIAlertControllerStyleAlert];
     
     okAction = [UIAlertAction actionWithTitle:@"OK"
@@ -425,7 +425,7 @@
         case 2:
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userEmail"];
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userDownloadUrl"];
-            [self displayMessage:currentMsg withTitle:@"Error"];
+            [self collectAndValidateEmail:@"Error" andMessage:[NSString stringWithFormat:@"%@ \n\n Please enter your email address.", currentMsg]];
             break;
         default:
             break;
@@ -462,6 +462,8 @@
     
     [self presentViewController:alertController animated:YES completion:nil];
 }
+
+
 
 - (NSString *)getUserEmailFromDefaults {
     return [[NSUserDefaults standardUserDefaults] stringForKey:@"userEmail"];
