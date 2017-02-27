@@ -8,11 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-
 @protocol UserStatusDelegate <NSObject>
-@required
 
--(void)authorizationStatusWasReturned:(int)isCurrentlyAuthorized userURL:(NSString *)currentURL message:(NSString *)currentMsg;
+@required
+//-(void)authorizationStatusWasReturned:(int)isCurrentlyAuthorized userURL:(NSString *)currentURL message:(NSString *)currentMsg;
+
+
+-(void)authorizationStatusWasReturned:(int)isCurrentlyAuthorized userURL:(NSString *)currentURL message:(NSString *)currentMsg currentVersion:(NSString *)versionNumber;
 
 @end
 

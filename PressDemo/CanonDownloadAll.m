@@ -48,42 +48,25 @@
     [self.view addSubview:loadScreen];
     
 //    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userEmail"];
+//    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userDownloadUrl"];
 
-//    //if we can reach the internet
-//    Reachability *reachability = [Reachability sharedReachability];
-//    NSLog(@"1");
-//    if ([reachability isReachable]) {
-//        NSLog(@"2");
-//        if ([self getUserEmailFromDefaults].length <= 0) {
-//            NSLog(@"3");
-//            [self collectAndValidateEmail];
-//        }
-//        else {
-//            NSLog(@"4");
-//            //TODO: Call Justin's class to validate the user
-//            //  -(void)verifyUser:(NSString *)userEmail;
-//        }
-//        
-//    } else {
-//        NSLog(@"5");
-//        //set UI error
-//        if ([self getUserEmailFromDefaults].length <= 0) {
-//            NSLog(@"6");
-//            [self collectAndValidateEmail];
-//        }
-//        else {
-//            NSLog(@"7");
-//            [self continueLoadingApp];
-//        }
-//    }
-    
-    
-    if ([self getUserEmailFromDefaults].length <= 0) {
-        [self collectAndValidateEmail];
-    }
-    else {
-        //TODO: Call Justin's class to validate the user
-        [userStatus verifyUser:[self getUserEmailFromDefaults]];
+    //if we can reach the internet
+    if ([self connected]) {
+        if ([self getUserEmailFromDefaults].length <= 0) {
+            [self collectAndValidateEmail];
+        }
+        else {
+            [userStatus verifyUser:[self getUserEmailFromDefaults]];
+        }
+        
+    } else {
+        //set UI error
+        if ([self getUserEmailFromDefaults].length <= 0) {
+            [self collectAndValidateEmail];
+        }
+        else {
+            [self continueLoadingApp];
+        }
     }
 }
 
@@ -119,6 +102,44 @@
         [downloadAll setTitle:@"BEGIN UPDATE" forState:UIControlStateNormal];
         message.text = @"NOTE: Before starting the application data download, please make sure you are connected to a Wi-Fi network.\n The initial download could take up to 20 minutes based on your connection.\n Subsequent updates will have shorter download times.";
     }
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    //app going into background notification
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(appWentIntoBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    
+    //set observation notification on completion
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(appCameBackIntoFocus) name:UIApplicationDidBecomeActiveNotification object:nil];
+}
+
+/*-----------------------------------------------------
+ 
+ Functions to control when the app comes in and out of focus
+ -(void)appWentIntoBackground
+ -(void)appCameBackIntoFocus
+ 
+ -------------------------------------------------------*/
+
+/* suppress anything that should be killed when app moves to the background */
+-(void)appWentIntoBackground
+{
+    ALog(@"App went into the background");
+    //kill anything that is running here
+}
+
+/* decided if the app needs to be loaded up again when it comes back to focus */
+-(void)appCameBackIntoFocus
+{
+    //start the update check here
+    ALog(@"App came back into focus");
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self continueLoadingApp];
+    });
 }
 
 -(void)loadUpUserInterface
@@ -191,11 +212,12 @@
 }
 
 //universal view function to display dynamic alerts
--(void)displayMessage:(NSString *)messageLocal withTitle:(NSString *)title
-{
-    UIAlertView *error = [[UIAlertView alloc] initWithTitle:title message: messageLocal
-                                                   delegate: self cancelButtonTitle: @"Ok" otherButtonTitles: nil];
-    [error show];
+-(void)displayMessage:(NSString *)messageLocal withTitle:(NSString *)title {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertView *error = [[UIAlertView alloc] initWithTitle:title message: messageLocal
+                                                       delegate: self cancelButtonTitle: @"Ok" otherButtonTitles: nil];
+        [error show];
+    });
 }
 
 /***************************************
@@ -291,26 +313,26 @@
 }
 
 -(void)continueLoadingApp {
-    NSLog(@"When do I run?");
-    //if we have made the initial download, push the user to the home screen
-    if([[NSUserDefaults standardUserDefaults] boolForKey:@"initialDownload"]){
-        //send the user to the first view after the build
-        CanonViewController *vc = [[CanonViewController alloc] initWithNibName:@"CanonViewController" bundle:nil];
-        [self.navigationController pushViewController:vc animated:NO];  // FIXME: This is causing a crash
-    }else{
-        //build the user interface
-        [self loadUpUserInterface];
-    }
-    
-    //get the data about the device
-    NSString *dimensions = @"1024x768";
-    if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
-        ([UIScreen mainScreen].scale == 2.0)) {
-        dimensions = @"2048x1536";
-    }
-    NSString *deviceData = [NSString stringWithFormat:@"%@ - %@", [model deviceInformation], dimensions];
-    [model logData:@"CanonViewController" withAction:@"Device Name" withLabel:deviceData];
-
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //if we have made the initial download, push the user to the home screen
+        if([[NSUserDefaults standardUserDefaults] boolForKey:@"initialDownload"]){
+            //send the user to the first view after the build
+            CanonViewController *vc = [[CanonViewController alloc] initWithNibName:@"CanonViewController" bundle:nil];
+            [self.navigationController pushViewController:vc animated:NO];
+        }else{
+            //build the user interface
+            [self loadUpUserInterface];
+        }
+        
+        //get the data about the device
+        NSString *dimensions = @"1024x768";
+        if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
+            ([UIScreen mainScreen].scale == 2.0)) {
+            dimensions = @"2048x1536";
+        }
+        NSString *deviceData = [NSString stringWithFormat:@"%@ - %@", [model deviceInformation], dimensions];
+        [model logData:@"CanonViewController" withAction:@"Device Name" withLabel:deviceData];
+    });
 }
 
 - (void)didReceiveMemoryWarning {
@@ -331,19 +353,17 @@
                                       handler:^(UIAlertAction *action) {
                                             UITextField *textField = [alert.textFields firstObject];
                                             if ([self validateEmailWithString:textField.text]) {
-                                                //TODO: Call Justin's class to validate the user
-                                                //  -(void)verifyUser:(NSString *)userEmail;
                                                 currentEmail = textField.text;
-                                                [userStatus verifyUser:currentEmail];
+
                                                 //if we can reach the internet
-//                                                if ([reachability isReachable]) {
-//                                                    [userStatus verifyUser:currentEmail];
-//                                                }
-//                                                else {
-//                                                    [[NSUserDefaults standardUserDefaults] setObject:currentEmail forKey:@"userEmail"];
-//                                                    [[NSUserDefaults standardUserDefaults] synchronize];
-//                                                    [self continueLoadingApp];
-//                                                }
+                                                if ([self connected]) {
+                                                    [userStatus verifyUser:currentEmail];
+                                                }
+                                                else {
+                                                    [[NSUserDefaults standardUserDefaults] setObject:currentEmail forKey:@"userEmail"];
+                                                    [[NSUserDefaults standardUserDefaults] synchronize];
+                                                    [self continueLoadingApp];
+                                                }
                                                 
                                             }
                                         }];
@@ -352,7 +372,7 @@
     
     [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
         // optionally configure the text field
-        textField.keyboardType = UIKeyboardTypeAlphabet;
+        textField.keyboardType = UIKeyboardTypeEmailAddress;
         textField.delegate = self;
     }];
     
@@ -369,7 +389,6 @@
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-    NSLog(@"text entered");
     NSString *finalString = [textField.text stringByReplacingCharactersInRange:range withString:string];
     [self.okAction setEnabled:([self validateEmailWithString:finalString])];
     return YES;
@@ -378,39 +397,81 @@
 #pragma -
 #pragma - Justins Delegate Method
 
--(void)authorizationStatusWasReturned:(int)isCurrentlyAuthorized userURL:(NSString *)currentURL message:(NSString *)currentMsg {
+-(void)authorizationStatusWasReturned:(int)isCurrentlyAuthorized userURL:(NSString *)currentURL message:(NSString *)currentMsg currentVersion:(NSString *)versionNumber{
     // 0 = yes
     // 1 = no
     // 2 = error
     
-    NSLog(@"BOOM!!!!!!");
-    
-    switch (isCurrentlyAuthorized) {
-        case 0:
-            if ([self getUserEmailFromDefaults].length <= 0) {
-                [[NSUserDefaults standardUserDefaults] setObject:currentEmail forKey:@"userEmail"];
-            }
-            
-            NSLog(@"currentURL: %@", currentURL);
-            [[NSUserDefaults standardUserDefaults] setObject:currentURL forKey:@"userDownloadUrl"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            
-            [self continueLoadingApp];
-            break;
-        case 1:
-            [self displayMessage:@"You are no longer authorized to use this app." withTitle:@"imPRESS"];
-            break;
-        case 2:
-            // TODO: Display msg to alert the user there was an error
-            [self displayMessage:currentMsg withTitle:@"Error"];
-            break;
-        default:
-            break;
+    if ([self getUserEmailFromDefaults].length <= 0) {
+        [[NSUserDefaults standardUserDefaults] setObject:currentEmail forKey:@"userEmail"];
     }
+    [[NSUserDefaults standardUserDefaults] setObject:currentURL forKey:@"userDownloadUrl"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    if (![version isEqualToString:versionNumber]) {
+        [self alertUserVersionIsOutOfDate:@"imPRESS" andMessage:@"There is a new version of the app available."];
+    }
+    else {
+        switch (isCurrentlyAuthorized) {
+            case 0:
+                [self continueLoadingApp];
+                break;
+            case 1:
+                [self displayMessage:@"You are no longer authorized to use this app." withTitle:@"imPRESS"];
+                break;
+            case 2:
+                [self displayMessage:currentMsg withTitle:@"Error"];
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+- (void)alertUserVersionIsOutOfDate:(NSString *)title andMessage:(NSString *)alertMsg {
+    UIAlertController *alertController  = [UIAlertController
+                                           alertControllerWithTitle:title
+                                           message:alertMsg
+                                           preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *cancelAction         = [UIAlertAction
+                                           actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel")
+                                           style:UIAlertActionStyleCancel
+                                           handler:^(UIAlertAction *action)
+                                           {
+                                               [self continueLoadingApp];
+                                           }];
+    
+    UIAlertAction *updateAction         = [UIAlertAction
+                                           actionWithTitle:NSLocalizedString(@"Update App", @"Update App")
+                                           style:UIAlertActionStyleDefault
+                                           handler:^(UIAlertAction *action)
+                                           {
+                                               [self openSafariToDownloadUpdatedVersion];
+                                           }];
+    
+    [alertController addAction:cancelAction];
+    [alertController addAction:updateAction];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (NSString *)getUserEmailFromDefaults {
     return [[NSUserDefaults standardUserDefaults] stringForKey:@"userEmail"];
+}
+
+- (void)openSafariToDownloadUpdatedVersion {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[[NSUserDefaults standardUserDefaults] stringForKey:@"userDownloadUrl"]]];
+}
+
+#pragma mark
+#pragma mark - Reachability
+- (BOOL)connected
+{
+    Reachability *reachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [reachability currentReachabilityStatus];
+    return networkStatus != NotReachable;
 }
 
 @end
