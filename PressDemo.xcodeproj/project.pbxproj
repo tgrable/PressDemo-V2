@@ -2152,6 +2152,7 @@
 				TargetAttributes = {
 					30AC1132192D90D300BE1072 = {
 						DevelopmentTeam = 477HKM2JBJ;
+						ProvisioningStyle = Automatic;
 					};
 					30AC1153192D90D300BE1072 = {
 						TestTargetID = 30AC1132192D90D300BE1072;
@@ -2841,6 +2842,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 477HKM2JBJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2872,6 +2874,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 477HKM2JBJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

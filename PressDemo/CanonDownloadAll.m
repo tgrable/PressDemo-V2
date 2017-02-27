@@ -406,27 +406,33 @@
         [[NSUserDefaults standardUserDefaults] setObject:currentEmail forKey:@"userEmail"];
     }
     [[NSUserDefaults standardUserDefaults] setObject:currentURL forKey:@"userDownloadUrl"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     
     NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
-    if (![version isEqualToString:versionNumber]) {
-        [self alertUserVersionIsOutOfDate:@"imPRESS" andMessage:@"There is a new version of the app available."];
-    }
-    else {
-        switch (isCurrentlyAuthorized) {
-            case 0:
+    switch (isCurrentlyAuthorized) {
+        case 0:
+            if (![version isEqualToString:versionNumber]) {
+                [self alertUserVersionIsOutOfDate:@"imPRESS" andMessage:@"There is a new version of the app available."];
+            }
+            else {
                 [self continueLoadingApp];
-                break;
-            case 1:
-                [self displayMessage:@"You are no longer authorized to use this app." withTitle:@"imPRESS"];
-                break;
-            case 2:
-                [self displayMessage:currentMsg withTitle:@"Error"];
-                break;
-            default:
-                break;
-        }
+            }
+            break;
+        case 1:
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userEmail"];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userDownloadUrl"];
+            [self displayMessage:@"You are no longer authorized to use this app." withTitle:@"imPRESS"];
+            break;
+        case 2:
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userEmail"];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userDownloadUrl"];
+            [self displayMessage:currentMsg withTitle:@"Error"];
+            break;
+        default:
+            break;
     }
+    
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
 }
 
 - (void)alertUserVersionIsOutOfDate:(NSString *)title andMessage:(NSString *)alertMsg {
