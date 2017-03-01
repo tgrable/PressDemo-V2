@@ -527,8 +527,8 @@
 		0B3AC2001E37C206005DAE26 /* k.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = k.png; sourceTree = "<group>"; };
 		2C16E96D1E5F86BC000304A6 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		2C16E96E1E5F86BC000304A6 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
-		2CBE227D1E60F055001272EC /* VerifyUserStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VerifyUserStatus.h; path = PressDemo/VerifyUserStatus.h; sourceTree = "<group>"; };
-		2CBE227E1E60F055001272EC /* VerifyUserStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VerifyUserStatus.m; path = PressDemo/VerifyUserStatus.m; sourceTree = "<group>"; };
+		2CBE227D1E60F055001272EC /* VerifyUserStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerifyUserStatus.h; sourceTree = "<group>"; };
+		2CBE227E1E60F055001272EC /* VerifyUserStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VerifyUserStatus.m; sourceTree = "<group>"; };
 		30AC1133192D90D300BE1072 /* PressDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PressDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30AC1136192D90D300BE1072 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		30AC1138192D90D300BE1072 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1195,8 +1195,6 @@
 		30AC112A192D90D300BE1072 = {
 			isa = PBXGroup;
 			children = (
-				2CBE227D1E60F055001272EC /* VerifyUserStatus.h */,
-				2CBE227E1E60F055001272EC /* VerifyUserStatus.m */,
 				30AC113C192D90D300BE1072 /* PressDemo */,
 				30AC115B192D90D300BE1072 /* PressDemoTests */,
 				30AC1135192D90D300BE1072 /* Frameworks */,
@@ -1316,6 +1314,8 @@
 		30AC116D192D914600BE1072 /* NetworkStack */ = {
 			isa = PBXGroup;
 			children = (
+				2CBE227D1E60F055001272EC /* VerifyUserStatus.h */,
+				2CBE227E1E60F055001272EC /* VerifyUserStatus.m */,
 				30AC1172192D91B100BE1072 /* NetworkData.h */,
 				30AC1173192D91B100BE1072 /* NetworkData.m */,
 				711FC30E1A41E7A7005BEDE7 /* DownloadFile.h */,

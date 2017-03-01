@@ -138,7 +138,18 @@
     ALog(@"App came back into focus");
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self continueLoadingApp];
+        if ([[[NSUserDefaults standardUserDefaults] stringForKey:@"userIsAuthorized"] isEqualToString:@"YES"]) {
+            [self continueLoadingApp];
+        }
+        else if ([[[NSUserDefaults standardUserDefaults] stringForKey:@"userIsAuthorized"] isEqualToString:@"NO"]) {
+            [self displayMessage:@"You are no longer authorized to use this app." withTitle:@"imPRESS"];
+        }
+        else if ([[[NSUserDefaults standardUserDefaults] stringForKey:@"userIsAuthorized"] isEqualToString:@"ERROR"]) {
+            [self collectAndValidateEmail:@"Error" andMessage:[NSString stringWithFormat:@"There was an error validating your access. \n\n Please enter your email address."]];
+        }
+        else {
+            NSLog(@"First time the user hits this update but they dont enter an email. Then hit the home button but do not completly close out the app.");
+        }
     });
 }
 
@@ -410,6 +421,7 @@
     NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     switch (isCurrentlyAuthorized) {
         case 0:
+            [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"userIsAuthorized"];
             if (![version isEqualToString:versionNumber]) {
                 [self alertUserVersionIsOutOfDate:@"imPRESS" andMessage:@"There is a new version of the app available."];
             }
@@ -418,11 +430,13 @@
             }
             break;
         case 1:
+            [[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"userIsAuthorized"];
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userEmail"];
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userDownloadUrl"];
             [self displayMessage:@"You are no longer authorized to use this app." withTitle:@"imPRESS"];
             break;
         case 2:
+            [[NSUserDefaults standardUserDefaults] setObject:@"ERROR" forKey:@"userIsAuthorized"];
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userEmail"];
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userDownloadUrl"];
             [self collectAndValidateEmail:@"Error" andMessage:[NSString stringWithFormat:@"%@ \n\n Please enter your email address.", currentMsg]];
