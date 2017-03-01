@@ -116,6 +116,15 @@
                                              selector:@selector(appCameBackIntoFocus) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    //remove notification
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
+}
+
+
 /*-----------------------------------------------------
  
  Functions to control when the app comes in and out of focus
@@ -324,13 +333,20 @@
 }
 
 -(void)continueLoadingApp {
+    NSLog(@"1");
     dispatch_async(dispatch_get_main_queue(), ^{
         //if we have made the initial download, push the user to the home screen
         if([[NSUserDefaults standardUserDefaults] boolForKey:@"initialDownload"]){
+            NSLog(@"2");
+            
             //send the user to the first view after the build
             CanonViewController *vc = [[CanonViewController alloc] initWithNibName:@"CanonViewController" bundle:nil];
             [self.navigationController pushViewController:vc animated:NO];
+            
+            
         }else{
+            NSLog(@"3");
+            
             //build the user interface
             [self loadUpUserInterface];
         }
