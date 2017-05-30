@@ -201,7 +201,7 @@
 {
     [super viewDidLoad];
     
-    
+    NSLog(@"trekkadmin: SeriesViewController");
     self.screenName = @"Series View";
     
     network = [[NetworkData alloc] init];
@@ -572,331 +572,265 @@
 //this function switches the main view from document to document
 -(void)tearDownAndLoadUpDocuments:(NSString *)flag withComplete:(completeBlock)completeFlag
 {
-    //remove all subviews
-    for(UIView *v in [documentScroll subviews]){
-        [v removeFromSuperview];
-    }
-
-    //dynamic property reference!!! woooohooo!
-    NSMutableArray *data;
-    
-    if([flag isEqualToString:@"solutions"]){
-        [mainView bringSubviewToFront:mainShortBanner];
-        if(decodedSolutions == NO){
-            
-            //decode partner data
-            NSData *partnerEcodedData = [model getFileData:@"initialPartners" complete:^(BOOL completeFlag){}];
-            model.initialPartnerData = [NSKeyedUnarchiver unarchiveObjectWithData:partnerEcodedData];
-            
-            //decode the solution data
-            NSData *solutionEncodedData = [model getFileData:@"initialSolutions" complete:^(BOOL completeFlag){}];
-            model.initialSolutionData = [NSKeyedUnarchiver unarchiveObjectWithData:solutionEncodedData];
-            data = [self sortOutSolutionsForSeries];
-            decodedSolutions = YES;
-        }else{
-            data = [self sortOutSolutionsForSeries];
-            
+    if (![flag isEqualToString:@"overview"]) {
+        //remove all subviews
+        for(UIView *v in [documentScroll subviews]){
+            [v removeFromSuperview];
         }
-    }else{
-     
-        data = [model.selectedSeries valueForKey:flag];
-    }
-    
-    //remove video rows
-    [offlineVideoRows removeAllObjects];
-    //make sure that when we are drawing in from the dynamic property that we are using the
-    //assigned data class correctly.  Check the data class to make sure before using
-    
-    
-    //make sure we are dealing with an array, otherwise we can assume that their is no content assigned to this 
-    if([data isKindOfClass:[NSArray class]] && [data count] > 0){
+        
+        //dynamic property reference!!! woooohooo!
+        NSMutableArray *data;
+        
+        NSLog(@"trekkadmin: flag = %@", flag);
         
         if([flag isEqualToString:@"solutions"]){
-            
-            int count = (int)[data count], i = 0, y = 0;
-            for(Solution *s in data){
+            [mainView bringSubviewToFront:mainShortBanner];
+            if(decodedSolutions == NO){
                 
-                if(y == 0) y = 16;
+                //decode partner data
+                NSData *partnerEcodedData = [model getFileData:@"initialPartners" complete:^(BOOL completeFlag){}];
+                model.initialPartnerData = [NSKeyedUnarchiver unarchiveObjectWithData:partnerEcodedData];
                 
-                int descHeight = 121, offset = 0;
+                //decode the solution data
+                NSData *solutionEncodedData = [model getFileData:@"initialSolutions" complete:^(BOOL completeFlag){}];
+                model.initialSolutionData = [NSKeyedUnarchiver unarchiveObjectWithData:solutionEncodedData];
+                data = [self sortOutSolutionsForSeries];
+                decodedSolutions = YES;
+            }else{
+                data = [self sortOutSolutionsForSeries];
                 
-                UIView *rowContainer = [[UIView alloc] initWithFrame:CGRectMake(0, y, 748, 179)];
-                rowContainer.backgroundColor = [UIColor whiteColor];
-                
-                UIView *back = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 748, 179)];
-                [back setUserInteractionEnabled:YES];
-                back.tag = i;
-                [back setBackgroundColor:[UIColor whiteColor]];
-                [rowContainer addSubview:back];
-                
-                float titleWidth = [model widthOfString:[s.title uppercaseString] withStringSize:14 andFontKey:@"ITCAvantGardeStd-Md"];
-                int numLinesTitle = 1, labelHeight = 20, descY = 35, descOffset = 0;
-                if(titleWidth > 330){
-                    numLinesTitle = 2;
-                    labelHeight = 40;
-                    descY = 50;
-                    descOffset = 15;
-                }
-                
-                UILabel *solutionTitle = [[UILabel alloc] initWithFrame:CGRectMake(20, 15, 330, labelHeight)];
-                [solutionTitle setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:14.0]];
-                solutionTitle.textColor = [UIColor blackColor];
-                solutionTitle.numberOfLines = numLinesTitle;
-                solutionTitle.backgroundColor = [UIColor clearColor];
-                solutionTitle.text = [s.title uppercaseString];
-                [back addSubview:solutionTitle];
-                
-                
-                UITextView *desc = [[UITextView alloc] initWithFrame:CGRectMake(20, descY, 350, 121)];
-                desc.textColor = model.dullBlack;
-                desc.backgroundColor = [UIColor clearColor];
-                [desc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
-                [desc setEditable:NO];
-                [desc setScrollEnabled:NO];
-                desc.text = s.description;
-                [back addSubview:desc];
-                [desc sizeToFit];
-     
-                //determine the height offset for the row
-                if(desc.frame.size.height > descHeight){
-                    offset = desc.frame.size.height - descHeight;
-                }
-                offset += descOffset;
-                
-                UILabel *partnerTitle = [[UILabel alloc] initWithFrame:CGRectMake(410, 15, 300, 20)];
-                [partnerTitle setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:14.0]];
-                partnerTitle.textColor = [UIColor blackColor];
-                partnerTitle.numberOfLines = 1;
-                partnerTitle.backgroundColor = [UIColor clearColor];
-                partnerTitle.text = @"PARTNERS WITH THIS SOLUTION";
-                [back addSubview:partnerTitle];
-                
-                NSMutableArray *partnerFirstArray = [NSMutableArray array];
-                NSMutableArray *partnerLastArray = [NSMutableArray array];
-                NSMutableArray *partnerArray = [NSMutableArray array];
-                
-                for (Partner *p in model.initialPartnerData) {
-                    if([p.solutions containsObject:s.key]){
-                        //add the object to the local partner array
-                        if(p.premier_partner)
-                          [partnerFirstArray addObject:p];
-                        else
-                          [partnerLastArray addObject:p];
-                        
-                        //make sure the potentail partner array does not contain duplicates
-                        if(![potentailPartners containsObject:p]){
-                            [potentailPartners addObject:p];
-                        }
-                    }
-                }
-                
-                //add the first partner list to the general partner list
-                for(Partner *p in partnerFirstArray){
-                    [partnerArray addObject:p];
-                }
-                //add the last partner list to the general partner list
-                for(Partner *p in partnerLastArray){
-                    [partnerArray addObject:p];
-                }
-                
-                //print all of the partners out
-                int py = 40, pi = 0;
-                for(Partner *p in partnerArray){
-                    
-                    float w = [model widthOfString:[p.title uppercaseString] withStringSize:14 andFontKey:@"ITCAvantGardeStd-Bk"];
-                    int numLines = 1, bHeight = 20;
-                    if(w > 280){
-                        numLines = 2;
-                        bHeight = 40;
-                    }
-                    
-                    UIButton *partner = [UIButton buttonWithType:UIButtonTypeCustom];
-                    [partner setFrame:CGRectMake(410, py, 280, bHeight)];
-                    [partner addTarget:self action:@selector(partnerTapped:)forControlEvents:UIControlEventTouchUpInside];
-                    partner.showsTouchWhenHighlighted = YES;
-                    [partner setUserInteractionEnabled:YES];
-                
-                    partner.titleLabel.numberOfLines = numLines;
-                    partner.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-                    [partner setTitle:[p.title uppercaseString] forState:UIControlStateNormal];
-                    [partner setTitleColor:model.blue forState:UIControlStateNormal];
-                    [partner setBackgroundColor:[UIColor clearColor]];
-                    if(p.premier_partner){
-                        partner.titleLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bold" size:14.0];
-                    }else{
-                        partner.titleLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0];
-                    }
-                    [back addSubview:partner];
-                    pi++;
-                    py += 35;
-                    if(numLines == 2) py += 20;
-                    //we basically cannot show more than 4 solutions because of the layout that was created
-                    if(pi == 4) break;
-                }
-                
-                //alter the row position based upon the text height
-                rowContainer.frame = CGRectMake(0, y, 748, (179 + offset));
-                
-        
-                //add sub view to the scroll container
-                [documentScroll addSubview:rowContainer];
-                i++;
-                
-                //alter the height of the row based upon the desc offset
-                y += rowContainer.frame.size.height + 16;
-                
-                if(i == count){
-                    [documentScroll setContentSize:CGSizeMake(748, y)];
-                    completeFlag(YES);
-                }
             }
-            
-            //else if we are creating a video or document, go with the code below
         }else{
-            //Below we loop through eith the document or video data to load up a dynamic set of buttons
-            int count = (int)[data count], i = 0, y = 0;
-            for(NSString *documentKey in data){
-                NSData *doc = [model getFileData:documentKey complete:^(BOOL completeFlag){}];
-                
-                y = i * 193 + 16;
-                if(y == 0) y = 16;
-                
-                UIView *rowContainer = [[UIView alloc] initWithFrame:CGRectMake(0, y, 748, 179)];
-                rowContainer.backgroundColor = [UIColor whiteColor];
-                
-                UIButton *back = [UIButton buttonWithType:UIButtonTypeCustom];
-                [back setFrame:CGRectMake(0, 0, 748, 179)];
-                [back addTarget:self action:@selector(rowTapped:)forControlEvents:UIControlEventTouchUpInside];
-                back.showsTouchWhenHighlighted = YES;
-                [back setUserInteractionEnabled:YES];
-                [back setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
-                back.tag = i;
-                [back setBackgroundColor:[UIColor whiteColor]];
-                [rowContainer addSubview:back];
-                
-                UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(3, 3, 308, 173)];
-                iv.backgroundColor = model.blue;
-                [back addSubview:iv];
-                
-                UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(328, 16, 360, 24)];
-                [title setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:16.0]];
-                title.textColor = [UIColor blackColor];
-                title.numberOfLines = 2;
-                title.adjustsFontSizeToFitWidth = YES;
-                title.backgroundColor = [UIColor clearColor];
-                [back addSubview:title];
-                
-                UIView *horizontalLine = [[UIView alloc] initWithFrame:CGRectMake(328, 40, 360, 1)];
-                horizontalLine.backgroundColor = [UIColor blackColor];
-                [back addSubview:horizontalLine];
-                
-                
-                UITextView *desc = [[UITextView alloc] initWithFrame:CGRectMake(328, 47, 400, 121)];
-                desc.textColor = model.dullBlack;
-                desc.backgroundColor = [UIColor clearColor];
-                [desc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
-                [desc setEditable:NO];
-                [desc setScrollEnabled:NO];
-                [back addSubview:desc];
-              
-                int offset = 0;
             
+            data = [model.selectedSeries valueForKey:flag];
+        }
+        
+        //remove video rows
+        [offlineVideoRows removeAllObjects];
+        //make sure that when we are drawing in from the dynamic property that we are using the
+        //assigned data class correctly.  Check the data class to make sure before using
+        
+        
+        //make sure we are dealing with an array, otherwise we can assume that their is no content assigned to this
+        if([data isKindOfClass:[NSArray class]] && [data count] > 0){
+            
+            if([flag isEqualToString:@"solutions"]){
                 
-                /**** if the document is a video ****/
-                if ([flag isEqualToString:@"videos"]){
-                    /*************** Videos ************************/
+                int count = (int)[data count], i = 0, y = 0;
+                for(Solution *s in data){
                     
-                    //set a video object from the selected object
-                    Video *v = [NSKeyedUnarchiver unarchiveObjectWithData:doc];
-                    //set the key for the object
-                    [back setTitle:v.key forState:UIControlStateNormal];
+                    if(y == 0) y = 16;
                     
-                    if([v.image isEqualToString:@""]){
-                        [iv setImage:[UIImage imageNamed:@"tmb-FPO-video.png"]];
-                    }else{
-                        //try and load the image via the internet, otherwise use placeholder as a fallback
-                        NSString *u = [v.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-                        [iv sd_setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
-                      
+                    int descHeight = 121, offset = 0;
+                    
+                    UIView *rowContainer = [[UIView alloc] initWithFrame:CGRectMake(0, y, 748, 179)];
+                    rowContainer.backgroundColor = [UIColor whiteColor];
+                    
+                    UIView *back = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 748, 179)];
+                    [back setUserInteractionEnabled:YES];
+                    back.tag = i;
+                    [back setBackgroundColor:[UIColor whiteColor]];
+                    [rowContainer addSubview:back];
+                    
+                    float titleWidth = [model widthOfString:[s.title uppercaseString] withStringSize:14 andFontKey:@"ITCAvantGardeStd-Md"];
+                    int numLinesTitle = 1, labelHeight = 20, descY = 35, descOffset = 0;
+                    if(titleWidth > 330){
+                        numLinesTitle = 2;
+                        labelHeight = 40;
+                        descY = 50;
+                        descOffset = 15;
                     }
                     
-                    NSString *rawVideo = [v.rawVideo stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-                    NSString *name = [model getVideoFileName:rawVideo];
+                    UILabel *solutionTitle = [[UILabel alloc] initWithFrame:CGRectMake(20, 15, 330, labelHeight)];
+                    [solutionTitle setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:14.0]];
+                    solutionTitle.textColor = [UIColor blackColor];
+                    solutionTitle.numberOfLines = numLinesTitle;
+                    solutionTitle.backgroundColor = [UIColor clearColor];
+                    solutionTitle.text = [s.title uppercaseString];
+                    [back addSubview:solutionTitle];
                     
-                    //set the data for the rest of the row
-                    title.text = v.title;
-                    [title alterSubstring:@"®" withSize:8];
-                    desc.text = v.description;
                     
-                    //make sure to resize the description after the text is added
-                    desc.frame = CGRectMake(328, 47, 400, desc.contentSize.height);
+                    UITextView *desc = [[UITextView alloc] initWithFrame:CGRectMake(20, descY, 350, 121)];
+                    desc.textColor = model.dullBlack;
+                    desc.backgroundColor = [UIColor clearColor];
+                    [desc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
+                    [desc setEditable:NO];
+                    [desc setScrollEnabled:NO];
+                    desc.text = s.description;
+                    [back addSubview:desc];
                     [desc sizeToFit];
-                    //determine if our new size of the desc frame overflows the current frame
-                    if(desc.frame.size.height > 121){
-                        //create an offset value if it does to alter the layou
-                        offset =  desc.frame.size.height - 121;
-                        rowContainer.frame = CGRectMake(0, y, 748, (179 + offset));
+                    
+                    //determine the height offset for the row
+                    if(desc.frame.size.height > descHeight){
+                        offset = desc.frame.size.height - descHeight;
+                    }
+                    offset += descOffset;
+                    
+                    UILabel *partnerTitle = [[UILabel alloc] initWithFrame:CGRectMake(410, 15, 300, 20)];
+                    [partnerTitle setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Md" size:14.0]];
+                    partnerTitle.textColor = [UIColor blackColor];
+                    partnerTitle.numberOfLines = 1;
+                    partnerTitle.backgroundColor = [UIColor clearColor];
+                    partnerTitle.text = @"PARTNERS WITH THIS SOLUTION";
+                    [back addSubview:partnerTitle];
+                    
+                    NSMutableArray *partnerFirstArray = [NSMutableArray array];
+                    NSMutableArray *partnerLastArray = [NSMutableArray array];
+                    NSMutableArray *partnerArray = [NSMutableArray array];
+                    
+                    for (Partner *p in model.initialPartnerData) {
+                        if([p.solutions containsObject:s.key]){
+                            //add the object to the local partner array
+                            if(p.premier_partner)
+                                [partnerFirstArray addObject:p];
+                            else
+                                [partnerLastArray addObject:p];
+                            
+                            //make sure the potentail partner array does not contain duplicates
+                            if(![potentailPartners containsObject:p]){
+                                [potentailPartners addObject:p];
+                            }
+                        }
                     }
                     
+                    //add the first partner list to the general partner list
+                    for(Partner *p in partnerFirstArray){
+                        [partnerArray addObject:p];
+                    }
+                    //add the last partner list to the general partner list
+                    for(Partner *p in partnerLastArray){
+                        [partnerArray addObject:p];
+                    }
                     
-                    //make sure the video row is faded out if the user is not online
-                    if(![model.hostReachability isReachableViaWiFi]){
-                        //user is not connected to the internet
-                        NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
-
-                        //check if the user has the video saved locally
-                        if([model fileExists:lookupName]){
-                            rowContainer.alpha = 1.0;
-                            back.enabled = YES;
+                    //print all of the partners out
+                    int py = 40, pi = 0;
+                    for(Partner *p in partnerArray){
+                        
+                        float w = [model widthOfString:[p.title uppercaseString] withStringSize:14 andFontKey:@"ITCAvantGardeStd-Bk"];
+                        int numLines = 1, bHeight = 20;
+                        if(w > 280){
+                            numLines = 2;
+                            bHeight = 40;
+                        }
+                        
+                        UIButton *partner = [UIButton buttonWithType:UIButtonTypeCustom];
+                        [partner setFrame:CGRectMake(410, py, 280, bHeight)];
+                        [partner addTarget:self action:@selector(partnerTapped:)forControlEvents:UIControlEventTouchUpInside];
+                        partner.showsTouchWhenHighlighted = YES;
+                        [partner setUserInteractionEnabled:YES];
+                        
+                        partner.titleLabel.numberOfLines = numLines;
+                        partner.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+                        [partner setTitle:[p.title uppercaseString] forState:UIControlStateNormal];
+                        [partner setTitleColor:model.blue forState:UIControlStateNormal];
+                        [partner setBackgroundColor:[UIColor clearColor]];
+                        if(p.premier_partner){
+                            partner.titleLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bold" size:14.0];
                         }else{
-                            rowContainer.alpha = 0.6;
-                            model.layoutSync = NO;
-                            [offlineVideos setObject:rowContainer forKey:v.key];
+                            partner.titleLabel.font = [UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0];
                         }
-                    }else{
-                        rowContainer.alpha = 1.0;
-                        back.enabled = YES;
+                        [back addSubview:partner];
+                        pi++;
+                        py += 35;
+                        if(numLines == 2) py += 20;
+                        //we basically cannot show more than 4 solutions because of the layout that was created
+                        if(pi == 4) break;
                     }
+                    
+                    //alter the row position based upon the text height
+                    rowContainer.frame = CGRectMake(0, y, 748, (179 + offset));
+                    
+                    
+                    //add sub view to the scroll container
+                    [documentScroll addSubview:rowContainer];
+                    i++;
+                    
+                    //alter the height of the row based upon the desc offset
+                    y += rowContainer.frame.size.height + 16;
+                    
+                    if(i == count){
+                        [documentScroll setContentSize:CGSizeMake(748, y)];
+                        completeFlag(YES);
+                    }
+                }
                 
-                    [offlineVideoRows addObject:rowContainer];
-                    //add the data set of data being held for easy reference
-                    [currentDocumentData setObject:v forKey:v.key];
-                }else{
+                //else if we are creating a video or document, go with the code below
+            }else{
+                //Below we loop through eith the document or video data to load up a dynamic set of buttons
+                int count = (int)[data count], i = 0, y = 0;
+                for(NSString *documentKey in data){
+                    NSData *doc = [model getFileData:documentKey complete:^(BOOL completeFlag){}];
                     
-                    /*************** Documents ************************/
+                    y = i * 193 + 16;
+                    if(y == 0) y = 16;
                     
-                    //set a document object from the selected object
-                    Document *d = [NSKeyedUnarchiver unarchiveObjectWithData:doc];
-                    //set the key for the object
-                    [back setTitle:d.key forState:UIControlStateNormal];
+                    UIView *rowContainer = [[UIView alloc] initWithFrame:CGRectMake(0, y, 748, 179)];
+                    rowContainer.backgroundColor = [UIColor whiteColor];
                     
-                    if([d.image isEqualToString:@""]){
-                        //if there is no url set for the image at all, use the fallback jason gave me
-                        if([flag isEqualToString:@"case_study"]){
-                            [iv setImage:[UIImage imageNamed:@"tmb-FPO-casestudy.png"]];
-                        }else if([flag isEqualToString:@"white_paper"]){
-                            [iv setImage:[UIImage imageNamed:@"tmb-FPO-whitepaper.png"]];
-                        }else if([flag isEqualToString:@"product_spec"]){
-                            [iv setImage:[UIImage imageNamed:@"placeholder.png"]];
+                    UIButton *back = [UIButton buttonWithType:UIButtonTypeCustom];
+                    [back setFrame:CGRectMake(0, 0, 748, 179)];
+                    [back addTarget:self action:@selector(rowTapped:)forControlEvents:UIControlEventTouchUpInside];
+                    back.showsTouchWhenHighlighted = YES;
+                    [back setUserInteractionEnabled:YES];
+                    [back setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+                    back.tag = i;
+                    [back setBackgroundColor:[UIColor whiteColor]];
+                    [rowContainer addSubview:back];
+                    
+                    UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(3, 3, 308, 173)];
+                    iv.backgroundColor = model.blue;
+                    [back addSubview:iv];
+                    
+                    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(328, 16, 360, 24)];
+                    [title setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:16.0]];
+                    title.textColor = [UIColor blackColor];
+                    title.numberOfLines = 2;
+                    title.adjustsFontSizeToFitWidth = YES;
+                    title.backgroundColor = [UIColor clearColor];
+                    [back addSubview:title];
+                    
+                    UIView *horizontalLine = [[UIView alloc] initWithFrame:CGRectMake(328, 40, 360, 1)];
+                    horizontalLine.backgroundColor = [UIColor blackColor];
+                    [back addSubview:horizontalLine];
+                    
+                    
+                    UITextView *desc = [[UITextView alloc] initWithFrame:CGRectMake(328, 47, 400, 121)];
+                    desc.textColor = model.dullBlack;
+                    desc.backgroundColor = [UIColor clearColor];
+                    [desc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
+                    [desc setEditable:NO];
+                    [desc setScrollEnabled:NO];
+                    [back addSubview:desc];
+                    
+                    int offset = 0;
+                    
+                    
+                    /**** if the document is a video ****/
+                    if ([flag isEqualToString:@"videos"]){
+                        /*************** Videos ************************/
+                        
+                        //set a video object from the selected object
+                        Video *v = [NSKeyedUnarchiver unarchiveObjectWithData:doc];
+                        //set the key for the object
+                        [back setTitle:v.key forState:UIControlStateNormal];
+                        
+                        if([v.image isEqualToString:@""]){
+                            [iv setImage:[UIImage imageNamed:@"tmb-FPO-video.png"]];
+                        }else{
+                            //try and load the image via the internet, otherwise use placeholder as a fallback
+                            NSString *u = [v.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+                            [iv sd_setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+                            
                         }
-
-                    }else{
-                        //try and load the image via the internet, otherwise use placeholder as a fallback
-                        NSString *u = [d.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-                        [iv sd_setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
-                    }
-                    
-                    //set the data for the rest of the row
-                    title.frame = CGRectMake(328, 16, 400, 24);
-                    title.text = d.title;
-                    [title alterSubstring:@"®" withSize:8];
-                    
-                    
-                    if([flag isEqualToString:@"product_spec"]){
-                        desc.text = @"Specifications document for the whole product series.";
-                    }else{
-                        //add the text
-                        desc.text = d.description;
+                        
+                        NSString *rawVideo = [v.rawVideo stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+                        NSString *name = [model getVideoFileName:rawVideo];
+                        
+                        //set the data for the rest of the row
+                        title.text = v.title;
+                        [title alterSubstring:@"®" withSize:8];
+                        desc.text = v.description;
+                        
                         //make sure to resize the description after the text is added
                         desc.frame = CGRectMake(328, 47, 400, desc.contentSize.height);
                         [desc sizeToFit];
@@ -907,49 +841,117 @@
                             rowContainer.frame = CGRectMake(0, y, 748, (179 + offset));
                         }
                         
+                        
+                        //make sure the video row is faded out if the user is not online
+                        if(![model.hostReachability isReachableViaWiFi]){
+                            //user is not connected to the internet
+                            NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
+                            
+                            //check if the user has the video saved locally
+                            if([model fileExists:lookupName]){
+                                rowContainer.alpha = 1.0;
+                                back.enabled = YES;
+                            }else{
+                                rowContainer.alpha = 0.6;
+                                model.layoutSync = NO;
+                                [offlineVideos setObject:rowContainer forKey:v.key];
+                            }
+                        }else{
+                            rowContainer.alpha = 1.0;
+                            back.enabled = YES;
+                        }
+                        
+                        [offlineVideoRows addObject:rowContainer];
+                        //add the data set of data being held for easy reference
+                        [currentDocumentData setObject:v forKey:v.key];
+                    }else{
+                        
+                        /*************** Documents ************************/
+                        
+                        //set a document object from the selected object
+                        Document *d = [NSKeyedUnarchiver unarchiveObjectWithData:doc];
+                        //set the key for the object
+                        [back setTitle:d.key forState:UIControlStateNormal];
+                        
+                        if([d.image isEqualToString:@""]){
+                            //if there is no url set for the image at all, use the fallback jason gave me
+                            if([flag isEqualToString:@"case_study"]){
+                                [iv setImage:[UIImage imageNamed:@"tmb-FPO-casestudy.png"]];
+                            }else if([flag isEqualToString:@"white_paper"]){
+                                [iv setImage:[UIImage imageNamed:@"tmb-FPO-whitepaper.png"]];
+                            }else if([flag isEqualToString:@"product_spec"]){
+                                [iv setImage:[UIImage imageNamed:@"placeholder.png"]];
+                            }
+                            
+                        }else{
+                            //try and load the image via the internet, otherwise use placeholder as a fallback
+                            NSString *u = [d.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+                            [iv sd_setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+                        }
+                        
+                        //set the data for the rest of the row
+                        title.frame = CGRectMake(328, 16, 400, 24);
+                        title.text = d.title;
+                        [title alterSubstring:@"®" withSize:8];
+                        
+                        
+                        if([flag isEqualToString:@"product_spec"]){
+                            desc.text = @"Specifications document for the whole product series.";
+                        }else{
+                            //add the text
+                            desc.text = d.description;
+                            //make sure to resize the description after the text is added
+                            desc.frame = CGRectMake(328, 47, 400, desc.contentSize.height);
+                            [desc sizeToFit];
+                            //determine if our new size of the desc frame overflows the current frame
+                            if(desc.frame.size.height > 121){
+                                //create an offset value if it does to alter the layou
+                                offset =  desc.frame.size.height - 121;
+                                rowContainer.frame = CGRectMake(0, y, 748, (179 + offset));
+                            }
+                            
+                        }
+                        
+                        horizontalLine.frame = CGRectMake(328, 40, 400, 1);
+                        
+                        //add the data set of data being held for easy reference
+                        [currentDocumentData setObject:d forKey:d.key];
                     }
+                    //add sub view to the scroll container
+                    [documentScroll addSubview:rowContainer];
+                    i++;
+                    y += offset;
                     
-                    horizontalLine.frame = CGRectMake(328, 40, 400, 1);
+                    //make sure to adjust the top of the image container if the row was expanded
+                    iv.frame = CGRectMake(3, (offset / 2) + 3, 308, 173);
                     
-                    //add the data set of data being held for easy reference
-                    [currentDocumentData setObject:d forKey:d.key];
-                }
-                //add sub view to the scroll container
-                [documentScroll addSubview:rowContainer];
-                i++;
-                y += offset;
-            
-                //make sure to adjust the top of the image container if the row was expanded
-                iv.frame = CGRectMake(3, (offset / 2) + 3, 308, 173);
-                
-                
-                if(i == count){
-                  [documentScroll setContentSize:CGSizeMake(748, (y + 193 + offset))];
-                  completeFlag(YES);
+                    
+                    if(i == count){
+                        [documentScroll setContentSize:CGSizeMake(748, (y + 193 + offset))];
+                        completeFlag(YES);
+                    }
                 }
             }
+        }else{
+            //this mean there is not results
+            UIView *rowContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 748, 179)];
+            rowContainer.backgroundColor = [UIColor whiteColor];
+            
+            UILabel *desc = [[UILabel alloc] initWithFrame:CGRectMake(0, 80, 748, 80)];
+            [desc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:16.0]];
+            desc.textColor = [UIColor whiteColor];
+            desc.textAlignment = NSTextAlignmentCenter;
+            desc.text = @"- NO CONTENT ASSOCIATED WITH THIS ITEM -";
+            desc.numberOfLines = 2;
+            desc.backgroundColor = [UIColor clearColor];
+            [rowContainer addSubview:desc];
+            
+            [documentScroll addSubview:desc];
+            
+            [documentScroll setContentSize:CGSizeMake(748, 300)];
+            completeFlag(YES);
         }
-    }else{
-        //this mean there is not results
-        UIView *rowContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 748, 179)];
-        rowContainer.backgroundColor = [UIColor whiteColor];
-        
-        UILabel *desc = [[UILabel alloc] initWithFrame:CGRectMake(0, 80, 748, 80)];
-        [desc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:16.0]];
-        desc.textColor = [UIColor whiteColor];
-        desc.textAlignment = NSTextAlignmentCenter;
-        desc.text = @"- NO CONTENT ASSOCIATED WITH THIS ITEM -";
-        desc.numberOfLines = 2;
-        desc.backgroundColor = [UIColor clearColor];
-        [rowContainer addSubview:desc];
-        
-        [documentScroll addSubview:desc];
-        
-        [documentScroll setContentSize:CGSizeMake(748, 300)];
-        completeFlag(YES);
     }
-    
-    
 }
 
 //this function gets the partner that was tapped and send the user to the partner page
