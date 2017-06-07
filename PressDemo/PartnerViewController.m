@@ -604,203 +604,203 @@
 //this function switches the main view from document to document
 -(void)tearDownAndLoadUpDocuments:(NSString *)flag withComplete:(completeBlock)completeFlag
 {
-    //remove all subviews
-    for(UIView *v in [documentScroll subviews]){
-        [v removeFromSuperview];
-    }
-    
-    //dynamic property reference!!! woooohooo!
-    NSMutableArray *data = [model.selectedPartner valueForKey:flag];
-
-    
-    //remove video rows
-    [offlineVideoRows removeAllObjects];
-    
-    
-    //make sure we are dealing with an array, otherwise we can assume that their is no content assigned to this
-    if([data isKindOfClass:[NSArray class]] && [data count] > 0){
-        
-        //Below we loop through eith the document or video data to load up a dynamic set of buttons
-        int count = (int)[data count], i = 0, y = 0;
-        for(NSString *documentKey in data){
-            NSData *doc = [model getFileData:documentKey complete:^(BOOL completeFlag){}];
-            
-            y = i * 193 + 16;
-            if(y == 0) y = 16;
-            
-            UIView *rowContainer = [[UIView alloc] initWithFrame:CGRectMake(0, y, 748, 179)];
-            rowContainer.backgroundColor = [UIColor whiteColor];
-            
-            UIButton *back = [UIButton buttonWithType:UIButtonTypeCustom];
-            [back setFrame:CGRectMake(0, 0, 748, 179)];
-            [back addTarget:self action:@selector(rowTapped:)forControlEvents:UIControlEventTouchUpInside];
-            back.showsTouchWhenHighlighted = YES;
-            [back setUserInteractionEnabled:YES];
-            [back setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
-            back.tag = i;
-            [back setBackgroundColor:[UIColor whiteColor]];
-            [rowContainer addSubview:back];
-            
-            UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(3, 3, 308, 173)];
-            iv.backgroundColor = model.blue;
-            [back addSubview:iv];
-            
-            UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(328, 16, 360, 24)];
-            [title setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:16.0]];
-            title.textColor = [UIColor blackColor];
-            title.numberOfLines = 2;
-            title.adjustsFontSizeToFitWidth = YES;
-            title.backgroundColor = [UIColor clearColor];
-            [back addSubview:title];
-            
-            UIView *horizontalLine = [[UIView alloc] initWithFrame:CGRectMake(328, 40, 360, 1)];
-            horizontalLine.backgroundColor = [UIColor blackColor];
-            [back addSubview:horizontalLine];
-            
-            UITextView *desc = [[UITextView alloc] initWithFrame:CGRectMake(328, 47, 400, 121)];
-            desc.textColor = model.dullBlack;
-            desc.backgroundColor = [UIColor clearColor];
-            [desc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
-            [desc setEditable:NO];
-            [desc setScrollEnabled:NO];
-            [back addSubview:desc];
-            
-            int offset = 0;
-            
-            /**** if the document is a video ****/
-            if ([flag isEqualToString:@"videos"]){
-                /*************** Videos ************************/
-                
-                //set a video object from the selected object
-                Video *v = [NSKeyedUnarchiver unarchiveObjectWithData:doc];
-                //set the key for the object
-                [back setTitle:v.key forState:UIControlStateNormal];
-                
-                if([v.image isEqualToString:@""]){
-                    [iv setImage:[UIImage imageNamed:@"tmb-FPO-video.png"]];
-                }else{
-                    //try and load the image via the internet, otherwise use placeholder as a fallback
-                    NSString *u = [v.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-                    [iv sd_setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
-                    
-                }
-                
-                NSString *rawVideo = [v.rawVideo stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-                NSString *name = [model getVideoFileName:rawVideo];
-                
-                //set the data for the rest of the row
-                title.text = v.title;
-                desc.text = v.description;
-                
-                //make sure to resize the description after the text is added
-                desc.frame = CGRectMake(328, 47, 400, desc.contentSize.height);
-                [desc sizeToFit];
-                //determine if our new size of the desc frame overflows the current frame
-                if(desc.frame.size.height > 121){
-                    //create an offset value if it does to alter the layou
-                    offset =  desc.frame.size.height - 121;
-                    rowContainer.frame = CGRectMake(0, y, 748, (179 + offset));
-                }
-                
-                //make sure the video row is faded out if the user is not online
-                if(![model.hostReachability isReachableViaWiFi]){
-                    //user is not connected to the internet
-                    NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
-                    
-                    //check if the user has the video saved locally
-                    if([model fileExists:lookupName]){
-                        rowContainer.alpha = 1.0;
-                        back.enabled = YES;
-                    }else{
-                        rowContainer.alpha = 0.6;
-                        model.layoutSync = NO;
-                        [offlineVideos setObject:rowContainer forKey:v.key];
-                    }
-                }else{
-                    rowContainer.alpha = 1.0;
-                    back.enabled = YES;
-                }
-                
-                [offlineVideoRows addObject:rowContainer];
-                //add the data set of data being held for easy reference
-                [currentDocumentData setObject:v forKey:v.key];
-            }else{
-                
-                /*************** Documents ************************/
-                
-                //set a document object from the selected object
-                Document *d = [NSKeyedUnarchiver unarchiveObjectWithData:doc];
-                //set the key for the object
-                [back setTitle:d.key forState:UIControlStateNormal];
-                
-                if([d.image isEqualToString:@""]){
-                    //if there is no url set for the image at all, use the fallback jason gave me
-                    if([flag isEqualToString:@"case_study"]){
-                        [iv setImage:[UIImage imageNamed:@"tmb-FPO-casestudy.png"]];
-                    }else if([flag isEqualToString:@"white_paper"]){
-                        [iv setImage:[UIImage imageNamed:@"tmb-FPO-whitepaper.png"]];
-                    }
-                    
-                }else{
-                    //try and load the image via the internet, otherwise use placeholder as a fallback
-                    NSString *u = [d.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-                    [iv sd_setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
-                }
-                
-                //set the data for the rest of the row
-                title.frame = CGRectMake(328, 16, 400, 24);
-                title.text = d.title;
-                
-                //add the text
-                desc.text = d.description;
-                //make sure to resize the description after the text is added
-                desc.frame = CGRectMake(328, 47, 400, desc.contentSize.height);
-                [desc sizeToFit];
-                //determine if our new size of the desc frame overflows the current frame
-                if(desc.frame.size.height > 121){
-                    //create an offset value if it does to alter the layou
-                    offset =  desc.frame.size.height - 121;
-                    rowContainer.frame = CGRectMake(0, y, 748, (179 + offset));
-                }
-
-                horizontalLine.frame = CGRectMake(328, 40, 400, 1);
-                
-                //add the data set of data being held for easy reference
-                [currentDocumentData setObject:d forKey:d.key];
-            }
-            //add sub view to the scroll container
-            [documentScroll addSubview:rowContainer];
-            i++;
-            y += offset;
-            
-            //make sure to adjust the top of the image container if the row was expanded
-            iv.frame = CGRectMake(3, (offset / 2) + 3, 308, 173);
-            
-            if(i == count){
-                [documentScroll setContentSize:CGSizeMake(748, (y + 193))];
-                completeFlag(YES);
-            }
+    if (![flag isEqualToString:@"overview"]) {
+        //remove all subviews
+        for(UIView *v in [documentScroll subviews]){
+            [v removeFromSuperview];
         }
         
-    }else{
-        //this mean there is not results
+        //dynamic property reference!!! woooohooo!
+        NSMutableArray *data = [model.selectedPartner valueForKey:flag];
         
-        UILabel *desc = [[UILabel alloc] initWithFrame:CGRectMake(0, 80, 748, 80)];
-        [desc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:16.0]];
-        desc.textColor = [UIColor whiteColor];
-        desc.textAlignment = NSTextAlignmentCenter;
-        desc.text = @"- NO CONTENT ASSOCIATED WITH THIS ITEM -";
-        desc.numberOfLines = 2;
-        desc.backgroundColor = [UIColor clearColor];
-        //[rowContainer addSubview:desc];
         
-        [documentScroll addSubview:desc];
+        //remove video rows
+        [offlineVideoRows removeAllObjects];
         
-        [documentScroll setContentSize:CGSizeMake(748, 300)];
-        completeFlag(YES);
+        
+        //make sure we are dealing with an array, otherwise we can assume that their is no content assigned to this
+        if([data isKindOfClass:[NSArray class]] && [data count] > 0){
+            
+            //Below we loop through eith the document or video data to load up a dynamic set of buttons
+            int count = (int)[data count], i = 0, y = 0;
+            for(NSString *documentKey in data){
+                NSData *doc = [model getFileData:documentKey complete:^(BOOL completeFlag){}];
+                
+                y = i * 193 + 16;
+                if(y == 0) y = 16;
+                
+                UIView *rowContainer = [[UIView alloc] initWithFrame:CGRectMake(0, y, 748, 179)];
+                rowContainer.backgroundColor = [UIColor whiteColor];
+                
+                UIButton *back = [UIButton buttonWithType:UIButtonTypeCustom];
+                [back setFrame:CGRectMake(0, 0, 748, 179)];
+                [back addTarget:self action:@selector(rowTapped:)forControlEvents:UIControlEventTouchUpInside];
+                back.showsTouchWhenHighlighted = YES;
+                [back setUserInteractionEnabled:YES];
+                [back setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+                back.tag = i;
+                [back setBackgroundColor:[UIColor whiteColor]];
+                [rowContainer addSubview:back];
+                
+                UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(3, 3, 308, 173)];
+                iv.backgroundColor = model.blue;
+                [back addSubview:iv];
+                
+                UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(328, 16, 360, 24)];
+                [title setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:16.0]];
+                title.textColor = [UIColor blackColor];
+                title.numberOfLines = 2;
+                title.adjustsFontSizeToFitWidth = YES;
+                title.backgroundColor = [UIColor clearColor];
+                [back addSubview:title];
+                
+                UIView *horizontalLine = [[UIView alloc] initWithFrame:CGRectMake(328, 40, 360, 1)];
+                horizontalLine.backgroundColor = [UIColor blackColor];
+                [back addSubview:horizontalLine];
+                
+                UITextView *desc = [[UITextView alloc] initWithFrame:CGRectMake(328, 47, 400, 121)];
+                desc.textColor = model.dullBlack;
+                desc.backgroundColor = [UIColor clearColor];
+                [desc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:14.0]];
+                [desc setEditable:NO];
+                [desc setScrollEnabled:NO];
+                [back addSubview:desc];
+                
+                int offset = 0;
+                
+                /**** if the document is a video ****/
+                if ([flag isEqualToString:@"videos"]){
+                    /*************** Videos ************************/
+                    
+                    //set a video object from the selected object
+                    Video *v = [NSKeyedUnarchiver unarchiveObjectWithData:doc];
+                    //set the key for the object
+                    [back setTitle:v.key forState:UIControlStateNormal];
+                    
+                    if([v.image isEqualToString:@""]){
+                        [iv setImage:[UIImage imageNamed:@"tmb-FPO-video.png"]];
+                    }else{
+                        //try and load the image via the internet, otherwise use placeholder as a fallback
+                        NSString *u = [v.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+                        [iv sd_setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+                        
+                    }
+                    
+                    NSString *rawVideo = [v.rawVideo stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+                    NSString *name = [model getVideoFileName:rawVideo];
+                    
+                    //set the data for the rest of the row
+                    title.text = v.title;
+                    desc.text = v.description;
+                    
+                    //make sure to resize the description after the text is added
+                    desc.frame = CGRectMake(328, 47, 400, desc.contentSize.height);
+                    [desc sizeToFit];
+                    //determine if our new size of the desc frame overflows the current frame
+                    if(desc.frame.size.height > 121){
+                        //create an offset value if it does to alter the layou
+                        offset =  desc.frame.size.height - 121;
+                        rowContainer.frame = CGRectMake(0, y, 748, (179 + offset));
+                    }
+                    
+                    //make sure the video row is faded out if the user is not online
+                    if(![model.hostReachability isReachableViaWiFi]){
+                        //user is not connected to the internet
+                        NSString *lookupName = [name stringByReplacingOccurrencesOfString:@"%20" withString:@"_"];
+                        
+                        //check if the user has the video saved locally
+                        if([model fileExists:lookupName]){
+                            rowContainer.alpha = 1.0;
+                            back.enabled = YES;
+                        }else{
+                            rowContainer.alpha = 0.6;
+                            model.layoutSync = NO;
+                            [offlineVideos setObject:rowContainer forKey:v.key];
+                        }
+                    }else{
+                        rowContainer.alpha = 1.0;
+                        back.enabled = YES;
+                    }
+                    
+                    [offlineVideoRows addObject:rowContainer];
+                    //add the data set of data being held for easy reference
+                    [currentDocumentData setObject:v forKey:v.key];
+                }else{
+                    
+                    /*************** Documents ************************/
+                    
+                    //set a document object from the selected object
+                    Document *d = [NSKeyedUnarchiver unarchiveObjectWithData:doc];
+                    //set the key for the object
+                    [back setTitle:d.key forState:UIControlStateNormal];
+                    
+                    if([d.image isEqualToString:@""]){
+                        //if there is no url set for the image at all, use the fallback jason gave me
+                        if([flag isEqualToString:@"case_study"]){
+                            [iv setImage:[UIImage imageNamed:@"tmb-FPO-casestudy.png"]];
+                        }else if([flag isEqualToString:@"white_paper"]){
+                            [iv setImage:[UIImage imageNamed:@"tmb-FPO-whitepaper.png"]];
+                        }
+                        
+                    }else{
+                        //try and load the image via the internet, otherwise use placeholder as a fallback
+                        NSString *u = [d.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+                        [iv sd_setImageWithURL:[NSURL URLWithString:u] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+                    }
+                    
+                    //set the data for the rest of the row
+                    title.frame = CGRectMake(328, 16, 400, 24);
+                    title.text = d.title;
+                    
+                    //add the text
+                    desc.text = d.description;
+                    //make sure to resize the description after the text is added
+                    desc.frame = CGRectMake(328, 47, 400, desc.contentSize.height);
+                    [desc sizeToFit];
+                    //determine if our new size of the desc frame overflows the current frame
+                    if(desc.frame.size.height > 121){
+                        //create an offset value if it does to alter the layou
+                        offset =  desc.frame.size.height - 121;
+                        rowContainer.frame = CGRectMake(0, y, 748, (179 + offset));
+                    }
+                    
+                    horizontalLine.frame = CGRectMake(328, 40, 400, 1);
+                    
+                    //add the data set of data being held for easy reference
+                    [currentDocumentData setObject:d forKey:d.key];
+                }
+                //add sub view to the scroll container
+                [documentScroll addSubview:rowContainer];
+                i++;
+                y += offset;
+                
+                //make sure to adjust the top of the image container if the row was expanded
+                iv.frame = CGRectMake(3, (offset / 2) + 3, 308, 173);
+                
+                if(i == count){
+                    [documentScroll setContentSize:CGSizeMake(748, (y + 193))];
+                    completeFlag(YES);
+                }
+            }
+            
+        }else{
+            //this mean there is not results
+            
+            UILabel *desc = [[UILabel alloc] initWithFrame:CGRectMake(0, 80, 748, 80)];
+            [desc setFont:[UIFont fontWithName:@"ITCAvantGardeStd-Bk" size:16.0]];
+            desc.textColor = [UIColor whiteColor];
+            desc.textAlignment = NSTextAlignmentCenter;
+            desc.text = @"- NO CONTENT ASSOCIATED WITH THIS ITEM -";
+            desc.numberOfLines = 2;
+            desc.backgroundColor = [UIColor clearColor];
+            //[rowContainer addSubview:desc];
+            
+            [documentScroll addSubview:desc];
+            
+            [documentScroll setContentSize:CGSizeMake(748, 300)];
+            completeFlag(YES);
+        }
     }
-    
-    
 }
 
 
