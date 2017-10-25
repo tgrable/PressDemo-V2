@@ -69,7 +69,8 @@
             status = 1;
             
             NSString *url = [NSString stringWithFormat:@"%@/data/api/%@", networkURL, value];
-
+            NSLog(@"url %@", url);
+            
             [downloadURLs addObject:url];
             
             //initiate the downloadoperation class and set the class properties for user authentication

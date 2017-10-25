@@ -56,7 +56,8 @@
             [self collectAndValidateEmail:@"imPRESS" andMessage:@"Please enter your email address."];
         }
         else {
-            [userStatus verifyUser:[self getUserEmailFromDefaults]];
+//            [userStatus verifyUser:[self getUserEmailFromDefaults]];
+            [self moveFowardIfUserIsAuthorizedForConnectionStatus:YES];
         }
         
     } else {
@@ -65,9 +66,37 @@
             [self collectAndValidateEmail:@"imPRESS" andMessage:@"Please enter your email address."];
         }
         else {
-            [self continueLoadingApp];
+//            [self continueLoadingApp];
+            [self moveFowardIfUserIsAuthorizedForConnectionStatus:NO];
         }
     }
+}
+
+-(void)moveFowardIfUserIsAuthorizedForConnectionStatus:(BOOL)status {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([[[NSUserDefaults standardUserDefaults] stringForKey:@"userIsAuthorized"] isEqualToString:@"YES"]) {
+            if (status == YES) {
+                [userStatus verifyUser:[self getUserEmailFromDefaults]];
+            }
+            else {
+                [self continueLoadingApp];
+            }
+        }
+        else if ([[[NSUserDefaults standardUserDefaults] stringForKey:@"userIsAuthorized"] isEqualToString:@"NO"]) {
+            [self displayMessage:@"You are no longer authorized to use this app." withTitle:@"imPRESS"];
+        }
+        else if ([[[NSUserDefaults standardUserDefaults] stringForKey:@"userIsAuthorized"] isEqualToString:@"ERROR"]) {
+            if (status == YES) {
+                [self collectAndValidateEmail:@"Error" andMessage:[NSString stringWithFormat:@"There was an error validating your access. \n\n Please enter your email address."]];
+            }
+            else {
+                [self displayMessage:@"There was an error validating your access. \n\n Please try again when you have internet access." withTitle:@"imPRESS"];
+            }
+        }
+        else {
+            NSLog(@"First time the user hits this update but they dont enter an email. Then hit the home button but do not completly close out the app.");
+        }
+    });
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -145,21 +174,6 @@
 {
     //start the update check here
     ALog(@"App came back into focus");
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([[[NSUserDefaults standardUserDefaults] stringForKey:@"userIsAuthorized"] isEqualToString:@"YES"]) {
-            [self continueLoadingApp];
-        }
-        else if ([[[NSUserDefaults standardUserDefaults] stringForKey:@"userIsAuthorized"] isEqualToString:@"NO"]) {
-            [self displayMessage:@"You are no longer authorized to use this app." withTitle:@"imPRESS"];
-        }
-        else if ([[[NSUserDefaults standardUserDefaults] stringForKey:@"userIsAuthorized"] isEqualToString:@"ERROR"]) {
-            [self collectAndValidateEmail:@"Error" andMessage:[NSString stringWithFormat:@"There was an error validating your access. \n\n Please enter your email address."]];
-        }
-        else {
-            NSLog(@"First time the user hits this update but they dont enter an email. Then hit the home button but do not completly close out the app.");
-        }
-    });
 }
 
 -(void)loadUpUserInterface
@@ -333,20 +347,13 @@
 }
 
 -(void)continueLoadingApp {
-    NSLog(@"1");
     dispatch_async(dispatch_get_main_queue(), ^{
         //if we have made the initial download, push the user to the home screen
         if([[NSUserDefaults standardUserDefaults] boolForKey:@"initialDownload"]){
-            NSLog(@"2");
-            
             //send the user to the first view after the build
             CanonViewController *vc = [[CanonViewController alloc] initWithNibName:@"CanonViewController" bundle:nil];
             [self.navigationController pushViewController:vc animated:NO];
-            
-            
         }else{
-            NSLog(@"3");
-            
             //build the user interface
             [self loadUpUserInterface];
         }
